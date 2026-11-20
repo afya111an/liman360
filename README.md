@@ -56,5 +56,5 @@ If no steps are defined, new invoices are approved on save.
 GitHub serves it once Pages is set to **Deploy from a branch → main → /docs** (repository Settings → Pages).
 
 The **Refresh demo** workflow (`.github/workflows/demo.yml`) regenerates `docs/` every weekday at 16:30 Istanbul time
-with that day's TCMB rates, commits it and requests a Pages build. Run it by hand from the Actions tab
+with that day's TCMB rates and commits it; the push starts the Pages build. Run it by hand from the Actions tab
 ("Refresh demo" → "Run workflow").

@@ -7,8 +7,7 @@ on:
   workflow_dispatch:           # "Run workflow" button in the Actions tab
 
 permissions:
-  contents: write   # commit the regenerated docs/
-  pages: write      # ask GitHub Pages to rebuild
+  contents: write   # commit the regenerated docs/ (the push itself starts the Pages build)
 
 concurrency:
   group: refresh-demo
@@ -35,10 +34,8 @@ jobs:
         run: python manage.py export_demo
 
       - name: Commit if changed
-        id: commit
         run: |
           if git diff --quiet -- docs; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "Demo unchanged."
             exit 0
           fi
@@ -47,15 +44,4 @@ jobs:
           git add docs
           git commit -m "Demo: daily refresh with TCMB rates ($(TZ=Europe/Istanbul date +%d.%m.%Y))"
           git push
-          echo "changed=true" >> "$GITHUB_OUTPUT"
 
-      # Pushes made with GITHUB_TOKEN may not start a Pages build on their own, so request one.
-      - name: Request Pages build
-        if: steps.commit.outputs.changed == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          curl -fsS -X POST \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/${{ github.repository }}/pages/builds"
