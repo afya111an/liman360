@@ -88,6 +88,12 @@ components:
   button-quiet-ink-hover:
     backgroundColor: "{colors.hover-wash}"
     textColor: "{colors.navy-ink}"
+  button-quiet-ink-small:
+    backgroundColor: "transparent"
+    textColor: "{colors.navy-ink}"
+    rounded: "{rounded.none}"
+    padding: "0.3rem 1rem"
+    height: "34px"
   button-reject:
     backgroundColor: "{colors.sheet-white}"
     textColor: "{colors.reject-red}"
@@ -118,6 +124,13 @@ components:
     backgroundColor: "{colors.navy-ink}"
     textColor: "{colors.form-paper}"
     height: "56px"
+  subnav:
+    backgroundColor: "{colors.form-paper}"
+    textColor: "{colors.ink-secondary}"
+    height: "52px"
+  line-table:
+    textColor: "{colors.navy-ink}"
+    padding: "0.5rem 0.5rem 0.5rem 0"
   stamp:
     textColor: "{colors.stamp-violet}"
     typography: "{typography.stamp}"
@@ -134,9 +147,9 @@ components:
 
 **Creative North Star: "The Konşimento"**
 
-Every record is a document, drawn as a bill-of-lading form: a navy-ink outer rule, a grid of numbered boxed fields separated by pale blue form rules, small tracked caps for each caption. The user reads an invoice the way they would read the paper original, then stamps it. Approval is not a badge or a toggle; it is a rotated violet stamp pressed onto the form, and a finished document carries its result as a large overprint across its head.
+Every record is a document, drawn as a bill-of-lading form: a navy-ink outer rule, a grid of numbered boxed fields separated by pale blue form rules, small tracked caps for each caption. The user reads an invoice or a payment order the way they would read the paper original, then stamps it. Approval is not a badge or a toggle; it is a rotated violet stamp pressed onto the form, and a finished document carries its result as a large overprint across its head.
 
-The surface is dense and calm. A navy top bar holds one module nav and the day's exchange rates; below it a ruled ledger lists records on the left and the selected document sits on the right. Nothing floats: there are no cards, no shadows, no rounded corners. Hierarchy comes from rules, weight and the single violet voice.
+The surface is dense and calm. A navy top bar holds the module nav (Faturalar, Ödemeler) and the day's exchange rates; each module has its own paper subnav, and below it a ruled ledger lists records on the left and the selected document sits on the right. Nothing floats: there are no cards, no shadows, no rounded corners. Hierarchy comes from rules, weight and the single violet voice.
 
 The world refuses the generic Bootstrap admin: cards, pill badges, soft shadows, and a sidebar duplicating the top nav.
 
@@ -152,15 +165,15 @@ The world refuses the generic Bootstrap admin: cards, pill badges, soft shadows,
 Navy ink on cool off-white form paper, ruled in pale print blue, with one violet stamp and one red rejection.
 
 ### Primary
-- **Stamp Violet** (stamp-violet): approval stamps, the approved state, the finished-document overprint, focus rings, caret, and the one primary action per screen. **Stamp Violet Deep** is its hover/pressed state and the text colour of confirmation flashes. **Stamp Tint** washes the stamp interior (at 35%) and text selection.
+- **Stamp Violet** (stamp-violet): approval and payment stamps, the approved and paid state, the approved or paid overprint, focus rings, caret, and the one primary action per screen. **Stamp Violet Deep** is its hover/pressed state and the text colour of confirmation flashes. **Stamp Tint** washes the stamp interior (at 35%) and text selection.
 
 ### Secondary
-- **Reject Red** (reject-red): rejection stamps and overprint, the outlined reject button, field errors, the required-field asterisk, invalid input borders. Never decorative.
+- **Reject Red** (reject-red): rejection and cancellation stamps and overprints (Reddedildi, İptal edildi), the struck status marker, the outlined reject button, field errors, the required-field asterisk, invalid input borders. Never decorative.
 
 ### Neutral
 - **Form Paper** (form-paper): page ground and the interior of every form field.
 - **Sheet White** (sheet-white): inputs, ledger rows, flashes, the reject button ground; it reads as a fresh slip lying on the paper.
-- **Navy Ink** (navy-ink): all primary text, the top bar, the form's outer rule, the selected ledger row's border, the pending state, and the next-approval slot.
+- **Navy Ink** (navy-ink): all primary text, the top bar, the form's outer rule, the selected ledger row's border, the pending and partway states, the line-table header and footer rules, and the next-approval slot.
 - **Ink Secondary** (ink-secondary): field captions, metadata, supplier lines, hints (7:1 on paper).
 - **Form Rule** (form-rule): the 1px rules between form fields and ledger rows, the ledger/sheet divider, the subnav underline.
 - **Rule Strong** (rule-strong): control borders, field-number boxes, dashed future-approval slots, empty-state border (3.9:1 on paper).
@@ -169,7 +182,7 @@ Navy ink on cool off-white form paper, ruled in pale print blue, with one violet
 ### Named Rules
 **The One Stamp Rule.** Violet means approval. It marks approved states, stamps, and exactly one primary action per screen; every other action is outlined ink. If two violet buttons appear on one screen, one is wrong.
 
-**The No Amber Rule.** Pending has no hue of its own. Pending is navy ink text with an empty square marker; the next approval slot is a solid 1.5px ink box, later slots are dashed rule-strong boxes.
+**The No Amber Rule.** Pending has no hue of its own. Pending is navy ink text with an empty square marker, partway is navy ink with a half-filled square; the next approval slot is a solid 1.5px ink box, later slots are dashed rule-strong boxes.
 
 ## Typography
 
@@ -195,11 +208,11 @@ Navy ink on cool off-white form paper, ruled in pale print blue, with one violet
 
 ## Layout
 
-A full-width app shell: navy top bar (56px) with module nav, rates and user; a paper subnav (52px) with section tabs, counts in boxed numerals, and the "new" action at the right. Below 768px the top bar collapses behind a toggler and items stack with paper-tinted dividers.
+A full-width app shell: navy top bar (56px) with the module nav (Faturalar, Ödemeler, plus Tanımlar for staff), rates and user; under it the current module's own paper subnav (52px) with its section tabs, counts in boxed numerals, and that module's small outlined "Yeni" action at the right. Below 768px the top bar collapses behind a toggler and items stack with paper-tinted dividers.
 
 The work area is a two-column grid from 992px: a ledger column (minmax(400px, 34rem)) separated by a form-rule line from a sticky, independently scrolling sheet holding the document (max 60rem). Below 992px the ledger is the page and the document opens on its own URL with a back link.
 
-The form is a 4-column grid with 1px gaps showing the rule colour; fields span 1, 2 or 4 columns. Below 576px it drops to 2 columns and two-span fields go full width. Spacing runs on 0.5 / 0.75 / 1 / 1.5 / 2.5rem; ledger padding 1.5rem, sheet padding 1.5rem 2.5rem on desktop, 1rem on phones.
+The form is a 4-column grid with 1px gaps showing the rule colour; fields span 1, 2 or 4 columns. Below 576px it drops to 2 columns and two-span fields go full width. A pick row (selects plus a reload button) shares one ruled row as three equal cells and an auto-width button cell; below 576px every cell goes full width. Two related inputs inside one field sit in a 12rem / 1fr pair, stacking on phones. Spacing runs on 0.5 / 0.75 / 1 / 1.5 / 2.5rem; ledger padding 1.5rem, sheet padding 1.5rem 2.5rem on desktop, 1rem on phones.
 
 ## Elevation & Depth
 
@@ -210,14 +223,14 @@ Flat. There are no shadows. Depth is conveyed by rules, by white slips on paper,
 
 ## Shapes
 
-Square corners throughout (Bootstrap radii set to 0). Rules are 1px; the form's outer rule is 1.5px navy ink. Stamps have a double frame: a 2.5px border plus a 1px outline offset 2px (overprint: 3px plus 1.5px offset 3px). Stamps rotate a few degrees (-3deg, alternating +2deg; overprint -6deg). Status markers are small squares: empty for pending, half-filled for partway (a payment approved but not yet sent, an invoice partly paid), filled for approved or done, struck diagonally for rejected or cancelled.
+Square corners throughout (Bootstrap radii set to 0). Rules are 1px; the form's outer rule is 1.5px navy ink. Stamps have a double frame: a 2.5px border plus a 1px outline offset 2px (overprint: 3px plus 1.5px offset 3px). Stamps rotate a few degrees (-3deg, alternating +2deg; overprint -6deg). Status markers are small squares (0.65em, 1.5px current-colour border) before the status word: empty for pending (navy), half-filled from the bottom for partway (navy; a payment approved but not yet sent, an invoice partly paid), filled for approved or done (violet; approved, paid), struck diagonally for rejected or cancelled (red).
 
 ## Components
 
 ### Buttons
-- **Shape:** square (0), min height 40px (44px on coarse pointers), 600 weight, icon 1em leading.
-- **Primary (stamp):** violet fill, white text; deepens on hover/focus. One per screen: approve, save-and-submit, sign in.
-- **Outlined ink:** transparent with rule-strong border, navy text; border goes navy with hover wash. All secondary actions, including "Yeni fatura" and cancel.
+- **Shape:** square (0), min height 40px (44px on coarse pointers), 600 weight, icon 1em leading. Small (34px) is used for in-place actions: the subnav "Yeni", "Tamamı" in entry tables, "Ödeme emri oluştur" on an invoice.
+- **Primary (stamp):** violet fill, white text; deepens on hover/focus. One per screen: approve, save-and-submit, record as paid ("Ödendi olarak kaydet"), sign in.
+- **Outlined ink:** transparent with rule-strong border, navy text; border goes navy with hover wash. All secondary actions, including "Yeni fatura" / "Yeni ödeme emri", "Vazgeç", "Tamamı", and cancelling a payment order.
 - **Reject:** white with red border and text, fills red on hover.
 - **On the top bar:** outlined paper at 45% opacity (sign out).
 - **Busy/disabled:** 60% opacity, no pointer events; forms submit once.
@@ -225,11 +238,13 @@ Square corners throughout (Bootstrap radii set to 0). Rules are 1px; the form's 
 ### Inputs / Fields
 - **Style:** white, rule-strong 1px border, square, 40px min height; 1rem text on phones.
 - **Focus:** violet border plus 3px violet ring at 35%.
-- **Error:** red border, field cell washed #FFF7F6, red 0.8125rem message beneath.
+- **Error:** red border, field cell (or line-table row) washed #FFF7F6, red 0.8125rem message beneath.
+- **Sub-labels:** when one field holds several controls, each gets a plain body label (600, 0.8125rem, navy, no caps), not a second field caption.
+- **Amount inputs:** right-aligned, tabular, 600 weight.
 
 ### Navigation
-- Top bar: paper text at 78% opacity, full paper on hover; active item gets an inset 3px paper underline (underline text on mobile).
-- Subnav: ink-secondary text, active tab navy with inset 3px navy underline; counts in a 1px current-colour box.
+- Top bar: one item per module (Faturalar, Ödemeler; Tanımlar for staff), paper text at 78% opacity, full paper on hover; the current module gets an inset 3px paper underline (underline text on mobile).
+- Subnav: one per module (invoices: Onay bekleyen, Tüm gider faturaları; payments: Onay bekleyen, Ödenecek, Tümü). Ink-secondary text, active tab navy with inset 3px navy underline; queue counts in a 1px current-colour box; the module's small outlined "Yeni" button pushed right. Tab labels shorten on phones.
 
 ### Ledger Rows
 Stacked white rows sharing 1px form rules; record number (Title), amount with small currency code right-aligned, supplier, then status square and due date. Selected row takes the selected wash and a navy border.
@@ -237,13 +252,17 @@ Stacked white rows sharing 1px form rules; record number (Title), amount with sm
 ### Bill-of-Lading Form (signature)
 Paper cells in a ruled 4-column grid inside a 1.5px navy outer rule; each cell a numbered caption over its value. The amount occupies a full-width box. Approvals are a numbered field holding the stamp row; the decision (note textarea plus approve and reject buttons) is itself the last numbered field inside the form. Entry forms use the same grid with inputs inside the cells.
 
+The payment order uses the same form: paying company, planned date, currency, paying account and payee (each IBAN in small tabular type), the paid invoices as a line table, the total in the amount box, then an "Onay ve ödeme" field holding its stamps and a final action field. The action field holds separate blocks: the decision (note plus approve and reject), the pay-out (date and bank receipt number, then the violet record button), and cancellation (reason plus an outlined cancel button). When cancel shares the field with another block it sits below a 1px form rule, so it never reads as the main action.
+
 ### Line Tables
 Tables that live inside a form field (invoices paid by a payment order, an invoice's payments): Archivo uppercase captions over a 1px navy rule, rows ruled in form rule, amounts right-aligned in tabular numerals, totals in a footer under a navy rule. Every amount caption carries the currency ("Bu emirle (USD)"); columns run record number, date, then the amounts as one right-aligned block, with the amount this document is about first. Entry tables put a right-aligned amount input and an outlined "Tamamı" button in the last column. Below 576px every line table stacks: each row becomes a block with the record number on top and each value under its own small caption; the footer total becomes one row.
 
 ### Stamps and Overprint (signature)
 - **Approval stamp:** violet double-framed box, rotated, stamp lettering for step and approver role, body type for name and timestamp, faint violet tint inside. Rejection stamps are red and quote the reason in italic.
+- **Payment stamp:** a violet stamp reading "Ödendi" with the bank receipt number ("Dekont ...") as its bold line and the payer and date beneath; it sits beside the approval stamp.
+- **Cancellation stamp:** red, "İptal edildi" with who, when and the quoted reason; it sits next to the approval stamp, which is kept as the record of the earlier decision.
 - **Pending slots:** body type; the next slot is a solid 1.5px navy box marked "Bekliyor", later slots dashed rule-strong.
-- **Overprint:** a finished document's result (approved or rejected plus date), large stamp lettering, rotated -6deg across the head and the form's top rule, multiply-blended. It is the status text; no separate status label.
+- **Overprint:** a finished document's result plus date (violet: Onaylandı, Ödendi; red: Reddedildi, İptal edildi), large stamp lettering, rotated -6deg across the head and the form's top rule, multiply-blended. It is the status text; no separate status label.
 - **Motion:** a fresh stamp lands in 0.45s (from 1.35x scale, -9deg, blurred, cubic-bezier(.16,1,.3,1)); none under reduced motion.
 
 ## Do's and Don'ts
@@ -251,9 +270,9 @@ Tables that live inside a form field (invoices paid by a payment order, an invoi
 ### Do:
 - **Do** draw every record as numbered boxed fields on form paper inside a 1.5px navy outer rule, ruled at 1px in form rule blue.
 - **Do** keep one violet primary action per screen; make every other action outlined ink.
-- **Do** show pending as navy ink with an empty square, the next approval slot as a solid ink box, later slots dashed.
+- **Do** show status with the four squares: empty (pending), half-filled (partway), filled (done), struck (rejected or cancelled); the next approval slot is a solid ink box, later slots dashed.
 - **Do** mark a finished document with the rotated, multiply-blended overprint across its head.
-- **Do** print every amount with tabular numerals and its currency code.
+- **Do** print every amount with tabular numerals and its currency code, in line-table captions too.
 
 ### Don't:
 - **Don't** use rounded corners, cards, pill badges or shadows.

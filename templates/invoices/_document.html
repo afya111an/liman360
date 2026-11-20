@@ -55,7 +55,7 @@
       <dd>
         {% if pay_lines %}
         <table class="lines">
-          <thead><tr><th scope="col">Ödeme emri</th><th scope="col">Durum</th><th scope="col" class="r">Tutar</th></tr></thead>
+          <thead><tr><th scope="col">Ödeme emri</th><th scope="col">Durum</th><th scope="col" class="r">Tutar ({{ selected.currency }})</th></tr></thead>
           <tbody>{% for ln in pay_lines %}<tr>
             <td>{% if perms.payments.view_paymentorder and not static_demo %}<a href="{% url 'payments:all_detail' ln.order_id %}">{{ ln.order.number }}</a>{% else %}{{ ln.order.number }}{% endif %}</td>
             <td data-label="Durum">{{ ln.order.get_status_display }}{% if ln.order.paid_on %} · <span class="num">{{ ln.order.paid_on|date:"d.m.Y" }}</span>{% endif %}</td>
