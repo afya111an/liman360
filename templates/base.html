@@ -27,9 +27,9 @@
           {% if user.is_staff %}<li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}">Tanımlar</a></li>{% endif %}
         </ul>
         {% if shell_rates %}
-        <p class="rates mb-0" title="Tanımlar ekranında girilen son kurlar">
+        <p class="rates mb-0" title="{% if shell_rates.0.1.source == 'TCMB' %}TCMB döviz satış kurları{% else %}Elle girilen kurlar{% endif %}">
           {% for c, r in shell_rates %}<span>{{ c }} <b>{{ r.rate|floatformat:"2g" }}</b></span>{% endfor %}
-          <span class="rates-date">{{ shell_rates.0.1.date|date:"d.m.Y" }}</span>
+          <span class="rates-date">{% if shell_rates.0.1.source == 'TCMB' %}TCMB {% endif %}{{ shell_rates.0.1.date|date:"d.m.Y" }}</span>
         </p>
         {% endif %}
         {% if static_demo %}<p class="user mb-0"><span class="user-name">{{ user.get_full_name }} (demo)</span></p>{% else %}

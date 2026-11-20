@@ -24,6 +24,21 @@ Demo users: `muhasebe` (enters invoices), `operasyon` (1st approval), `finans` (
 
 Set `DJANGO_DEBUG=0`, `DJANGO_SECRET_KEY`, and `DJANGO_ALLOWED_HOSTS`; run `collectstatic`. The default database is SQLite for development only.
 
+## Exchange rates (TCMB)
+
+`fetch_tcmb_rates` stores TCMB's *döviz satış* rate for every currency the app uses (USD, EUR).
+TCMB publishes around 15:30 on business days; there is no bulletin on weekends and holidays, and an invoice
+then uses the latest earlier rate. Run it daily on the server, for example with cron:
+
+```cron
+# 16:05 Mon-Fri, Istanbul time
+5 16 * * 1-5  cd /srv/liman360 && .venv/bin/python manage.py fetch_tcmb_rates >> /var/log/liman360-tcmb.log 2>&1
+```
+
+First install or after downtime: `manage.py fetch_tcmb_rates --days 30` fills the gap. The command exits
+non-zero when TCMB is unreachable or a currency is missing, so cron mail or log monitoring will show failures.
+Rates can still be corrected by hand in Tanımlar → Döviz kurları; those are marked "Elle girildi".
+
 ## How approval works
 
 Approval steps are set up in Tanımlar → Onay adımları (order + user group). A new invoice waits on step 1, then step 2, and so on.

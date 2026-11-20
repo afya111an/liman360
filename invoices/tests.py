@@ -160,3 +160,56 @@ class ViewTests(Base):
             'number': 'N-3', 'invoice_date': '2026-11-20', 'supplier': self.sup.pk, 'company': self.co.pk,
             'amount': '10', 'currency': 'USD'})
         self.assertEqual(Invoice.objects.get(number='N-3').status, Invoice.Status.APPROVED)
+
+
+SAMPLE = b'''<?xml version="1.0" encoding="UTF-8"?>
+<Tarih_Date Tarih="20.11.2026" Date="11/20/2026" Bulten_No="2026/219">
+  <Currency Kod="USD" CurrencyCode="USD"><Unit>1</Unit><ForexBuying>50.4028</ForexBuying><ForexSelling>50.4936</ForexSelling></Currency>
+  <Currency Kod="JPY" CurrencyCode="JPY"><Unit>100</Unit><ForexSelling>32.5000</ForexSelling></Currency>
+  <Currency Kod="EUR" CurrencyCode="EUR"><Unit>1</Unit><ForexSelling>58.1234</ForexSelling></Currency>
+  <Currency Kod="XDR" CurrencyCode="XDR"><Unit>1</Unit><ForexSelling></ForexSelling></Currency>
+</Tarih_Date>'''
+
+
+class TcmbTests(Base):
+    def test_parse_uses_forex_selling_per_unit(self):
+        from . import tcmb
+        day, rates = tcmb.parse(SAMPLE, {'USD', 'EUR', 'JPY', 'XDR'})
+        self.assertEqual(day, date(2026, 11, 20))
+        self.assertEqual(rates, {'USD': Decimal('50.4936'), 'EUR': Decimal('58.1234'), 'JPY': Decimal('0.3250')})
+
+    def test_parse_rejects_other_xml(self):
+        from . import tcmb
+        with self.assertRaises(ValueError):
+            tcmb.parse(b'<html/>', {'USD'})
+
+    def test_command_saves_and_is_idempotent(self):
+        from unittest import mock
+
+        from django.core.management import call_command
+        with mock.patch('invoices.tcmb.download', return_value=SAMPLE):
+            call_command('fetch_tcmb_rates', stdout=__import__('io').StringIO())
+            call_command('fetch_tcmb_rates', stdout=__import__('io').StringIO())
+        rows = ExchangeRate.objects.filter(date=date(2026, 11, 20))
+        self.assertEqual(rows.count(), 2)
+        self.assertEqual(rows.get(currency='EUR').source, ExchangeRate.Source.TCMB)
+
+    def test_command_holiday_and_missing_currency(self):
+        from io import StringIO
+        from unittest import mock
+
+        from django.core.management import CommandError, call_command
+        with mock.patch('invoices.tcmb.download', return_value=None):
+            out = StringIO()
+            call_command('fetch_tcmb_rates', stdout=out)
+            self.assertIn('no TCMB bulletin', out.getvalue())
+        no_eur = SAMPLE.replace(b'CurrencyCode="EUR"', b'CurrencyCode="EUX"')
+        with mock.patch('invoices.tcmb.download', return_value=no_eur), self.assertRaises(CommandError):
+            call_command('fetch_tcmb_rates', stdout=StringIO())
+
+    def test_document_names_tcmb_source(self):
+        ExchangeRate.objects.create(date=date(2026, 9, 22), currency='USD', rate=Decimal('34.0000'),
+                                    source=ExchangeRate.Source.TCMB)
+        self.client.force_login(self.clerk)
+        r = self.client.get(reverse('invoices:all_detail', args=[self.inv.pk]))
+        self.assertContains(r, 'TCMB döviz satış 34,0000 (22.09.2026)')

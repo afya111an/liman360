@@ -5,6 +5,7 @@ from django.contrib.auth.models import Group
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models, transaction
+from django.utils.functional import cached_property
 
 
 class Currency(models.TextChoices):
@@ -80,9 +81,14 @@ class ApprovalLevel(models.Model):
 
 
 class ExchangeRate(models.Model):
+    class Source(models.TextChoices):
+        TCMB = 'TCMB', 'TCMB'
+        MANUAL = 'MANUAL', 'Elle girildi'
+
     date = models.DateField('tarih')
     currency = models.CharField('döviz', max_length=3, choices=Currency.choices)
-    rate = models.DecimalField('TCMB kuru (TRY)', max_digits=12, decimal_places=4)
+    rate = models.DecimalField('döviz satış kuru (TRY)', max_digits=12, decimal_places=4)
+    source = models.CharField('kaynak', max_length=6, choices=Source.choices, default=Source.MANUAL)
 
     class Meta:
         verbose_name = 'döviz kuru'
@@ -92,11 +98,8 @@ class ExchangeRate(models.Model):
 
     @classmethod
     def on(cls, currency, date):
-        """Latest rate on or before date, or None."""
-        if currency == Currency.TRY:
-            return Decimal(1)
-        r = cls.objects.filter(currency=currency, date__lte=date).first()
-        return r.rate if r else None
+        """Latest rate record on or before date, or None (TRY needs no rate)."""
+        return cls.objects.filter(currency=currency, date__lte=date).first()
 
 
 class Invoice(models.Model):
@@ -138,14 +141,14 @@ class Invoice(models.Model):
         if self.due_date and self.invoice_date and self.due_date < self.invoice_date:
             raise ValidationError({'due_date': 'Vade tarihi fatura tarihinden önce olamaz.'})
 
-    @property
-    def try_equivalent(self):
-        rate = ExchangeRate.on(self.currency, self.invoice_date)
-        return (self.amount * rate).quantize(Decimal('0.01')) if rate is not None else None
+    @cached_property
+    def rate(self):
+        """ExchangeRate used for the TRY equivalent: latest on or before the invoice date."""
+        return None if self.currency == Currency.TRY else ExchangeRate.on(self.currency, self.invoice_date)
 
     @property
-    def rate(self):
-        return ExchangeRate.on(self.currency, self.invoice_date)
+    def try_equivalent(self):
+        return (self.amount * self.rate.rate).quantize(Decimal('0.01')) if self.rate else None
 
     def next_level(self):
         """The approval level this invoice is waiting on, or None."""

@@ -24,7 +24,7 @@
     <div class="f w4 f-amt"><dt><span class="no" aria-hidden="true">8</span>Tutar</dt>
       <dd><span class="amt num">{{ selected.amount|money }} {{ selected.currency }}</span>
         {% if selected.currency != 'TRY' %}
-          {% if selected.try_equivalent is not None %}<small class="num">≈ {{ selected.try_equivalent|money }} TRY · sistemdeki kur {{ selected.rate|floatformat:"4g" }}</small>
+          {% if selected.try_equivalent is not None %}<small class="num">≈ {{ selected.try_equivalent|money }} TRY · {% if selected.rate.source == 'TCMB' %}TCMB döviz satış{% else %}elle girilen kur{% endif %} {{ selected.rate.rate|floatformat:"4g" }} ({{ selected.rate.date|date:"d.m.Y" }})</small>
           {% else %}<small>Fatura tarihi için kur girilmemiş.</small>{% endif %}
         {% endif %}
       </dd></div>

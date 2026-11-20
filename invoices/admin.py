@@ -16,8 +16,8 @@ class SupplierAdmin(admin.ModelAdmin):
 
 @admin.register(ExchangeRate)
 class ExchangeRateAdmin(admin.ModelAdmin):
-    list_display = ['date', 'currency', 'rate']
-    list_filter = ['currency']
+    list_display = ['date', 'currency', 'rate', 'source']
+    list_filter = ['currency', 'source']
 
 
 class ApprovalInline(admin.TabularInline):
