@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Giriş{% endblock %}
+{% block body_class %}page-login{% endblock %}
+{% block content %}
+<div class="login">
+  <form method="post" class="doc login-doc" novalidate data-once>
+    {% csrf_token %}
+    <h1 class="brand-mark">Liman360</h1>
+    <p class="login-sub">Denizcilik ve lojistik ERP</p>
+    {% if form.non_field_errors %}
+      <p class="field-error" role="alert">Kullanıcı adı veya şifre hatalı. Büyük/küçük harfe dikkat ederek tekrar deneyin.</p>
+    {% endif %}
+    <div class="f">
+      <label for="id_username"><span class="no" aria-hidden="true">1</span>Kullanıcı adı</label>
+      <input class="form-control" type="text" name="username" id="id_username" autocomplete="username" autocapitalize="none" required autofocus value="{{ form.username.value|default:'' }}">
+    </div>
+    <div class="f">
+      <label for="id_password"><span class="no" aria-hidden="true">2</span>Şifre</label>
+      <div class="pw">
+        <input class="form-control" type="password" name="password" id="id_password" autocomplete="current-password" required>
+        <button type="button" class="btn btn-quiet-ink" data-toggle-pw aria-controls="id_password" aria-pressed="false">Göster</button>
+      </div>
+    </div>
+    <input type="hidden" name="next" value="{{ next }}">
+    <button type="submit" class="btn btn-stamp w-100">Giriş yap</button>
+    <p class="login-help">Şifrenizi unuttuysanız sistem yöneticinize başvurun.</p>
+  </form>
+</div>
+{% endblock %}

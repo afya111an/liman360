@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load static liman %}
+{% block title %}{% if selected %}{{ selected.number }}{% elif scope == 'pool' %}Onay bekleyen faturalar{% else %}Gider faturaları{% endif %}{% endblock %}
+{% block content %}
+<div class="work{% if selected %} has-doc{% endif %}">
+  <section class="ledger" aria-labelledby="ledger-title">
+    <div class="ledger-head">
+      <h1 id="ledger-title">{% if scope == 'pool' %}Onayınızı bekleyen faturalar{% else %}Gider faturaları{% endif %}</h1>
+      <p class="ledger-sum">
+        {{ page.paginator.count }} fatura{% for t in totals %}<span class="sep" aria-hidden="true"> · </span><span class="num">{{ t.total|money }}</span> {{ t.currency }}{% endfor %}
+      </p>
+    </div>
+
+    {% if scope == 'all' %}
+    <form class="filters" method="get" role="search">
+      <div class="filters-q">
+        <label class="visually-hidden" for="f-q">Ara</label>
+        <input class="form-control" type="search" id="f-q" name="q" value="{{ filters.q }}" placeholder="Fatura no, cari, açıklama">
+      </div>
+      <label class="visually-hidden" for="f-durum">Durum</label>
+      <select class="form-select" id="f-durum" name="durum">
+        <option value="">Tüm durumlar</option>
+        {% for v, l in statuses %}<option value="{{ v }}" {% if filters.durum == v %}selected{% endif %}>{{ l }}</option>{% endfor %}
+      </select>
+      <label class="visually-hidden" for="f-sirket">Şirket</label>
+      <select class="form-select" id="f-sirket" name="sirket">
+        <option value="">Tüm şirketler</option>
+        {% for c in companies %}<option value="{{ c.pk }}" {% if filters.sirket == c.pk|stringformat:'s' %}selected{% endif %}>{{ c.code }}</option>{% endfor %}
+      </select>
+      <label class="visually-hidden" for="f-gemi">Gemi</label>
+      <select class="form-select" id="f-gemi" name="gemi">
+        <option value="">Tüm gemiler</option>
+        {% for v in vessels %}<option value="{{ v.pk }}" {% if filters.gemi == v.pk|stringformat:'s' %}selected{% endif %}>{{ v.name }}</option>{% endfor %}
+      </select>
+      <button class="btn btn-quiet-ink" type="submit">
+        <svg class="ic" aria-hidden="true"><use href="{% static 'vendor/icons.svg' %}#search"></use></svg>Filtrele
+      </button>
+      {% if query %}<a class="btn btn-quiet-ink" href="{% url 'invoices:all' %}">Temizle</a>{% endif %}
+    </form>
+    {% endif %}
+
+    {% if page.object_list %}
+    <ol class="rows">
+      {% for inv in page.object_list %}
+      <li>
+        <a class="row-link{% if inv.pk == selected.pk %} is-selected{% endif %}"
+           href="{% if scope == 'pool' %}{% url 'invoices:pool_detail' inv.pk %}{% else %}{% url 'invoices:all_detail' inv.pk %}{% endif %}{% if query %}?{{ query }}{% endif %}"
+           {% if inv.pk == selected.pk %}aria-current="true"{% endif %}>
+          <span class="r-no">{{ inv.number }}</span>
+          <span class="r-amt num">{{ inv.amount|money }} <small>{{ inv.currency }}</small></span>
+          <span class="r-sup">{{ inv.supplier.name }}</span>
+          <span class="r-meta">
+            {% if scope == 'all' %}<span class="state state-{{ inv.status|lower }}">{{ inv.get_status_display }}</span>{% endif %}
+            {% if inv.due_date %}Vade <span class="num">{{ inv.due_date|date:"d.m.Y" }}</span>{% endif %}
+            {% if inv.vessel %} · {{ inv.vessel.name }}{% endif %}
+          </span>
+        </a>
+      </li>
+      {% endfor %}
+    </ol>
+    {% if page.has_other_pages %}
+    <nav class="pager" aria-label="Sayfalar">
+      {% if page.has_previous %}<a href="?{% if query %}{{ query }}&amp;{% endif %}sayfa={{ page.previous_page_number }}">Önceki</a>{% endif %}
+      <span>Sayfa {{ page.number }} / {{ page.paginator.num_pages }}</span>
+      {% if page.has_next %}<a href="?{% if query %}{{ query }}&amp;{% endif %}sayfa={{ page.next_page_number }}">Sonraki</a>{% endif %}
+    </nav>
+    {% endif %}
+    {% else %}
+    <div class="empty">
+      <svg class="ic ic-lg" aria-hidden="true"><use href="{% static 'vendor/icons.svg' %}#inbox"></use></svg>
+      {% if scope == 'pool' %}
+        <p>Onayınızı bekleyen fatura yok.</p>
+        <a href="{% url 'invoices:all' %}">Tüm gider faturalarına bakın</a>
+      {% elif query %}
+        <p>Bu filtrelere uyan fatura yok.</p>
+        <a href="{% url 'invoices:all' %}">Filtreleri temizleyin</a>
+      {% else %}
+        <p>Henüz gider faturası girilmedi.</p>
+        <a href="{% url 'invoices:create' %}">İlk faturayı girin</a>
+      {% endif %}
+    </div>
+    {% endif %}
+  </section>
+
+  <section class="sheet" aria-label="Fatura belgesi">
+    {% if selected %}
+      {% include "invoices/_document.html" %}
+    {% else %}
+      <p class="sheet-hint">Belgesini görmek için soldan bir fatura seçin.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

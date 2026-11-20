@@ -1,0 +1,78 @@
+{% load static liman %}
+<article class="doc" aria-labelledby="doc-title">
+  <a class="back" href="{% if scope == 'pool' %}{% url 'invoices:pool' %}{% else %}{% url 'invoices:all' %}{% endif %}{% if query %}?{{ query }}{% endif %}">
+    <svg class="ic" aria-hidden="true"><use href="{% static 'vendor/icons.svg' %}#arrow-left"></use></svg>Listeye dön
+  </a>
+  <header class="doc-head">
+    <h2 id="doc-title">{{ selected.number }}</h2>
+    {% if next_level %}
+      <p class="doc-state state-pending">{{ next_level.order }}. onay bekliyor · {{ next_level.name }}</p>
+    {% else %}
+      {# A finished document carries its result as the overprinted stamp; the stamp is the status text. #}
+      <p class="overprint{% if selected.status == 'REJECTED' %} stamp-reject{% endif %}{% if fresh_final %} is-fresh{% endif %}">{{ selected.get_status_display }}<small class="num">{{ final_at|date:"d.m.Y" }}</small></p>
+    {% endif %}
+  </header>
+
+  <dl class="bl">
+    <div class="f w2"><dt><span class="no" aria-hidden="true">1</span>Cari / tedarikçi</dt><dd>{{ selected.supplier.name }}</dd></div>
+    <div class="f"><dt><span class="no" aria-hidden="true">2</span>Fatura tarihi</dt><dd class="num">{{ selected.invoice_date|date:"d.m.Y" }}</dd></div>
+    <div class="f"><dt><span class="no" aria-hidden="true">3</span>Vade</dt><dd class="num">{{ selected.due_date|date:"d.m.Y"|default:"—" }}</dd></div>
+    <div class="f w2"><dt><span class="no" aria-hidden="true">4</span>Borçlu şirket</dt><dd>{{ selected.company.code }} <small>{{ selected.company.name }}</small></dd></div>
+    <div class="f w2"><dt><span class="no" aria-hidden="true">5</span>Gemi</dt><dd>{{ selected.vessel.name|default:"—" }}</dd></div>
+    <div class="f w2"><dt><span class="no" aria-hidden="true">6</span>Gider kategorisi</dt><dd>{{ selected.category.name|default:"—" }}</dd></div>
+    <div class="f w2"><dt><span class="no" aria-hidden="true">7</span>Evrak / ref no</dt><dd>{{ selected.ref_no|default:"—" }}</dd></div>
+    <div class="f w4 f-amt"><dt><span class="no" aria-hidden="true">8</span>Tutar</dt>
+      <dd><span class="amt num">{{ selected.amount|money }} {{ selected.currency }}</span>
+        {% if selected.currency != 'TRY' %}
+          {% if selected.try_equivalent is not None %}<small class="num">≈ {{ selected.try_equivalent|money }} TRY · sistemdeki kur {{ selected.rate|floatformat:"4g" }}</small>
+          {% else %}<small>Fatura tarihi için kur girilmemiş.</small>{% endif %}
+        {% endif %}
+      </dd></div>
+    <div class="f w4"><dt><span class="no" aria-hidden="true">9</span>Gider kalemi açıklaması</dt><dd>{{ selected.description|default:"—" }}</dd></div>
+    {% if selected.notes %}<div class="f w4"><dt><span class="no" aria-hidden="true">10</span>Notlar</dt><dd class="notes">{{ selected.notes|linebreaksbr }}</dd></div>{% endif %}
+    <div class="f w4"><dt><span class="no" aria-hidden="true">{{ n_entered }}</span>Kaydeden</dt>
+      <dd>{{ selected.created_by.get_full_name|default:selected.created_by.username }}<small class="num">{{ selected.created_at|date:"d.m.Y H:i" }}</small></dd></div>
+    <div class="f w4 f-stamps"><dt><span class="no" aria-hidden="true">{{ n_stamps }}</span>Onaylar</dt>
+      <dd>
+        {% if steps %}
+        <ol class="stamps">
+          {% for level, d in steps %}
+          <li>
+            {% if d and d.approved %}
+              <span class="stamp{% if d.pk == fresh %} is-fresh{% endif %}">{{ level.order }}. onay<b>{{ level.name }}</b><small>{{ d.user.get_full_name|default:d.user.username }} · <span class="num">{{ d.at|date:"d.m.Y H:i" }}</span></small></span>
+            {% elif d %}
+              <span class="stamp stamp-reject{% if d.pk == fresh %} is-fresh{% endif %}">Reddedildi<b>{{ level.name }}</b><small>{{ d.user.get_full_name|default:d.user.username }} · <span class="num">{{ d.at|date:"d.m.Y H:i" }}</span></small>{% if d.note %}<q>{{ d.note }}</q>{% endif %}</span>
+            {% elif selected.status == 'PENDING' %}
+              <span class="slot{% if level == next_level %} is-next{% endif %}">{{ level.order }}. onay: {{ level.name }}<small>{% if level == next_level %}Bekliyor{% else %}Sırada{% endif %}</small></span>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ol>
+        {% else %}<span>Onay adımı tanımlı değil.</span>{% endif %}
+      </dd></div>
+    {% if can_decide %}
+    <div class="f w4 f-decide">
+      <dt><label for="gerekce"><span class="no" aria-hidden="true">{{ n_decide }}</span>Karar / not</label></dt>
+      <dd>
+        <form method="post" action="{% url 'invoices:decide' selected.pk %}" data-once>
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ decided_here }}">
+          <textarea class="form-control" id="gerekce" name="gerekce" rows="2" maxlength="300" aria-describedby="gerekce-hint"></textarea>
+          <p class="hint" id="gerekce-hint">Onaylarken isteğe bağlı, reddederken zorunlu.</p>
+          <div class="decide-actions">
+            <button class="btn btn-stamp" type="submit" name="karar" value="onayla">
+              <svg class="ic" aria-hidden="true"><use href="{% static 'vendor/icons.svg' %}#check-lg"></use></svg>{{ next_level.order }}. onayı ver
+            </button>
+            <button class="btn btn-reject" type="submit" name="karar" value="reddet">
+              <svg class="ic" aria-hidden="true"><use href="{% static 'vendor/icons.svg' %}#x-lg"></use></svg>Reddet
+            </button>
+          </div>
+        </form>
+      </dd>
+    </div>
+    {% elif next_level %}
+    <div class="f w4"><dt><span class="no" aria-hidden="true">{{ n_decide }}</span>Karar</dt>
+      <dd class="decide-note">Bu adımı <b>{{ next_level.group.name }}</b> grubundan biri onaylayacak{% if user.pk == selected.created_by_id %}; kendi girdiğiniz faturayı onaylayamazsınız{% endif %}.</dd></div>
+    {% endif %}
+  </dl>
+</article>

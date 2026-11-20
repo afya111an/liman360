@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Yeni gider faturası{% endblock %}
+{% block content %}
+<div class="entry">
+  <form method="post" class="doc" novalidate data-once aria-labelledby="entry-title">
+    {% csrf_token %}
+    <header class="doc-head">
+      <h1 id="entry-title">Yeni gider faturası</h1>
+      <p class="doc-state"><span class="req" aria-hidden="true">*</span> zorunlu alan</p>
+    </header>
+    {% if form.non_field_errors %}
+      <div class="field-error" role="alert">{% for e in form.non_field_errors %}<p>{{ e }}</p>{% endfor %}</div>
+    {% endif %}
+    <div class="bl">
+      {% for field in form %}
+      <div class="f {{ field.field.span }}{% if field.errors %} has-error{% endif %}">
+        <label for="{{ field.id_for_label }}"><span class="no" aria-hidden="true">{{ forloop.counter }}</span>{{ field.label|capfirst }}{% if field.field.required %}<span class="req" aria-hidden="true">*</span>{% endif %}</label>
+        {{ field }}
+        {% if field.errors %}<p class="field-error">{{ field.errors.0 }}</p>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    <div class="decide-actions">
+      <button class="btn btn-stamp" type="submit">Kaydet ve onaya gönder</button>
+      <a class="btn btn-quiet-ink" href="{% url 'invoices:all' %}">Vazgeç</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

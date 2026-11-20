@@ -1,0 +1,65 @@
+{% load static %}<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1B2A4A">
+<title>{% block title %}{% endblock %} · Liman360</title>
+<link rel="preload" href="{% static 'vendor/fonts/archivo-latin-wght-normal.woff2' %}" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{% static 'vendor/bootstrap/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/app.css' %}">
+<link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml">
+</head>
+<body class="{% block body_class %}{% endblock %}">
+<a class="visually-hidden-focusable skip" href="#icerik">İçeriğe geç</a>
+{% if user.is_authenticated %}
+<header class="topbar">
+  <nav class="navbar navbar-expand-md navbar-dark" aria-label="Modüller">
+    <div class="container-fluid px-3 px-md-4">
+      <a class="brand" href="{% url 'invoices:pool' %}">Liman360</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#modules" aria-controls="modules" aria-expanded="false" aria-label="Menüyü aç">
+        <svg class="ic" aria-hidden="true"><use href="{% static 'vendor/icons.svg' %}#list"></use></svg>
+      </button>
+      <div class="collapse navbar-collapse" id="modules">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'invoices:pool' %}">Faturalar</a></li>
+          {% if user.is_staff %}<li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}">Tanımlar</a></li>{% endif %}
+        </ul>
+        {% if shell_rates %}
+        <p class="rates mb-0" title="Tanımlar ekranında girilen son kurlar">
+          {% for c, r in shell_rates %}<span>{{ c }} <b>{{ r.rate|floatformat:"2g" }}</b></span>{% endfor %}
+          <span class="rates-date">{{ shell_rates.0.1.date|date:"d.m.Y" }}</span>
+        </p>
+        {% endif %}
+        <form method="post" action="{% url 'logout' %}" class="user">
+          {% csrf_token %}
+          <span class="user-name">{{ user.get_full_name|default:user.username }}</span>
+          <button type="submit" class="btn btn-sm btn-quiet">
+            <svg class="ic" aria-hidden="true"><use href="{% static 'vendor/icons.svg' %}#box-arrow-right"></use></svg>Çıkış
+          </button>
+        </form>
+      </div>
+    </div>
+  </nav>
+</header>
+<nav class="subnav" aria-label="Faturalar">
+  <div class="container-fluid px-3 px-md-4">
+    <a href="{% url 'invoices:pool' %}" {% if scope == 'pool' %}aria-current="page"{% endif %}>Onay bekleyen <span class="count">{{ shell_pool_count }}</span></a>
+    <a href="{% url 'invoices:all' %}" {% if scope == 'all' %}aria-current="page"{% endif %}><span class="d-sm-none">Tümü</span><span class="d-none d-sm-inline">Tüm gider faturaları</span></a>
+    <a class="btn btn-quiet-ink btn-sm ms-auto" href="{% url 'invoices:create' %}" {% if request.resolver_match.url_name == 'create' %}aria-current="page"{% endif %}>
+      <svg class="ic" aria-hidden="true"><use href="{% static 'vendor/icons.svg' %}#plus-lg"></use></svg>Yeni<span class="d-none d-sm-inline">&nbsp;fatura</span>
+    </a>
+  </div>
+</nav>
+{% endif %}
+{% if messages %}
+<div class="flash container-fluid px-3 px-md-4" role="status">
+  {% for m in messages %}<p class="flash-{{ m.tags }}">
+    {% if m.level_tag == 'error' %}<svg class="ic" aria-hidden="true"><use href="{% static 'vendor/icons.svg' %}#exclamation-triangle"></use></svg>{% endif %}{{ m }}</p>{% endfor %}
+</div>
+{% endif %}
+<main id="icerik">{% block content %}{% endblock %}</main>
+<script src="{% static 'vendor/bootstrap/bootstrap.bundle.min.js' %}" defer></script>
+<script src="{% static 'js/app.js' %}" defer></script>
+</body>
+</html>
