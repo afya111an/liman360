@@ -49,6 +49,10 @@
     <a href="/liman360/operasyon/bunker/" >Bunker</a>
     <a href="/liman360/operasyon/raporlar/" ><span class="d-sm-none">Noon</span><span class="d-none d-sm-inline">Günlük raporlar</span></a>
     
+    <a class="btn btn-quiet-ink btn-sm ms-auto btn-new" href="/liman360/operasyon/seferler/yeni/" aria-label="Yeni sefer">
+      <svg class="ic" aria-hidden="true"><use href="/liman360/static/vendor/icons.svg#plus-lg"></use></svg><span class="d-none d-sm-inline">Yeni sefer</span>
+    </a>
+    
   </div>
 </nav>
 
@@ -216,6 +220,24 @@
             <td class="r num" data-label="VLSFO tüketim (MT)">28,2</td><td class="r num" data-label="VLSFO ROB (MT)">782,6</td><td class="r num" data-label="MGO tüketim (MT)">2,4</td><td class="r num" data-label="MGO ROB (MT)">103,2</td>
             <td data-label="Kontrol"><span class="ok-text">Tutarlı</span></td></tr></tbody>
         </table>
+        
+      </dd></div>
+    
+    <div class="f w4 f-decide"><dt><span class="no" aria-hidden="true">15</span>Aşama</dt>
+      <dd>
+        <p class="hint mt-0">Demoda işlem kaydedilmez.</p>
+        
+        <form method="post" action="/liman360/operasyon/seferler/2/islem/" data-once>
+          <input type="hidden" name="csrfmiddlewaretoken" value="9MBiL3YIcq3tZBpLY2FXAYipI07pSHfRDQ9Z0D5eSIEXHXQcxUh85mDqcHmehYXv"><input type="hidden" name="next" value="/operasyon/seferler/2/">
+          <div class="pay-fields">
+            <div><label class="sub-label" for="vy-tarih">Gerçekleşme tarihi<span class="req" aria-hidden="true">*</span></label>
+              <input class="form-control" type="date" id="vy-tarih" name="tarih" value="2026-11-20" max="2026-11-20" required></div>
+          </div>
+          <div class="decide-actions">
+            <button class="btn btn-stamp" type="submit" name="islem" value="ilerle" disabled>Tahliyeye başla</button>
+          </div>
+        </form>
+        
         
       </dd></div>
     

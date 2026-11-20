@@ -67,6 +67,12 @@ class Command(BaseCommand):
     def _render(self, username, base):
         client = Client()
         user = User.objects.get(username=username)
+        # Demo only (throwaway DB): let the viewer also see Operasyon's create screens. Direct permissions,
+        # not the Operasyon group, so the invoice approval pool stays the finance user's own.
+        from django.contrib.auth.models import Permission
+        user.user_permissions.add(*Permission.objects.filter(codename__in=[
+            'add_voyage', 'change_voyage', 'add_vessel', 'add_bunkerdelivery', 'add_noonreport']))
+        user = User.objects.get(pk=user.pk)  # drop the cached permissions
         client.force_login(user)
         paths = ['/faturalar/onay/', '/faturalar/tumu/', '/faturalar/yeni/']
         paths += [f'/faturalar/tumu/{pk}/' for pk in Invoice.objects.values_list('pk', flat=True)]
@@ -81,7 +87,9 @@ class Command(BaseCommand):
                     paths.append(f'/odemeler/{scope}/{o.pk}/')
         from operations.models import BunkerDelivery, NoonReport, Voyage
         from invoices.models import Vessel
-        paths += ['/operasyon/seferler/', '/operasyon/gemiler/', '/operasyon/bunker/', '/operasyon/raporlar/']
+        paths += ['/operasyon/seferler/', '/operasyon/gemiler/', '/operasyon/bunker/', '/operasyon/raporlar/',
+                  '/operasyon/seferler/yeni/', '/operasyon/gemiler/yeni/', '/operasyon/bunker/yeni/',
+                  '/operasyon/raporlar/yeni/']
         paths += [f'/operasyon/seferler/{pk}/' for pk in Voyage.objects.values_list('pk', flat=True)]
         paths += [f'/operasyon/gemiler/{pk}/' for pk in Vessel.objects.values_list('pk', flat=True)]
         paths += [f'/operasyon/bunker/{pk}/' for pk in BunkerDelivery.objects.values_list('pk', flat=True)]

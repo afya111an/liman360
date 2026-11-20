@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1B2A4A">
+<title>Yeni gemi · Liman360</title>
+<link rel="preload" href="/liman360/static/vendor/fonts/archivo-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/liman360/static/vendor/bootstrap/bootstrap.min.css">
+<link rel="stylesheet" href="/liman360/static/css/app.css">
+<link rel="icon" href="/liman360/static/favicon.svg" type="image/svg+xml">
+</head>
+<body class="">
+<a class="visually-hidden-focusable skip" href="#icerik">İçeriğe geç</a>
+<p class="demo-bar">Statik demo: örnek veri, kayıt yapılmaz. <a href="https://github.com/afya111an/liman360">Kaynak kod</a></p>
+
+<header class="topbar">
+  <nav class="navbar navbar-expand-md navbar-dark" aria-label="Modüller">
+    <div class="container-fluid px-3 px-md-4">
+      <a class="brand" href="/liman360/faturalar/onay/">Liman360</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#modules" aria-controls="modules" aria-expanded="false" aria-label="Menüyü aç">
+        <svg class="ic" aria-hidden="true"><use href="/liman360/static/vendor/icons.svg#list"></use></svg>
+      </button>
+      <div class="collapse navbar-collapse" id="modules">
+        <ul class="navbar-nav me-auto">
+          
+          <li class="nav-item"><a class="nav-link" href="/liman360/faturalar/onay/">Faturalar</a></li>
+          <li class="nav-item"><a class="nav-link active" aria-current="page" href="/liman360/operasyon/seferler/">Operasyon</a></li>
+          <li class="nav-item"><a class="nav-link" href="/liman360/odemeler/onay/">Ödemeler</a></li>
+          
+          
+        </ul>
+        
+        <p class="rates mb-0" title="TCMB döviz satış kurları">
+          <span>USD <b>50,49</b></span><span>EUR <b>55,40</b></span>
+          <span class="rates-date">TCMB 20.11.2026</span>
+        </p>
+        
+        <p class="user mb-0"><span class="user-name">Selin Demir (demo)</span></p>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<nav class="subnav" aria-label="Operasyon">
+  <div class="container-fluid px-3 px-md-4">
+    <a href="/liman360/operasyon/seferler/" >Seferler <span class="count" title="Yolda olan sefer">1</span><span class="visually-hidden"> yolda</span></a>
+    <a href="/liman360/operasyon/gemiler/" aria-current="page">Gemiler</a>
+    <a href="/liman360/operasyon/bunker/" >Bunker</a>
+    <a href="/liman360/operasyon/raporlar/" ><span class="d-sm-none">Noon</span><span class="d-none d-sm-inline">Günlük raporlar</span></a>
+    
+    <a class="btn btn-quiet-ink btn-sm ms-auto btn-new" href="/liman360/operasyon/gemiler/yeni/" aria-label="Yeni gemi">
+      <svg class="ic" aria-hidden="true"><use href="/liman360/static/vendor/icons.svg#plus-lg"></use></svg><span class="d-none d-sm-inline">Yeni gemi</span>
+    </a>
+    
+  </div>
+</nav>
+
+
+
+<main id="icerik">
+<div class="entry">
+  <form method="post" class="doc" novalidate data-once aria-labelledby="entry-title">
+    <input type="hidden" name="csrfmiddlewaretoken" value="s4aHY5XisJl16559PilmIDhyJRYRqXpBW8IodF4O81WvOrwAoaXxd1CzdydGPe7f">
+    <header class="doc-head">
+      <h1 id="entry-title">Yeni gemi</h1>
+      <p class="doc-state"><span class="req" aria-hidden="true">*</span> zorunlu alan</p>
+    </header>
+    
+    <div class="bl">
+      <div class="f w2">
+  <label for="id_name"><span class="no" aria-hidden="true">1</span>Gemi adı<span class="req" aria-hidden="true">*</span></label>
+  <input type="text" name="name" maxlength="100" class="form-control" required id="id_name">
+  
+  
+</div>
+<div class="f ">
+  <label for="id_imo"><span class="no" aria-hidden="true">2</span>IMO no</label>
+  <input type="text" name="imo" maxlength="7" class="form-control" id="id_imo">
+  
+  
+</div>
+<div class="f ">
+  <label for="id_vessel_type"><span class="no" aria-hidden="true">3</span>Gemi tipi<span class="req" aria-hidden="true">*</span></label>
+  <select name="vessel_type" class="form-select" id="id_vessel_type">
+  <option value="BULK" selected>Dökme yük</option>
+
+  <option value="GENERAL">Genel kargo</option>
+
+  <option value="TANKER">Tanker</option>
+
+  <option value="CONTAINER">Konteyner</option>
+
+  <option value="OTHER">Diğer</option>
+
+</select>
+  
+  
+</div>
+<div class="f w2">
+  <label for="id_flag"><span class="no" aria-hidden="true">4</span>Bayrak</label>
+  <input type="text" name="flag" maxlength="40" class="form-control" id="id_flag">
+  
+  
+</div>
+<div class="f ">
+  <label for="id_dwt"><span class="no" aria-hidden="true">5</span>DWT (ton)</label>
+  <input type="number" name="dwt" min="0" class="form-control" id="id_dwt">
+  
+  
+</div>
+<div class="f  f-check">
+  <label for="id_active"><span class="no" aria-hidden="true">6</span>Filoda</label>
+  <input type="checkbox" name="active" class="form-check-input" id="id_active" checked>
+  
+  
+</div>
+
+    </div>
+    <div class="decide-actions">
+      <button class="btn btn-stamp" type="submit" disabled>Kaydet</button>
+      <a class="btn btn-quiet-ink" href="/liman360/operasyon/gemiler/">Vazgeç</a>
+      <p class="hint w-100">Demoda kayıt yapılmaz.</p>
+    </div>
+  </form>
+</div>
+</main>
+<script src="/liman360/static/vendor/bootstrap/bootstrap.bundle.min.js" defer></script>
+<script src="/liman360/static/js/app.js" defer></script>
+</body>
+</html>

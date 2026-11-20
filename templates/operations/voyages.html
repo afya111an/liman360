@@ -43,7 +43,7 @@
     <h2 id="doc-title">{{ v.number }}</h2>
     {% if v.status == 'COMPLETED' %}<p class="overprint">Tamamlandı<small class="num">{{ v.actual_arrival|date:"d.m.Y" }}</small></p>
     {% elif v.status == 'CANCELLED' %}<p class="overprint stamp-reject">İptal edildi<small class="num">{{ cancel_event.on_date|date:"d.m.Y" }}</small></p>
-    {% else %}<p class="doc-state state-pending">{{ v.get_status_display }}{% if can_change %} · <a href="{% url 'operations:voyage_edit' v.pk %}">Düzenle</a>{% endif %}</p>{% endif %}
+    {% else %}<p class="doc-state state-pending">{{ v.get_status_display }}{% if can_change and not static_demo %} · <a href="{% url 'operations:voyage_edit' v.pk %}">Düzenle</a>{% endif %}</p>{% endif %}
   </header>
   <dl class="bl">
     <div class="f w2"><dt><span class="no" aria-hidden="true">1</span>Gemi</dt><dd>{% if static_demo %}{{ v.vessel.name }}{% else %}<a href="{% url 'operations:vessel_detail' v.vessel_id %}">{{ v.vessel.name }}</a>{% endif %}{% if v.vessel.imo %}<small class="num">IMO {{ v.vessel.imo }}</small>{% endif %}</dd></div>
