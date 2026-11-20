@@ -1,0 +1,61 @@
+# Regenerates the static GitHub Pages demo (docs/) with that day's TCMB exchange rates.
+name: Refresh demo
+
+on:
+  schedule:
+    - cron: '30 13 * * 1-5'   # 16:30 Istanbul, Mon-Fri, after TCMB publishes (~15:30)
+  workflow_dispatch:           # "Run workflow" button in the Actions tab
+
+permissions:
+  contents: write   # commit the regenerated docs/
+  pages: write      # ask GitHub Pages to rebuild
+
+concurrency:
+  group: refresh-demo
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install
+        run: pip install -r requirements.txt
+
+      - name: Regenerate demo
+        env:
+          TZ: Europe/Istanbul
+        run: python manage.py export_demo
+
+      - name: Commit if changed
+        id: commit
+        run: |
+          if git diff --quiet -- docs; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Demo unchanged."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs
+          git commit -m "Demo: daily refresh with TCMB rates ($(TZ=Europe/Istanbul date +%d.%m.%Y))"
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      # Pushes made with GITHUB_TOKEN may not start a Pages build on their own, so request one.
+      - name: Request Pages build
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -fsS -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/pages/builds"
