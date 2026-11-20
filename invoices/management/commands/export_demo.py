@@ -26,7 +26,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('--out', default='docs', help='Output folder (default: docs)')
         parser.add_argument('--base', default='/liman360', help='URL path the site is served under')
-        parser.add_argument('--as-user', default='operasyon', help='Demo user whose view is exported')
+        parser.add_argument('--as-user', default='finans', help='Demo user whose view is exported')
 
     def handle(self, *args, out, base, as_user, **opts):
         out = Path(out).resolve()
@@ -65,6 +65,14 @@ class Command(BaseCommand):
         paths = ['/faturalar/onay/', '/faturalar/tumu/', '/faturalar/yeni/']
         paths += [f'/faturalar/tumu/{pk}/' for pk in Invoice.objects.values_list('pk', flat=True)]
         paths += [f'/faturalar/onay/{pk}/' for pk in waiting_for(user)]
+        if user.has_perm('payments.view_paymentorder'):
+            from payments.models import PaymentOrder
+            paths += ['/odemeler/onay/', '/odemeler/odenecek/', '/odemeler/tumu/', '/odemeler/yeni/']
+            for o in PaymentOrder.objects.all():
+                paths.append(f'/odemeler/tumu/{o.pk}/')
+                scope = {'PENDING': 'onay', 'APPROVED': 'odenecek'}.get(o.status)
+                if scope:
+                    paths.append(f'/odemeler/{scope}/{o.pk}/')
         pages = {}
         for p in paths:
             r = client.get(p)

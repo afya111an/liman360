@@ -23,7 +23,10 @@
       </button>
       <div class="collapse navbar-collapse" id="modules">
         <ul class="navbar-nav me-auto">
+          
           <li class="nav-item"><a class="nav-link active" aria-current="page" href="/liman360/faturalar/onay/">Faturalar</a></li>
+          <li class="nav-item"><a class="nav-link" href="/liman360/odemeler/onay/">Ödemeler</a></li>
+          
           
         </ul>
         
@@ -32,20 +35,22 @@
           <span class="rates-date">20.11.2026</span>
         </p>
         
-        <p class="user mb-0"><span class="user-name">Mert Kaya (demo)</span></p>
+        <p class="user mb-0"><span class="user-name">Selin Demir (demo)</span></p>
       </div>
     </div>
   </nav>
 </header>
+
 <nav class="subnav" aria-label="Faturalar">
   <div class="container-fluid px-3 px-md-4">
-    <a href="/liman360/faturalar/onay/" >Onay bekleyen <span class="count">3</span></a>
+    <a href="/liman360/faturalar/onay/" >Onay bekleyen <span class="count">1</span></a>
     <a href="/liman360/faturalar/tumu/" aria-current="page"><span class="d-sm-none">Tümü</span><span class="d-none d-sm-inline">Tüm gider faturaları</span></a>
     <a class="btn btn-quiet-ink btn-sm ms-auto" href="/liman360/faturalar/yeni/" >
       <svg class="ic" aria-hidden="true"><use href="/liman360/static/vendor/icons.svg#plus-lg"></use></svg>Yeni<span class="d-none d-sm-inline">&nbsp;fatura</span>
     </a>
   </div>
 </nav>
+
 
 
 <main id="icerik">
@@ -71,7 +76,7 @@
           <span class="r-amt num">9.760,00 <small>EUR</small></span>
           <span class="r-sup">Örnek Liman Hizmetleri Ltd.</span>
           <span class="r-meta">
-            <span class="state state-approved">Onaylandı</span>
+            <span class="state state-approved">Ödendi</span>
             Vade <span class="num">23.11.2026</span>
              · M/V DEMO STAR
           </span>
@@ -101,7 +106,7 @@
           <span class="r-amt num">3.125,50 <small>USD</small></span>
           <span class="r-sup">Örnek Kumanya Tedarik</span>
           <span class="r-meta">
-            <span class="state state-pending">Onay bekliyor</span>
+            <span class="state state-approved">Onaylandı</span>
             Vade <span class="num">29.11.2026</span>
              · M/V DEMO STAR
           </span>
@@ -191,7 +196,7 @@
     <div class="f w4"><dt><span class="no" aria-hidden="true">9</span>Gider kalemi açıklaması</dt><dd>Rıhtım ve barınma ücreti</dd></div>
     
     <div class="f w4"><dt><span class="no" aria-hidden="true">10</span>Kaydeden</dt>
-      <dd>Ayşe Yılmaz<small class="num">20.11.2026 21:09</small></dd></div>
+      <dd>Ayşe Yılmaz<small class="num">20.11.2026 21:57</small></dd></div>
     <div class="f w4 f-stamps"><dt><span class="no" aria-hidden="true">11</span>Onaylar</dt>
       <dd>
         
@@ -199,19 +204,35 @@
           
           <li>
             
-              <span class="stamp">1. onay<b>Operasyon</b><small>Mert Kaya · <span class="num">20.11.2026 21:09</span></small></span>
+              <span class="stamp">1. onay<b>Operasyon</b><small>Mert Kaya · <span class="num">20.11.2026 21:57</span></small></span>
             
           </li>
           
           <li>
             
-              <span class="stamp">2. onay<b>Finans müdürü</b><small>Selin Demir · <span class="num">20.11.2026 21:09</span></small></span>
+              <span class="stamp">2. onay<b>Finans müdürü</b><small>Selin Demir · <span class="num">20.11.2026 21:57</span></small></span>
             
           </li>
           
         </ol>
         
       </dd></div>
+    
+    <div class="f w4"><dt><span class="no" aria-hidden="true">12</span>Ödemeler</dt>
+      <dd>
+        
+        <table class="lines">
+          <thead><tr><th scope="col">Ödeme emri</th><th scope="col">Durum</th><th scope="col" class="r">Tutar</th></tr></thead>
+          <tbody><tr>
+            <td>OE-2026-0001</td>
+            <td>Ödendi · <span class="num">20.11.2026</span></td>
+            <td class="r num">9.760,00 EUR</td></tr></tbody>
+        </table>
+        
+        <p class="mb-0 mt-1">Ödenen <b class="num">9.760,00 EUR</b> · Ödeme emri verilmemiş açık bakiye <b class="num">0,00 EUR</b></p>
+        
+      </dd></div>
+    
     
   </dl>
 </article>

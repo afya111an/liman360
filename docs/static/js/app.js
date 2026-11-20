@@ -3,13 +3,16 @@ document.addEventListener('submit', (e) => {
   const form = e.target.closest('form[data-once]');
   if (!form) return;
   if (form.dataset.sent) { e.preventDefault(); return; }
-  const note = form.querySelector('[name=gerekce]');
-  if (note && e.submitter && e.submitter.value === 'reddet' && !note.value.trim()) {
+  // Fields marked data-required-for="reddet iptal" must be filled for those submit buttons only.
+  const action = e.submitter && e.submitter.value;
+  const missing = [...form.querySelectorAll('[data-required-for]')].find(
+    (f) => f.dataset.requiredFor.split(' ').includes(action) && !f.value.trim());
+  if (missing) {
     e.preventDefault();
-    note.setAttribute('aria-invalid', 'true');
-    note.setCustomValidity('Reddetmek için bir gerekçe yazın.');
-    note.reportValidity();
-    note.addEventListener('input', () => { note.setCustomValidity(''); note.removeAttribute('aria-invalid'); }, { once: true });
+    missing.setAttribute('aria-invalid', 'true');
+    missing.setCustomValidity('Bu işlem için bu alanı doldurun.');
+    missing.reportValidity();
+    missing.addEventListener('input', () => { missing.setCustomValidity(''); missing.removeAttribute('aria-invalid'); }, { once: true });
     return;
   }
   form.dataset.sent = '1';
@@ -35,3 +38,21 @@ document.addEventListener('click', (e) => {
 });
 // After a failed save, put the cursor in the first field that needs fixing.
 document.querySelector('form [aria-invalid="true"]')?.focus();
+
+// Payment order entry: "Tamamı" fills the open balance; the footer shows the running total.
+const totalOut = document.getElementById('po-total');
+if (totalOut) {
+  const num = (v) => Number(String(v).trim().replace(/\s/g, '').replace(/\.(?=\d{3}(\D|$))/g, '').replace(',', '.')) || 0;
+  const fmt = new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const inputs = [...document.querySelectorAll('input[data-open]')];
+  const update = () => { totalOut.value = `${fmt.format(inputs.reduce((s, i) => s + num(i.value), 0))} ${totalOut.dataset.currency}`; };
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-fill]');
+    if (!b) return;
+    const input = document.getElementById(b.dataset.fill);
+    input.value = fmt.format(Number(input.dataset.open));
+    update();
+  });
+  inputs.forEach((i) => i.addEventListener('input', update));
+  update();
+}

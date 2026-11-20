@@ -7,6 +7,8 @@ from django.core.validators import MinValueValidator
 from django.db import models, transaction
 from django.utils.functional import cached_property
 
+from .validators import validate_iban
+
 
 class Currency(models.TextChoices):
     USD = 'USD', 'USD - Amerikan Doları'
@@ -30,6 +32,8 @@ class Company(models.Model):
 class Supplier(models.Model):
     name = models.CharField('ünvan', max_length=200, unique=True)
     tax_no = models.CharField('vergi no', max_length=20, blank=True)
+    iban = models.CharField('IBAN', max_length=34, blank=True, validators=[validate_iban],
+                            help_text='Ödeme emirlerinde varsayılan alıcı IBAN')
 
     class Meta:
         verbose_name = 'cari'

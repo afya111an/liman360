@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static liman %}
+{% block title %}{% if selected %}{{ selected.number }}{% else %}Ödeme emirleri{% endif %}{% endblock %}
+{% block subnav %}{% include "payments/_subnav.html" %}{% endblock %}
+{% block content %}
+<div class="work{% if selected %} has-doc{% endif %}">
+  <section class="ledger" aria-labelledby="ledger-title">
+    <div class="ledger-head">
+      <h1 id="ledger-title">{% if scope == 'onay' %}Onay bekleyen ödeme emirleri{% elif scope == 'odenecek' %}Ödenecek ödeme emirleri{% else %}Ödeme emirleri{% endif %}</h1>
+      <p class="ledger-sum">
+        {{ page.paginator.count }} ödeme emri{% for t in totals %}<span class="sep" aria-hidden="true"> · </span><span class="num">{{ t.total|money }}</span> {{ t.order__currency }}{% endfor %}
+      </p>
+    </div>
+
+    {% if scope == 'tumu' and not static_demo %}
+    <form class="filters filters-one" method="get">
+      <label class="visually-hidden" for="f-durum">Durum</label>
+      <select class="form-select" id="f-durum" name="durum">
+        <option value="">Tüm durumlar</option>
+        {% for v, l in statuses %}<option value="{{ v }}" {% if durum == v %}selected{% endif %}>{{ l }}</option>{% endfor %}
+      </select>
+      <button class="btn btn-quiet-ink" type="submit">Filtrele</button>
+    </form>
+    {% endif %}
+
+    {% if page.object_list %}
+    <ol class="rows">
+      {% for o in page.object_list %}
+      <li>
+        <a class="row-link{% if o.pk == selected.pk %} is-selected{% endif %}" href="{% url detail_url o.pk %}{% if query %}?{{ query }}{% endif %}" {% if o.pk == selected.pk %}aria-current="true"{% endif %}>
+          <span class="r-no">{{ o.number }}</span>
+          <span class="r-amt num">{{ o.sum_total|money }} <small>{{ o.currency }}</small></span>
+          <span class="r-sup">{{ o.supplier.name }}</span>
+          <span class="r-meta">
+            <span class="state state-{% if o.status == 'PENDING' %}pending{% elif o.status == 'APPROVED' or o.status == 'PAID' %}approved{% else %}rejected{% endif %}">{{ o.get_status_display }}</span>
+            {% if o.status == 'PAID' %}<span class="num">{{ o.paid_on|date:"d.m.Y" }}</span>{% else %}Ödeme <span class="num">{{ o.pay_date|date:"d.m.Y" }}</span>{% endif %} · {{ o.account.bank }}
+          </span>
+        </a>
+      </li>
+      {% endfor %}
+    </ol>
+    {% if page.has_other_pages %}
+    <nav class="pager" aria-label="Sayfalar">
+      {% if page.has_previous %}<a href="?{% if query %}{{ query }}&amp;{% endif %}sayfa={{ page.previous_page_number }}">Önceki</a>{% endif %}
+      <span>Sayfa {{ page.number }} / {{ page.paginator.num_pages }}</span>
+      {% if page.has_next %}<a href="?{% if query %}{{ query }}&amp;{% endif %}sayfa={{ page.next_page_number }}">Sonraki</a>{% endif %}
+    </nav>
+    {% endif %}
+    {% else %}
+    <div class="empty">
+      <svg class="ic ic-lg" aria-hidden="true"><use href="{% static 'vendor/icons.svg' %}#inbox"></use></svg>
+      {% if scope == 'onay' %}<p>Onay bekleyen ödeme emri yok.</p>
+      {% elif scope == 'odenecek' %}<p>Ödenmeyi bekleyen ödeme emri yok.</p>
+      {% else %}<p>Bu filtreye uyan ödeme emri yok.</p>{% endif %}
+      {% if perms.payments.add_paymentorder %}<a href="{% url 'payments:create' %}">Yeni ödeme emri oluşturun</a>{% endif %}
+    </div>
+    {% endif %}
+  </section>
+
+  <section class="sheet" aria-label="Ödeme emri belgesi">
+    {% if selected %}{% include "payments/_document.html" %}
+    {% else %}<p class="sheet-hint">Belgesini görmek için soldan bir ödeme emri seçin.</p>{% endif %}
+  </section>
+</div>
+{% endblock %}

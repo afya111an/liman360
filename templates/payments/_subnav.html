@@ -1,0 +1,13 @@
+{% load static %}
+<nav class="subnav" aria-label="Ödemeler">
+  <div class="container-fluid px-3 px-md-4">
+    <a href="{% url 'payments:pending' %}" {% if scope == 'onay' %}aria-current="page"{% endif %}><span class="d-sm-none">Onay</span><span class="d-none d-sm-inline">Onay bekleyen</span> <span class="count">{{ shell_pay_counts.pending }}</span></a>
+    <a href="{% url 'payments:topay' %}" {% if scope == 'odenecek' %}aria-current="page"{% endif %}>Ödenecek <span class="count">{{ shell_pay_counts.topay }}</span></a>
+    <a href="{% url 'payments:all' %}" {% if scope == 'tumu' %}aria-current="page"{% endif %}>Tümü</a>
+    {% if perms.payments.add_paymentorder %}
+    <a class="btn btn-quiet-ink btn-sm ms-auto" href="{% url 'payments:create' %}" {% if scope == 'yeni' %}aria-current="page"{% endif %}>
+      <svg class="ic" aria-hidden="true"><use href="{% static 'vendor/icons.svg' %}#plus-lg"></use></svg>Yeni<span class="d-none d-sm-inline">&nbsp;ödeme emri</span>
+    </a>
+    {% endif %}
+  </div>
+</nav>

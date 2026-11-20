@@ -3,6 +3,15 @@ from django.conf import settings
 from .models import Currency, ExchangeRate, waiting_for
 
 
+def _payment_counts(user):
+    if not user.has_perm('payments.view_paymentorder'):
+        return None
+    from payments.models import PaymentOrder
+    qs = PaymentOrder.objects
+    return {'pending': qs.filter(status=PaymentOrder.Status.PENDING).exclude(created_by=user).count(),
+            'topay': qs.filter(status=PaymentOrder.Status.APPROVED).count()}
+
+
 def shell(request):
     if not getattr(request, 'user', None) or not request.user.is_authenticated:
         return {}
@@ -11,4 +20,5 @@ def shell(request):
         'static_demo': getattr(settings, 'LIMAN_STATIC_DEMO', False),
         'shell_rates': [(c, r) for c, r in rates if r],
         'shell_pool_count': len(waiting_for(request.user)),
+        'shell_pay_counts': _payment_counts(request.user),
     }

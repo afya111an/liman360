@@ -52,6 +52,7 @@ Modules in the current prototype (rebuild from scratch, same domain):
 - Operations: voyages, fleet/ship management, ship budgets, bunker deliveries, daily oil/fuel consumption, proposal/feasibility worksheet.
 - Invoices and expenses: incoming expense invoices, income invoices, new invoice entry, department approval pool.
 - Payments and finance: payments and collections, bank transfer orders, virman, bank balances, payment orders.
+  Built so far (rebuild): payment orders. Finance creates an order from approved invoices of one supplier, company and currency (several invoices and partial amounts allowed; amounts cannot exceed an invoice's open balance); a user with payment-approval permission who did not create it approves or rejects; finance sends the transfer by hand in internet banking and records the date and bank receipt number. Rejected or cancelled orders release their amounts.
 - Purchasing: purchase requests (PR), purchase orders (PO).
 - Definitions: customer/supplier accounts, group companies and banks, ports and routes, currencies and TCMB rates.
 - Reports: report centre, consolidated holding finance report, proposal and feasibility worksheet.

@@ -237,6 +237,9 @@ Stacked white rows sharing 1px form rules; record number (Title), amount with sm
 ### Bill-of-Lading Form (signature)
 Paper cells in a ruled 4-column grid inside a 1.5px navy outer rule; each cell a numbered caption over its value. The amount occupies a full-width box. Approvals are a numbered field holding the stamp row; the decision (note textarea plus approve and reject buttons) is itself the last numbered field inside the form. Entry forms use the same grid with inputs inside the cells.
 
+### Line Tables
+Tables that live inside a form field (invoices paid by a payment order, an invoice's payments): Archivo uppercase captions over a 1px navy rule, rows ruled in form rule, amounts right-aligned in tabular numerals, totals in a footer under a navy rule. Entry tables put a right-aligned amount input and an outlined "Tamamı" button in the last column; below 576px entry rows stack and read-only tables scroll sideways inside their field.
+
 ### Stamps and Overprint (signature)
 - **Approval stamp:** violet double-framed box, rotated, stamp lettering for step and approver role, body type for name and timestamp, faint violet tint inside. Rejection stamps are red and quote the reason in italic.
 - **Pending slots:** body type; the next slot is a solid 1.5px navy box marked "Bekliyor", later slots dashed rule-strong.

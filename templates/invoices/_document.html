@@ -50,6 +50,25 @@
         </ol>
         {% else %}<span>Onay adımı tanımlı değil.</span>{% endif %}
       </dd></div>
+    {% if n_pay %}
+    <div class="f w4"><dt><span class="no" aria-hidden="true">{{ n_pay }}</span>Ödemeler</dt>
+      <dd>
+        {% if pay_lines %}
+        <table class="lines">
+          <thead><tr><th scope="col">Ödeme emri</th><th scope="col">Durum</th><th scope="col" class="r">Tutar</th></tr></thead>
+          <tbody>{% for ln in pay_lines %}<tr>
+            <td>{% if perms.payments.view_paymentorder and not static_demo %}<a href="{% url 'payments:all_detail' ln.order_id %}">{{ ln.order.number }}</a>{% else %}{{ ln.order.number }}{% endif %}</td>
+            <td>{{ ln.order.get_status_display }}{% if ln.order.paid_on %} · <span class="num">{{ ln.order.paid_on|date:"d.m.Y" }}</span>{% endif %}</td>
+            <td class="r num">{{ ln.amount|money }} {{ selected.currency }}</td></tr>{% endfor %}</tbody>
+        </table>
+        {% endif %}
+        <p class="mb-0 mt-1">Ödenen <b class="num">{{ pay_paid|money }} {{ selected.currency }}</b> · Ödeme emri verilmemiş açık bakiye <b class="num">{{ pay_open|money }} {{ selected.currency }}</b></p>
+        {% if pay_open > 0 and perms.payments.add_paymentorder and not static_demo %}
+        <a class="btn btn-quiet-ink btn-sm mt-2" href="{% url 'payments:create' %}?sirket={{ selected.company_id }}&amp;cari={{ selected.supplier_id }}&amp;doviz={{ selected.currency }}">
+          <svg class="ic" aria-hidden="true"><use href="{% static 'vendor/icons.svg' %}#plus-lg"></use></svg>Ödeme emri oluştur</a>
+        {% endif %}
+      </dd></div>
+    {% endif %}
     {% if can_decide %}
     <div class="f w4 f-decide">
       <dt><label for="gerekce"><span class="no" aria-hidden="true">{{ n_decide }}</span>Karar / not</label></dt>
@@ -57,7 +76,7 @@
         <form method="post" action="{% url 'invoices:decide' selected.pk %}" data-once>
           {% csrf_token %}
           <input type="hidden" name="next" value="{{ decided_here }}">
-          <textarea class="form-control" id="gerekce" name="gerekce" rows="2" maxlength="300" aria-describedby="gerekce-hint"></textarea>
+          <textarea class="form-control" id="gerekce" name="gerekce" rows="2" maxlength="300" aria-describedby="gerekce-hint" data-required-for="reddet"></textarea>
           <p class="hint" id="gerekce-hint">Onaylarken isteğe bağlı, reddederken zorunlu.</p>
           {% if static_demo %}<p class="hint">Demoda karar kaydedilmez.</p>{% endif %}
           <div class="decide-actions">

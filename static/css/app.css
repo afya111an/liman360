@@ -242,3 +242,40 @@ a { text-underline-offset: 3px; }
 
 /* static GitHub Pages demo */
 .demo-bar { margin: 0; padding: .45rem 1rem; background: var(--stamp-tint); color: var(--ink); font-size: .8125rem; text-align: center; }
+
+/* payments: invoice lines inside a form field, pay-out fields */
+.lines { width: 100%; border-collapse: collapse; margin-top: .25rem; font-size: .875rem; }
+.lines th { font: 600 .75rem/1.3 var(--display); letter-spacing: .04em; text-transform: uppercase; color: var(--ink-2); text-align: left; padding: .35rem .5rem .35rem 0; border-bottom: 1px solid var(--ink); }
+.lines td { padding: .5rem .5rem .5rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; font-variant-numeric: tabular-nums; }
+.lines tfoot th, .lines tfoot td { border-bottom: 0; border-top: 1px solid var(--ink); font-weight: 600; text-transform: none; font-size: .875rem; color: var(--ink); }
+.lines .r { text-align: right; }
+.lines small { color: var(--ink-2); }
+.lines tr.has-error td { background: #FFF7F6; }
+.amt-in { display: flex; gap: .35rem; justify-content: flex-end; }
+.amt-in .form-control { max-width: 9.5rem; text-align: right; font-variant-numeric: tabular-nums; }
+@media (max-width: 575.98px) {
+  .lines-input thead { display: none; }
+  .lines-input tr { display: grid; grid-template-columns: 1fr 1fr; gap: .15rem .75rem; padding: .5rem 0; border-bottom: 1px solid var(--rule); }
+  .lines-input td { border: 0; padding: 0; }
+  .lines-input td:last-child { grid-column: 1 / -1; }
+  .lines-input .amt-in { justify-content: stretch; }
+  .lines-input .amt-in .form-control { max-width: none; }
+  .lines:not(.lines-input) { display: block; overflow-x: auto; }
+}
+.cap { display: flex; align-items: center; font: 600 .75rem/1.3 var(--display); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); margin-bottom: .35rem; }
+.iban { letter-spacing: .02em; }
+.pay-fields { display: grid; grid-template-columns: minmax(0, 12rem) minmax(0, 1fr); gap: .75rem; max-width: 40rem; }
+@media (max-width: 575.98px) { .pay-fields { grid-template-columns: 1fr; } }
+.sub-label { display: block; font-size: .8125rem; font-weight: 600; margin-bottom: .25rem; }
+.f-go { display: flex; align-items: center; }
+.f-go .btn { max-width: 16rem; }
+.filters-one { grid-template-columns: minmax(0, 1fr) auto; }
+.pay-state { display: block; margin-top: .15rem; }
+/* labels inside tables and sub-fields are plain text, not field captions */
+.bl .lines label { display: inline; font: 600 .875rem/1.35 var(--bs-body-font-family); letter-spacing: 0; text-transform: none; color: var(--ink); margin: 0; }
+.bl .sub-label { display: block; font: 600 .8125rem/1.35 var(--bs-body-font-family); letter-spacing: 0; text-transform: none; color: var(--ink); margin-bottom: .25rem; }
+@media (max-width: 575.98px) {
+  .pick .f { grid-column: 1 / -1; }
+  .subnav a:not(.btn) { padding-left: .5rem; padding-right: .5rem; }
+  .lines:not(.lines-input) th, .lines:not(.lines-input) td { white-space: nowrap; padding-right: 1rem; }
+}

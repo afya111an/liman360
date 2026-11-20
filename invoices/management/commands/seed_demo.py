@@ -4,11 +4,19 @@ import secrets
 from datetime import date, timedelta
 from decimal import Decimal
 
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import Group, Permission, User
 from django.core.management.base import BaseCommand, CommandError
 
 from invoices.models import (ApprovalLevel, Company, ExchangeRate, ExpenseCategory, Invoice, Supplier,
                              Vessel)
+from payments.models import BankAccount, create_order
+
+
+def demo_iban(account16, bank='00099'):
+    """A checksum-valid but fictional Turkish IBAN (bank code 00099 is not a real bank)."""
+    bban = f'{bank}0{account16}'
+    check = 98 - int(''.join(str(int(c, 36)) for c in bban + 'TR00')) % 97
+    return f'TR{check:02d}{bban}'
 
 
 class Command(BaseCommand):
@@ -30,6 +38,11 @@ class Command(BaseCommand):
         clerk = user('muhasebe', 'Ayşe', 'Yılmaz')
         op = user('operasyon', 'Mert', 'Kaya', ops)
         fi = user('finans', 'Selin', 'Demir', fin)
+        pay_ok = Group.objects.get_or_create(name='Ödeme onayı')[0]
+        mudur = user('mudur', 'Kemal', 'Aydın', pay_ok)
+        perms = {p.codename: p for p in Permission.objects.filter(content_type__app_label='payments')}
+        fin.permissions.add(perms['view_paymentorder'], perms['add_paymentorder'], perms['pay_paymentorder'])
+        pay_ok.permissions.add(perms['view_paymentorder'], perms['approve_paymentorder'])
         user('yonetici', 'Demo', 'Yönetici', is_staff=True, is_superuser=True)
 
         today = date.today()
@@ -45,9 +58,12 @@ class Command(BaseCommand):
         fuel = ExpenseCategory.objects.create(name='Yakıt ve madeni yağ')
         port = ExpenseCategory.objects.create(name='Liman masrafları / D/A')
         ExpenseCategory.objects.create(name='Genel masraf')
-        s = {n: Supplier.objects.create(name=n) for n in [
+        s = {n: Supplier.objects.create(name=n, iban=demo_iban(f'{i + 1:016d}')) for i, n in enumerate([
             'Örnek Marine Fuels SA', 'Örnek Port Agency Services', 'Örnek Liman Hizmetleri Ltd.',
-            'Örnek Tersane A.Ş.', 'Örnek Kumanya Tedarik']}
+            'Örnek Tersane A.Ş.', 'Örnek Kumanya Tedarik'])}
+        accounts = {cur: BankAccount.objects.create(company=co, bank='Örnek Bankası', currency=cur,
+                                                    iban=demo_iban(f'{900 + n:016d}'))
+                    for n, cur in enumerate(['USD', 'EUR', 'TRY'])}
 
         rows = [
             ('INV-2026-0891', 'Örnek Marine Fuels SA', v1, fuel, '187200.00', 'USD', 20, 'VLSFO ikmali'),
@@ -67,6 +83,18 @@ class Command(BaseCommand):
         invs[3].decide(op, approve=False, note='Teklifle uyuşmuyor, revize fatura istendi.')
         invs[5].decide(op, approve=True)                     # fully approved: shows both stamps
         invs[5].decide(fi, approve=True)
+        invs[4].decide(op, approve=True)                     # KMN: approved, paid in two parts below
+        invs[4].decide(fi, approve=True)
+
+        def order(inv, amount, days):
+            return create_order(fi, company=co, supplier=inv.supplier, currency=inv.currency,
+                                account=accounts[inv.currency], payee_iban=inv.supplier.iban,
+                                pay_date=today + timedelta(days=days), note='', amounts={inv.pk: Decimal(amount)})
+        paid = order(invs[5], '9760.00', 0)
+        paid.decide(mudur, approve=True)
+        paid.mark_paid(fi, today, 'DK-2026-114508')
+        order(invs[4], '1000.00', 2).decide(mudur, approve=True)   # approved, waiting to be paid
+        order(invs[4], '1500.00', 5)                               # waiting for payment approval
         self.stdout.write(self.style.SUCCESS('Demo data created.'))
         if not os.environ.get('LIMAN_DEMO_PASSWORD'):
             self.stdout.write(f'Demo password for all users: {password}')

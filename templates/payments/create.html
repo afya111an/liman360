@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load static liman %}
+{% block title %}Yeni ödeme emri{% endblock %}
+{% block subnav %}{% include "payments/_subnav.html" %}{% endblock %}
+{% block content %}
+<div class="entry">
+  <div class="doc">
+    <header class="doc-head">
+      <h1 id="entry-title">Yeni ödeme emri</h1>
+      <p class="doc-state"><span class="req" aria-hidden="true">*</span> zorunlu alan</p>
+    </header>
+
+    <form method="get" class="bl pick" aria-label="Kime, hangi şirketten, hangi para biriminde">
+      {% for field in pick %}
+      <div class="f{% if forloop.counter == 2 %} w2{% endif %}{% if field.errors %} has-error{% endif %}">
+        <label for="{{ field.id_for_label }}"><span class="no" aria-hidden="true">{{ forloop.counter }}</span>{{ field.label }}<span class="req" aria-hidden="true">*</span></label>
+        {{ field }}
+        {% if field.errors %}<p class="field-error">{{ field.errors.0 }}</p>{% endif %}
+      </div>
+      {% endfor %}
+      <div class="f w4 f-go">
+        <button class="btn btn-quiet-ink w-100" type="submit"{% if static_demo %} disabled{% endif %}>{% if form %}Değiştir{% else %}Açık faturaları getir{% endif %}</button>
+      </div>
+    </form>
+
+    {% if form %}
+    <form method="post" class="mt-4" novalidate data-once>
+      {% csrf_token %}
+      {% if form.non_field_errors %}<div class="field-error" role="alert">{% for e in form.non_field_errors %}<p>{{ e }}</p>{% endfor %}</div>{% endif %}
+      <div class="bl">
+        <div class="f w4">
+          <span class="cap"><span class="no" aria-hidden="true">4</span>Ödenecek faturalar · {{ supplier.name }} · {{ currency }}</span>
+          {% if invoices %}
+          <table class="lines lines-input">
+            <thead><tr><th scope="col">Fatura</th><th scope="col">Vade</th><th scope="col" class="r">Fatura tutarı</th><th scope="col" class="r">Açık bakiye</th><th scope="col" class="r">Bu emirle ödenecek</th></tr></thead>
+            <tbody>
+            {% for inv in invoices %}
+              <tr{% if inv.error %} class="has-error"{% endif %}>
+                <td><label for="tutar_{{ inv.pk }}">{{ inv.number }}</label>{% if inv.committed %}<small class="d-block">Önceki emirlerde {{ inv.committed|money }}</small>{% endif %}</td>
+                <td class="num">{{ inv.due_date|date:"d.m.Y"|default:"—" }}</td>
+                <td class="r num">{{ inv.amount|money }}</td>
+                <td class="r num">{{ inv.open|money }}</td>
+                <td class="r">
+                  <div class="amt-in">
+                    <input class="form-control" id="tutar_{{ inv.pk }}" name="tutar_{{ inv.pk }}" inputmode="decimal" autocomplete="off" value="{{ inv.entered }}" placeholder="0,00" data-open="{{ inv.open|stringformat:'s' }}"{% if inv.error %} aria-invalid="true" aria-describedby="tutar_{{ inv.pk }}-err"{% endif %}>
+                    <button type="button" class="btn btn-quiet-ink btn-sm" data-fill="tutar_{{ inv.pk }}" aria-label="{{ inv.number }}: açık bakiyenin tamamı">Tamamı</button>
+                  </div>
+                  {% if inv.error %}<p class="field-error" id="tutar_{{ inv.pk }}-err">{{ inv.error }}</p>{% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot><tr><th scope="row" colspan="4" class="r">Toplam</th><td class="r num"><output id="po-total" data-currency="{{ currency }}">0,00 {{ currency }}</output></td></tr></tfoot>
+          </table>
+          {% else %}
+          <p class="decide-note mt-2">{{ supplier.name }} için {{ company.code }} adına, {{ currency }} cinsinden onaylanmış ve açık bakiyesi olan fatura yok.</p>
+          {% endif %}
+        </div>
+        {% for field in form %}
+        <div class="f w2{% if field.errors %} has-error{% endif %}">
+          <label for="{{ field.id_for_label }}"><span class="no" aria-hidden="true">{{ forloop.counter|add:4 }}</span>{{ field.label }}{% if field.field.required %}<span class="req" aria-hidden="true">*</span>{% endif %}</label>
+          {{ field }}
+          {% if field.name == 'account' and not accounts %}<p class="field-error">{{ company.code }} için kullanımda bir {{ currency }} hesabı yok. Tanımlar → Banka hesapları'ndan ekleyin.</p>{% endif %}
+          {% if field.errors %}<p class="field-error">{{ field.errors.0 }}</p>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      <div class="decide-actions">
+        <button class="btn btn-stamp" type="submit"{% if static_demo or not invoices %} disabled{% endif %}>Kaydet ve onaya gönder</button>
+        <a class="btn btn-quiet-ink" href="{% url 'payments:pending' %}">Vazgeç</a>
+        {% if static_demo %}<p class="hint w-100">Demoda ödeme emri kaydedilmez.</p>{% endif %}
+      </div>
+    </form>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

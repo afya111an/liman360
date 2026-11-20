@@ -12,6 +12,8 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 
 from .forms import InvoiceForm
+from payments.models import PaymentOrder, with_balances
+
 from .models import ApprovalLevel, Company, Invoice, Vessel, waiting_for
 
 
@@ -36,7 +38,7 @@ def _filtered(request, scope):
 def invoice_list(request, scope, pk=None):
     qs, filters = _filtered(request, scope)
     totals = qs.order_by().values('currency').annotate(total=Sum('amount'), n=Count('pk')).order_by('currency')
-    page = Paginator(qs, 50).get_page(request.GET.get('sayfa'))
+    page = Paginator(with_balances(qs).order_by(*Invoice._meta.ordering), 50).get_page(request.GET.get('sayfa'))
     selected = None
     if pk is not None:
         selected = get_object_or_404(Invoice.objects.select_related(
@@ -68,6 +70,15 @@ def invoice_list(request, scope, pk=None):
             'n_stamps': 12 if selected.notes else 11,
             'n_decide': 13 if selected.notes else 12,
         })
+        if selected.status == Invoice.Status.APPROVED:
+            bal = with_balances(Invoice.objects.filter(pk=selected.pk)).get()
+            ctx.update({
+                'pay_lines': selected.payment_lines.select_related('order').exclude(
+                    order__status__in=[PaymentOrder.Status.REJECTED, PaymentOrder.Status.CANCELLED]),
+                'pay_open': selected.amount - bal.committed,
+                'pay_paid': bal.paid,
+                'n_pay': ctx['n_stamps'] + 1,
+            })
     return render(request, 'invoices/list.html', ctx)
 
 
