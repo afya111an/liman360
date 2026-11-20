@@ -1,0 +1,144 @@
+{% extends "shared/ledger.html" %}
+{% load static liman %}
+{% block title %}{% if selected %}{{ selected.number }}{% else %}Seferler{% endif %}{% endblock %}
+{% block subnav %}{% include "operations/_subnav.html" %}{% endblock %}
+{% block ledger_title %}{{ title }}{% endblock %}
+{% block ledger_sum %}{{ page.paginator.count }} sefer{% endblock %}
+{% block filters %}
+{% if not static_demo %}
+<form class="filters" method="get">
+  <label class="visually-hidden" for="f-durum">Durum</label>
+  <select class="form-select" id="f-durum" name="durum">
+    {% for k, label in filters %}<option value="{{ k }}"{% if durum == k %} selected{% endif %}>{{ label }}</option>{% endfor %}
+  </select>
+  <label class="visually-hidden" for="f-gemi">Gemi</label>
+  <select class="form-select" id="f-gemi" name="gemi">
+    <option value="">Tüm gemiler</option>
+    {% for s in vessels %}<option value="{{ s.pk }}"{% if gemi == s.pk|stringformat:'s' %} selected{% endif %}>{{ s.name }}</option>{% endfor %}
+  </select>
+  <button class="btn btn-quiet-ink" type="submit">Filtrele</button>
+</form>
+{% endif %}
+{% endblock %}
+{% block row %}
+<a class="row-link{% if obj.pk == selected.pk %} is-selected{% endif %}" href="{% url 'operations:voyage_detail' obj.pk %}{% if query %}?{{ query }}{% endif %}"{% if obj.pk == selected.pk %} aria-current="true"{% endif %}>
+  <span class="r-no">{{ obj.number }}</span>
+  <span class="r-amt">{{ obj.vessel.name }}</span>
+  <span class="r-sup">{{ obj.load_port }} → {{ obj.discharge_port }}{% if obj.cargo %} · {{ obj.cargo }}{% endif %}</span>
+  <span class="r-meta">
+    {% include "operations/_voyage_state.html" with v=obj %}
+    {% if obj.actual_departure %}Kalkış <span class="num">{{ obj.actual_departure|date:"d.m.Y" }}</span>{% else %}Plan <span class="num">{{ obj.planned_departure|date:"d.m.Y" }}</span>{% endif %}
+    {% if obj.actual_arrival %} · Varış <span class="num">{{ obj.actual_arrival|date:"d.m.Y" }}</span>{% endif %}
+  </span>
+</a>
+{% endblock %}
+{% block empty %}<p>Bu filtreye uyan sefer yok.</p>{% endblock %}
+{% block sheet_label %}Sefer belgesi{% endblock %}
+{% block hint %}Ayrıntılarını görmek için soldan bir sefer seçin.{% endblock %}
+{% block document %}
+{% with v=selected %}
+<article class="doc" aria-labelledby="doc-title">
+  <a class="back" href="{% url 'operations:voyages' %}{% if query %}?{{ query }}{% endif %}"><svg class="ic" aria-hidden="true"><use href="{% static 'vendor/icons.svg' %}#arrow-left"></use></svg>Listeye dön</a>
+  <header class="doc-head">
+    <h2 id="doc-title">{{ v.number }}</h2>
+    {% if v.status == 'COMPLETED' %}<p class="overprint">Tamamlandı<small class="num">{{ v.actual_arrival|date:"d.m.Y" }}</small></p>
+    {% elif v.status == 'CANCELLED' %}<p class="overprint stamp-reject">İptal edildi<small class="num">{{ cancel_event.on_date|date:"d.m.Y" }}</small></p>
+    {% else %}<p class="doc-state state-pending">{{ v.get_status_display }}{% if can_change %} · <a href="{% url 'operations:voyage_edit' v.pk %}">Düzenle</a>{% endif %}</p>{% endif %}
+  </header>
+  <dl class="bl">
+    <div class="f w2"><dt><span class="no" aria-hidden="true">1</span>Gemi</dt><dd>{% if static_demo %}{{ v.vessel.name }}{% else %}<a href="{% url 'operations:vessel_detail' v.vessel_id %}">{{ v.vessel.name }}</a>{% endif %}{% if v.vessel.imo %}<small class="num">IMO {{ v.vessel.imo }}</small>{% endif %}</dd></div>
+    <div class="f w2"><dt><span class="no" aria-hidden="true">2</span>Rota</dt><dd>{{ v.load_port }} → {{ v.discharge_port }}<small>{{ v.load_port.country }} → {{ v.discharge_port.country }}</small></dd></div>
+    <div class="f"><dt><span class="no" aria-hidden="true">3</span>Planlanan kalkış</dt><dd class="num">{{ v.planned_departure|date:"d.m.Y" }}</dd></div>
+    <div class="f"><dt><span class="no" aria-hidden="true">4</span>Planlanan varış</dt><dd class="num">{{ v.planned_arrival|date:"d.m.Y" }}</dd></div>
+    <div class="f"><dt><span class="no" aria-hidden="true">5</span>Gerçekleşen kalkış</dt><dd class="num">{{ v.actual_departure|date:"d.m.Y"|default:"—" }}</dd></div>
+    <div class="f"><dt><span class="no" aria-hidden="true">6</span>Gerçekleşen varış</dt><dd class="num">{{ v.actual_arrival|date:"d.m.Y"|default:"—" }}</dd></div>
+    <div class="f w4"><dt><span class="no" aria-hidden="true">7</span>Aşamalar</dt>
+      <dd>
+        <ol class="phases">
+          {% for p in phases %}
+          <li class="phase phase-{{ p.state }}{% if v.status == 'CANCELLED' %} phase-dim{% endif %}"{% if p.state == 'current' %} aria-current="step"{% endif %}>
+            <span class="state state-{% if p.state == 'done' %}approved{% elif p.state == 'current' and v.status != 'PLANNED' %}partial{% else %}pending{% endif %}">{{ p.label }}</span>
+            {% if p.event %}<small class="num">{{ p.event.on_date|date:"d.m.Y" }} · {{ p.event.user.get_full_name|default:p.event.user.username }}</small>{% elif forloop.first %}<small>Kaydeden {{ v.created_by.get_full_name|default:v.created_by.username }}</small>{% endif %}
+          </li>
+          {% endfor %}
+          {% if cancel_event %}<li class="phase"><span class="state state-rejected">İptal edildi</span><small class="num">{{ cancel_event.on_date|date:"d.m.Y" }} · {{ cancel_event.user.get_full_name|default:cancel_event.user.username }}</small>{% if cancel_event.note %}<small>“{{ cancel_event.note }}”</small>{% endif %}</li>{% endif %}
+        </ol>
+      </dd></div>
+    <div class="f w2"><dt><span class="no" aria-hidden="true">8</span>Yük</dt><dd>{{ v.cargo|default:"—" }}{% if v.cargo_mt is not None %}<small class="num">{{ v.cargo_mt|mt }} MT</small>{% endif %}</dd></div>
+    <div class="f w2"><dt><span class="no" aria-hidden="true">9</span>Kiracı (charterer)</dt><dd>{{ v.charterer.name|default:"—" }}</dd></div>
+    <div class="f w4 f-amt"><dt><span class="no" aria-hidden="true">10</span>Navlun</dt>
+      <dd>{% if v.freight_total is not None %}<span class="amt num">{{ v.freight_total|money }} {{ v.freight_currency }}</span><small class="num">{{ v.freight_rate|money }} {{ v.freight_currency }}/MT × {{ v.cargo_mt|mt }} MT</small>{% else %}—{% endif %}</dd></div>
+    <div class="f w4"><dt><span class="no" aria-hidden="true">11</span>Sefer masrafları</dt>
+      <dd>
+        {% if invoices %}
+        <table class="lines">
+          <thead><tr><th scope="col">Fatura</th><th scope="col">Cari</th><th scope="col">Durum</th><th scope="col" class="r">Tutar</th></tr></thead>
+          <tbody>
+          {% for i in invoices %}<tr>
+            <td>{% if static_demo %}{{ i.number }}{% else %}<a href="{% url 'invoices:all_detail' i.pk %}">{{ i.number }}</a>{% endif %}</td>
+            <td data-label="Cari">{{ i.supplier.name }}</td>
+            <td data-label="Durum">{{ i.get_status_display }}</td>
+            <td class="r num" data-label="Tutar ({{ i.currency }})">{{ i.amount|money }} {{ i.currency }}</td></tr>{% endfor %}
+          </tbody>
+          <tfoot>{% for cur, t in cost_totals %}<tr><th scope="row" colspan="3" class="r">Toplam {{ cur }}</th><td class="r num">{{ t|money }} {{ cur }}</td></tr>{% endfor %}</tfoot>
+        </table>
+        {% else %}<span class="decide-note">Bu sefere bağlı gider faturası yok.</span>{% endif %}
+      </dd></div>
+    <div class="f w4 f-amt"><dt><span class="no" aria-hidden="true">12</span>Navlun − {{ v.freight_currency }} masraflar</dt>
+      <dd>{% if net is not None %}<span class="amt num">{{ net|money }} {{ v.freight_currency }}</span><small>Reddedilen faturalar hariç; başka para birimindeki masraflar ayrı listelenir, toplanmaz.</small>{% else %}<span class="decide-note">Navlun girilmediği için hesaplanmıyor.</span>{% endif %}</dd></div>
+    <div class="f w4"><dt><span class="no" aria-hidden="true">13</span>Bunker ikmalleri</dt>
+      <dd>
+        {% if bunkers %}
+        <table class="lines">
+          <thead><tr><th scope="col">Tarih</th><th scope="col">Liman</th><th scope="col">Cins</th><th scope="col" class="r">Miktar (MT)</th><th scope="col" class="r">Tutar</th></tr></thead>
+          <tbody>{% for b in bunkers %}<tr>
+            <td class="num">{% if static_demo %}{{ b.date|date:"d.m.Y" }}{% else %}<a href="{% url 'operations:bunker_detail' b.pk %}">{{ b.date|date:"d.m.Y" }}</a>{% endif %}</td>
+            <td data-label="Liman">{{ b.port }}</td><td data-label="Cins">{{ b.grade }}</td>
+            <td class="r num" data-label="Miktar (MT)">{{ b.quantity_mt|mt }}</td>
+            <td class="r num" data-label="Tutar ({{ b.currency }})">{{ b.total|money }} {{ b.currency }}</td></tr>{% endfor %}</tbody>
+        </table>
+        {% else %}<span class="decide-note">Bu sefer için bunker ikmali yok.</span>{% endif %}
+      </dd></div>
+    <div class="f w4"><dt><span class="no" aria-hidden="true">14</span>Son günlük raporlar</dt>
+      <dd>
+        {% if noons %}
+        <table class="lines">
+          <thead><tr><th scope="col">Tarih</th>{% for f in noons.0.fuel_list %}<th scope="col" class="r">{{ f.grade }} tüketim (MT)</th><th scope="col" class="r">{{ f.grade }} ROB (MT)</th>{% endfor %}<th scope="col">Kontrol</th></tr></thead>
+          <tbody>{% for r in noons %}<tr>
+            <td class="num">{% if static_demo %}{{ r.date|date:"d.m.Y" }}{% else %}<a href="{% url 'operations:noon_detail' r.pk %}">{{ r.date|date:"d.m.Y" }}</a>{% endif %}</td>
+            {% for f in r.fuel_list %}<td class="r num" data-label="{{ f.grade }} tüketim (MT)">{{ f.consumed_mt|mt }}</td><td class="r num" data-label="{{ f.grade }} ROB (MT)">{{ f.rob_mt|mt }}</td>{% endfor %}
+            <td data-label="Kontrol">{% if r.flagged %}<span class="flag-text">ROB tutmuyor</span>{% else %}<span class="ok-text">Tutarlı</span>{% endif %}</td></tr>{% endfor %}</tbody>
+        </table>
+        {% else %}<span class="decide-note">Bu sefer için günlük rapor yok.</span>{% endif %}
+      </dd></div>
+    {% if can_change %}
+    <div class="f w4 f-decide"><dt><span class="no" aria-hidden="true">15</span>Aşama</dt>
+      <dd>
+        {% if static_demo %}<p class="hint mt-0">Demoda işlem kaydedilmez.</p>{% endif %}
+        {% if next_label %}
+        <form method="post" action="{% url 'operations:voyage_action' v.pk %}" data-once>
+          {% csrf_token %}<input type="hidden" name="next" value="{{ here }}">
+          <div class="pay-fields">
+            <div><label class="sub-label" for="vy-tarih">Gerçekleşme tarihi<span class="req" aria-hidden="true">*</span></label>
+              <input class="form-control" type="date" id="vy-tarih" name="tarih" value="{{ today|date:'Y-m-d' }}" max="{{ today|date:'Y-m-d' }}" required></div>
+          </div>
+          <div class="decide-actions">
+            <button class="btn btn-stamp" type="submit" name="islem" value="ilerle"{% if static_demo %} disabled{% endif %}>{{ next_label }}</button>
+          </div>
+        </form>
+        {% endif %}
+        {% if v.status == 'PLANNED' or v.status == 'LOADING' %}
+        <form method="post" action="{% url 'operations:voyage_action' v.pk %}" class="cancel-block is-secondary" data-once>
+          {% csrf_token %}<input type="hidden" name="next" value="{{ here }}">
+          <label class="sub-label" for="vy-iptal">İptal gerekçesi<span class="req" aria-hidden="true">*</span></label>
+          <textarea class="form-control" id="vy-iptal" name="not" rows="2" maxlength="300" data-required-for="iptal"></textarea>
+          <p class="hint">Sefer iptal edilir; bağlı faturalar ve bunker kayıtları silinmez.</p>
+          <div class="decide-actions"><button class="btn btn-quiet-ink" type="submit" name="islem" value="iptal"{% if static_demo %} disabled{% endif %}>Seferi iptal et</button></div>
+        </form>
+        {% endif %}
+      </dd></div>
+    {% endif %}
+  </dl>
+</article>
+{% endwith %}
+{% endblock %}

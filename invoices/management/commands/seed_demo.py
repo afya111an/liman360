@@ -9,6 +9,7 @@ from django.core.management.base import BaseCommand, CommandError
 
 from invoices.models import (ApprovalLevel, Company, ExchangeRate, ExpenseCategory, Invoice, Supplier,
                              Vessel)
+from operations.models import BunkerDelivery, NoonFuel, NoonReport, Port, Voyage
 from payments.models import BankAccount, create_order
 
 
@@ -54,7 +55,12 @@ class Command(BaseCommand):
         ])
         co = Company.objects.create(code='DEMO', name='Demo Denizcilik A.Ş. (örnek veri)')
         Company.objects.create(code='DEMOLOJ', name='Demo Lojistik Ltd. (örnek veri)')
-        v1, v2 = Vessel.objects.create(name='M/V DEMO STAR'), Vessel.objects.create(name='M/V DEMO WAVE')
+        v1 = Vessel.objects.create(name='M/V DEMO STAR', imo='9074729', flag='Malta', dwt=37500)
+        v2 = Vessel.objects.create(name='M/V DEMO WAVE', imo='9123453', flag='Türkiye', dwt=28200,
+                                   vessel_type=Vessel.Type.GENERAL)
+        ops.permissions.add(*Permission.objects.filter(codename__in=[
+            'add_voyage', 'change_voyage', 'add_bunkerdelivery', 'change_bunkerdelivery', 'add_noonreport',
+            'change_noonreport', 'add_vessel', 'change_vessel']))
         fuel = ExpenseCategory.objects.create(name='Yakıt ve madeni yağ')
         port = ExpenseCategory.objects.create(name='Liman masrafları / D/A')
         ExpenseCategory.objects.create(name='Genel masraf')
@@ -64,6 +70,27 @@ class Command(BaseCommand):
         accounts = {cur: BankAccount.objects.create(company=co, bank='Örnek Bankası', currency=cur,
                                                     iban=demo_iban(f'{900 + n:016d}'))
                     for n, cur in enumerate(['USD', 'EUR', 'TRY'])}
+
+        p = {n: Port.objects.create(name=n, country=c, unlocode=u) for n, c, u in [
+            ('Novorossiysk', 'Rusya', 'RUNVS'), ('Alexandria', 'Mısır', 'EGALY'), ('Mersin', 'Türkiye', 'TRMER'),
+            ('Constanța', 'Romanya', 'ROCND'), ('Ambarlı', 'Türkiye', 'TRAMB'), ('Pire', 'Yunanistan', 'GRPIR')]}
+        grain = Supplier.objects.create(name='Örnek Grain Trading SA')
+
+        def voyage(no, vessel, a, b, dep, arr, cargo, mt, rate, phases):
+            v = Voyage.objects.create(number=no, vessel=vessel, load_port=p[a], discharge_port=p[b],
+                                      planned_departure=today + timedelta(days=dep),
+                                      planned_arrival=today + timedelta(days=arr), cargo=cargo,
+                                      cargo_mt=Decimal(mt), charterer=grain, freight_rate=Decimal(rate),
+                                      created_by=op)
+            for days in phases:
+                v.advance(op, today + timedelta(days=days))
+            return v
+        # synthetic voyages: one finished, one at sea, one planned
+        wave = voyage('DW-26/05', v2, 'Mersin', 'Constanța', -40, -24, 'Demir çelik (rulo)', '24800', '18.75',
+                      [-40, -37, -25, -22])
+        star = voyage('DS-26/08', v1, 'Novorossiysk', 'Alexandria', -14, 2, 'Dökme buğday', '28500', '24.50',
+                      [-14, -11])
+        voyage('DS-26/09', v1, 'Alexandria', 'Pire', 12, 15, 'Dökme mısır', '27000', '19.00', [])
 
         rows = [
             ('INV-2026-0891', 'Örnek Marine Fuels SA', v1, fuel, '187200.00', 'USD', 20, 'VLSFO ikmali'),
@@ -78,7 +105,26 @@ class Command(BaseCommand):
             invs.append(Invoice.objects.create(
                 number=no, supplier=s[sup], company=co, vessel=vessel, category=cat, amount=Decimal(amt),
                 currency=cur, invoice_date=today - timedelta(days=10), due_date=today + timedelta(days=due),
-                description=desc, created_by=clerk))
+                description=desc, created_by=clerk,
+                voyage={'INV-2026-0891': star, 'DA-26-044': star, 'KMN-2026-031': star, 'LH-2026-104': star,
+                        'LH-2026-117': wave}.get(no)))
+
+        # bunker at Novorossiysk before sailing, then daily noon reports at sea (one day does not add up)
+        for grade, qty, price, bdn in [('VLSFO', '650', '590.00', 'NV-26-3310'), ('MGO', '80', '815.00', 'NV-26-3311')]:
+            BunkerDelivery.objects.create(vessel=v1, voyage=star, date=today - timedelta(days=13), port=p['Novorossiysk'],
+                                          supplier=s['Örnek Marine Fuels SA'], grade=grade, quantity_mt=Decimal(qty),
+                                          price_per_mt=Decimal(price), bdn_no=bdn, created_by=op)
+        rob = {'VLSFO': Decimal('980.0'), 'MGO': Decimal('120.0')}
+        for n, days in enumerate(range(-12, 0)):
+            burn = {'VLSFO': Decimal('27.5') + Decimal(n % 3) * Decimal('0.7'), 'MGO': Decimal('2.4')}
+            r = NoonReport.objects.create(vessel=v1, voyage=star, date=today + timedelta(days=days), created_by=op,
+                                          remarks='Ege Denizi, hava iyi' if days == -3 else '')
+            for g in ('VLSFO', 'MGO'):
+                if n:
+                    rob[g] -= burn[g]
+                shown = rob[g] - (Decimal('6.0') if g == 'VLSFO' and days == -4 else 0)
+                NoonFuel.objects.create(report=r, grade=g, consumed_mt=burn[g], rob_mt=shown)
+                rob[g] = shown
         invs[0].decide(op, approve=True)                     # waits for Finans
         invs[3].decide(op, approve=False, note='Teklifle uyuşmuyor, revize fatura istendi.')
         invs[5].decide(op, approve=True)                     # fully approved: shows both stamps

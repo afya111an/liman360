@@ -7,7 +7,7 @@ from django.core.validators import MinValueValidator
 from django.db import models, transaction
 from django.utils.functional import cached_property
 
-from .validators import validate_iban
+from .validators import validate_iban, validate_imo
 
 
 class Currency(models.TextChoices):
@@ -45,7 +45,19 @@ class Supplier(models.Model):
 
 
 class Vessel(models.Model):
+    class Type(models.TextChoices):
+        BULK = 'BULK', 'Dökme yük'
+        GENERAL = 'GENERAL', 'Genel kargo'
+        TANKER = 'TANKER', 'Tanker'
+        CONTAINER = 'CONTAINER', 'Konteyner'
+        OTHER = 'OTHER', 'Diğer'
+
     name = models.CharField('gemi adı', max_length=100, unique=True)
+    imo = models.CharField('IMO no', max_length=7, unique=True, null=True, blank=True, validators=[validate_imo])
+    vessel_type = models.CharField('gemi tipi', max_length=10, choices=Type.choices, default=Type.BULK)
+    flag = models.CharField('bayrak', max_length=40, blank=True)
+    dwt = models.PositiveIntegerField('DWT (ton)', null=True, blank=True)
+    active = models.BooleanField('filoda', default=True)
 
     class Meta:
         verbose_name = 'gemi'
@@ -117,6 +129,8 @@ class Invoice(models.Model):
     supplier = models.ForeignKey(Supplier, on_delete=models.PROTECT, verbose_name='cari / tedarikçi')
     company = models.ForeignKey(Company, on_delete=models.PROTECT, verbose_name='borçlu şirket')
     vessel = models.ForeignKey(Vessel, on_delete=models.PROTECT, null=True, blank=True, verbose_name='gemi')
+    voyage = models.ForeignKey('operations.Voyage', on_delete=models.PROTECT, null=True, blank=True,
+                               related_name='invoices', verbose_name='sefer')
     category = models.ForeignKey(ExpenseCategory, on_delete=models.PROTECT, null=True, blank=True,
                                  verbose_name='gider kategorisi')
     invoice_date = models.DateField('fatura tarihi')
@@ -144,6 +158,11 @@ class Invoice(models.Model):
     def clean(self):
         if self.due_date and self.invoice_date and self.due_date < self.invoice_date:
             raise ValidationError({'due_date': 'Vade tarihi fatura tarihinden önce olamaz.'})
+        if self.voyage_id:
+            if not self.vessel_id:
+                self.vessel_id = self.voyage.vessel_id
+            elif self.vessel_id != self.voyage.vessel_id:
+                raise ValidationError({'voyage': f'{self.voyage} seferi {self.voyage.vessel} gemisine ait; gemi ile sefer uyuşmuyor.'})
 
     @cached_property
     def rate(self):

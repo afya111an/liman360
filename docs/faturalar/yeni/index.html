@@ -25,6 +25,7 @@
         <ul class="navbar-nav me-auto">
           
           <li class="nav-item"><a class="nav-link active" aria-current="page" href="/liman360/faturalar/onay/">Faturalar</a></li>
+          <li class="nav-item"><a class="nav-link" href="/liman360/operasyon/seferler/">Operasyon</a></li>
           <li class="nav-item"><a class="nav-link" href="/liman360/odemeler/onay/">Ödemeler</a></li>
           
           
@@ -56,7 +57,7 @@
 <main id="icerik">
 <div class="entry">
   <form method="post" class="doc" novalidate data-once aria-labelledby="entry-title">
-    <input type="hidden" name="csrfmiddlewaretoken" value="jbYM5D8K0FS75nd2BNo7eWA8FbwiVdWcqjp4nSxEVQ0F6yLhvvURyUKurnToRxKx">
+    <input type="hidden" name="csrfmiddlewaretoken" value="DrDjCoZ0BsoYyfWYCQdwJ0C1uPI543gvUY4RWZEYxJ38wZ3MFfwKkUZCdOO1U2an">
     <header class="doc-head">
       <h1 id="entry-title">Yeni gider faturası</h1>
       <p class="doc-state"><span class="req" aria-hidden="true">*</span> zorunlu alan</p>
@@ -68,11 +69,13 @@
         <label for="id_number"><span class="no" aria-hidden="true">1</span>Fatura / belge no<span class="req" aria-hidden="true">*</span></label>
         <input type="text" name="number" maxlength="40" class="form-control" autocomplete="off" required id="id_number">
         
+        
       </div>
       
       <div class="f ">
         <label for="id_invoice_date"><span class="no" aria-hidden="true">2</span>Fatura tarihi<span class="req" aria-hidden="true">*</span></label>
         <input type="date" name="invoice_date" value="2026-11-20" class="form-control" required id="id_invoice_date">
+        
         
       </div>
       
@@ -80,11 +83,13 @@
         <label for="id_due_date"><span class="no" aria-hidden="true">3</span>Vade tarihi</label>
         <input type="date" name="due_date" class="form-control" id="id_due_date">
         
+        
       </div>
       
       <div class="f ">
         <label for="id_ref_no"><span class="no" aria-hidden="true">4</span>Evrak / ref no</label>
         <input type="text" name="ref_no" maxlength="40" class="form-control" id="id_ref_no">
+        
         
       </div>
       
@@ -92,6 +97,8 @@
         <label for="id_supplier"><span class="no" aria-hidden="true">5</span>Cari / tedarikçi<span class="req" aria-hidden="true">*</span></label>
         <select name="supplier" class="form-select" required id="id_supplier">
   <option value="" selected>Seçiniz</option>
+
+  <option value="6">Örnek Grain Trading SA</option>
 
   <option value="5">Örnek Kumanya Tedarik</option>
 
@@ -105,6 +112,7 @@
 
 </select>
         
+        
       </div>
       
       <div class="f w2">
@@ -117,6 +125,7 @@
   <option value="2">DEMOLOJ</option>
 
 </select>
+        
         
       </div>
       
@@ -133,9 +142,10 @@
 
 </select>
         
+        
       </div>
       
-      <div class="f w2">
+      <div class="f ">
         <label for="id_vessel"><span class="no" aria-hidden="true">8</span>Gemi</label>
         <select name="vessel" class="form-select" id="id_vessel">
   <option value="" selected>Seçiniz</option>
@@ -146,16 +156,34 @@
 
 </select>
         
+        
+      </div>
+      
+      <div class="f ">
+        <label for="id_voyage"><span class="no" aria-hidden="true">9</span>Sefer</label>
+        <select name="voyage" class="form-select" aria-describedby="id_voyage_helptext" id="id_voyage">
+  <option value="" selected>Seçiniz</option>
+
+  <option value="3">DS-26/09 · M/V DEMO STAR</option>
+
+  <option value="2">DS-26/08 · M/V DEMO STAR</option>
+
+  <option value="1">DW-26/05 · M/V DEMO WAVE</option>
+
+</select>
+        <p class="hint">Seçilirse gemi seferden alınır.</p>
+        
       </div>
       
       <div class="f w2 f-amt">
-        <label for="id_amount"><span class="no" aria-hidden="true">9</span>Tutar<span class="req" aria-hidden="true">*</span></label>
+        <label for="id_amount"><span class="no" aria-hidden="true">10</span>Tutar<span class="req" aria-hidden="true">*</span></label>
         <input type="number" name="amount" step="0.01" min="0.01" inputmode="decimal" class="form-control" required id="id_amount">
+        
         
       </div>
       
       <div class="f w2">
-        <label for="id_currency"><span class="no" aria-hidden="true">10</span>Para birimi<span class="req" aria-hidden="true">*</span></label>
+        <label for="id_currency"><span class="no" aria-hidden="true">11</span>Para birimi<span class="req" aria-hidden="true">*</span></label>
         <select name="currency" class="form-select" id="id_currency">
   <option value="USD" selected>USD - Amerikan Doları</option>
 
@@ -165,18 +193,21 @@
 
 </select>
         
-      </div>
-      
-      <div class="f w4">
-        <label for="id_description"><span class="no" aria-hidden="true">11</span>Gider kalemi açıklaması</label>
-        <input type="text" name="description" maxlength="200" class="form-control" id="id_description">
         
       </div>
       
       <div class="f w4">
-        <label for="id_notes"><span class="no" aria-hidden="true">12</span>Notlar</label>
+        <label for="id_description"><span class="no" aria-hidden="true">12</span>Gider kalemi açıklaması</label>
+        <input type="text" name="description" maxlength="200" class="form-control" id="id_description">
+        
+        
+      </div>
+      
+      <div class="f w4">
+        <label for="id_notes"><span class="no" aria-hidden="true">13</span>Notlar</label>
         <textarea name="notes" cols="40" rows="3" class="form-control" id="id_notes">
 </textarea>
+        
         
       </div>
       

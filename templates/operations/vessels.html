@@ -1,0 +1,63 @@
+{% extends "shared/ledger.html" %}
+{% load static liman %}
+{% block title %}{% if selected %}{{ selected.name }}{% else %}Gemiler{% endif %}{% endblock %}
+{% block subnav %}{% include "operations/_subnav.html" %}{% endblock %}
+{% block ledger_title %}Filo{% endblock %}
+{% block ledger_sum %}{{ page.paginator.count }} gemi{% endblock %}
+{% block row %}
+<a class="row-link{% if obj.pk == selected.pk %} is-selected{% endif %}" href="{% url 'operations:vessel_detail' obj.pk %}"{% if obj.pk == selected.pk %} aria-current="true"{% endif %}>
+  <span class="r-no">{{ obj.name }}</span>
+  <span class="r-amt num">{% if obj.imo %}IMO {{ obj.imo }}{% endif %}</span>
+  <span class="r-sup">{{ obj.get_vessel_type_display }}{% if obj.dwt %} · <span class="num">{{ obj.dwt|floatformat:"0g" }}</span> DWT{% endif %}{% if obj.flag %} · {{ obj.flag }}{% endif %}</span>
+  <span class="r-meta">
+    {% if not obj.active %}<span class="ok-text">Filoda değil</span>
+    {% elif obj.current %}{% include "operations/_voyage_state.html" with v=obj.current %}{{ obj.current.number }} · {{ obj.current.load_port }} → {{ obj.current.discharge_port }}
+    {% else %}<span class="state state-pending">Seferde değil</span>{% endif %}
+  </span>
+</a>
+{% endblock %}
+{% block empty %}<p>Henüz gemi yok.</p>{% endblock %}
+{% block sheet_label %}Gemi kartı{% endblock %}
+{% block hint %}Ayrıntılarını görmek için soldan bir gemi seçin.{% endblock %}
+{% block document %}
+{% with s=selected %}
+<article class="doc" aria-labelledby="doc-title">
+  <a class="back" href="{% url 'operations:vessels' %}"><svg class="ic" aria-hidden="true"><use href="{% static 'vendor/icons.svg' %}#arrow-left"></use></svg>Listeye dön</a>
+  <header class="doc-head">
+    <h2 id="doc-title">{{ s.name }}</h2>
+    <p class="doc-state">{% if s.active %}Filoda{% else %}Filoda değil{% endif %}{% if can_change and not static_demo %} · <a href="{% url 'operations:vessel_edit' s.pk %}">Düzenle</a>{% endif %}</p>
+  </header>
+  <dl class="bl">
+    <div class="f"><dt><span class="no" aria-hidden="true">1</span>IMO no</dt><dd class="num">{{ s.imo|default:"—" }}</dd></div>
+    <div class="f"><dt><span class="no" aria-hidden="true">2</span>Tip</dt><dd>{{ s.get_vessel_type_display }}</dd></div>
+    <div class="f"><dt><span class="no" aria-hidden="true">3</span>Bayrak</dt><dd>{{ s.flag|default:"—" }}</dd></div>
+    <div class="f"><dt><span class="no" aria-hidden="true">4</span>DWT</dt><dd class="num">{% if s.dwt %}{{ s.dwt|floatformat:"0g" }} ton{% else %}—{% endif %}</dd></div>
+    <div class="f w4"><dt><span class="no" aria-hidden="true">5</span>Şu anki sefer</dt>
+      <dd>{% if s.current %}{% if static_demo %}{{ s.current.number }}{% else %}<a href="{% url 'operations:voyage_detail' s.current.pk %}">{{ s.current.number }}</a>{% endif %} · {{ s.current.load_port }} → {{ s.current.discharge_port }}<small>{% include "operations/_voyage_state.html" with v=s.current %}</small>{% else %}Seferde değil{% endif %}</dd></div>
+    <div class="f w4"><dt><span class="no" aria-hidden="true">6</span>Gemideki yakıt (son rapor)</dt>
+      <dd>
+        {% if last_report %}
+        <table class="lines">
+          <thead><tr><th scope="col">Cins</th><th scope="col" class="r">ROB (MT)</th><th scope="col" class="r">Son tüketim (MT)</th></tr></thead>
+          <tbody>{% for f in last_report.fuel_list %}<tr><td>{{ f.grade }}</td><td class="r num" data-label="ROB (MT)"><b>{{ f.rob_mt|mt }}</b></td><td class="r num" data-label="Son tüketim (MT)">{{ f.consumed_mt|mt }}</td></tr>{% endfor %}</tbody>
+        </table>
+        <p class="hint">{% if static_demo %}{{ last_report.date|date:"d.m.Y" }}{% else %}<a href="{% url 'operations:noon_detail' last_report.pk %}">{{ last_report.date|date:"d.m.Y" }}</a>{% endif %} raporu{% if last_report.flagged %} · <span class="flag-text">ROB tutmuyor</span>{% endif %}</p>
+        {% else %}<span class="decide-note">Bu gemi için günlük rapor yok.</span>{% endif %}
+      </dd></div>
+    <div class="f w4"><dt><span class="no" aria-hidden="true">7</span>Seferler</dt>
+      <dd>
+        {% if voyages %}
+        <table class="lines">
+          <thead><tr><th scope="col">Sefer</th><th scope="col">Rota</th><th scope="col">Durum</th><th scope="col">Kalkış</th></tr></thead>
+          <tbody>{% for v in voyages %}<tr>
+            <td>{% if static_demo %}{{ v.number }}{% else %}<a href="{% url 'operations:voyage_detail' v.pk %}">{{ v.number }}</a>{% endif %}</td>
+            <td data-label="Rota">{{ v.load_port }} → {{ v.discharge_port }}</td>
+            <td data-label="Durum">{% include "operations/_voyage_state.html" %}</td>
+            <td class="num" data-label="Kalkış">{{ v.actual_departure|default:v.planned_departure|date:"d.m.Y" }}</td></tr>{% endfor %}</tbody>
+        </table>
+        {% else %}<span class="decide-note">Henüz sefer yok.</span>{% endif %}
+      </dd></div>
+  </dl>
+</article>
+{% endwith %}
+{% endblock %}

@@ -12,6 +12,11 @@ def _payment_counts(user):
             'topay': qs.filter(status=PaymentOrder.Status.APPROVED).count()}
 
 
+def _underway():
+    from operations.models import Voyage
+    return Voyage.objects.filter(status__in=Voyage.UNDERWAY).count()
+
+
 def shell(request):
     if not getattr(request, 'user', None) or not request.user.is_authenticated:
         return {}
@@ -21,4 +26,5 @@ def shell(request):
         'shell_rates': [(c, r) for c, r in rates if r],
         'shell_pool_count': len(waiting_for(request.user)),
         'shell_pay_counts': _payment_counts(request.user),
+        'shell_underway': _underway(),
     }

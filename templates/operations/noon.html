@@ -1,0 +1,57 @@
+{% extends "shared/ledger.html" %}
+{% load static liman %}
+{% block title %}Günlük raporlar{% endblock %}
+{% block subnav %}{% include "operations/_subnav.html" %}{% endblock %}
+{% block ledger_title %}Günlük raporlar{% if vessel %} · {{ vessel.name }}{% endif %}{% endblock %}
+{% block ledger_sum %}{{ page.paginator.count }} rapor{% if flagged %} · <span class="flag-text">{{ flagged }} raporda ROB tutmuyor</span>{% endif %}{% endblock %}
+{% block filters %}
+{% if vessels|length > 1 and not static_demo %}
+<form class="filters filters-one" method="get">
+  <label class="visually-hidden" for="f-gemi">Gemi</label>
+  <select class="form-select" id="f-gemi" name="gemi">
+    {% for s in vessels %}<option value="{{ s.pk }}"{% if s.pk == vessel.pk %} selected{% endif %}>{{ s.name }}</option>{% endfor %}
+  </select>
+  <button class="btn btn-quiet-ink" type="submit">Göster</button>
+</form>
+{% endif %}
+{% endblock %}
+{% block row %}
+<a class="row-link{% if obj.pk == selected.pk %} is-selected{% endif %}" href="{% url 'operations:noon_detail' obj.pk %}"{% if obj.pk == selected.pk %} aria-current="true"{% endif %}>
+  <span class="r-no num">{{ obj.date|date:"d.m.Y" }}</span>
+  <span class="r-amt num">{% for f in obj.fuel_list %}{{ f.grade }} {{ f.consumed_mt|mt }}{% if not forloop.last %} · {% endif %}{% endfor %} <small>MT</small></span>
+  <span class="r-sup">{% if obj.voyage %}{{ obj.voyage.number }}{% else %}Seferde değil{% endif %}{% if obj.remarks %} · {{ obj.remarks }}{% endif %}</span>
+  <span class="r-meta">{% if obj.flagged %}<span class="flag-text">ROB tutmuyor</span>{% else %}<span class="ok-text">Tutarlı</span>{% endif %}</span>
+</a>
+{% endblock %}
+{% block empty %}<p>Günlük rapor yok.</p>{% endblock %}
+{% block sheet_label %}Günlük rapor{% endblock %}
+{% block hint %}Yakıt hesabını görmek için soldan bir rapor seçin.{% endblock %}
+{% block document %}
+{% with r=selected %}
+<article class="doc" aria-labelledby="doc-title">
+  <a class="back" href="{% url 'operations:noon' %}?gemi={{ r.vessel_id }}"><svg class="ic" aria-hidden="true"><use href="{% static 'vendor/icons.svg' %}#arrow-left"></use></svg>Listeye dön</a>
+  <header class="doc-head"><h2 id="doc-title">{{ r.vessel.name }} · <span class="num">{{ r.date|date:"d.m.Y" }}</span></h2>
+    <p class="doc-state">{% if can_edit %}<a href="{% url 'operations:noon_edit' r.pk %}">Düzenle</a> · {% endif %}{% if r.flagged %}<span class="flag-text">ROB tutmuyor</span>{% else %}<span class="ok-text">Tutarlı</span>{% endif %}</p></header>
+  <dl class="bl">
+    <div class="f w2"><dt><span class="no" aria-hidden="true">1</span>Sefer</dt><dd>{% if r.voyage %}{% if static_demo %}{{ r.voyage.number }}{% else %}<a href="{% url 'operations:voyage_detail' r.voyage_id %}">{{ r.voyage.number }}</a>{% endif %}{% else %}Seferde değil{% endif %}</dd></div>
+    <div class="f w2"><dt><span class="no" aria-hidden="true">2</span>Kaydeden</dt><dd>{{ r.created_by.get_full_name|default:r.created_by.username }}<small class="num">{{ r.created_at|date:"d.m.Y H:i" }}</small></dd></div>
+    <div class="f w4"><dt><span class="no" aria-hidden="true">3</span>Yakıt hesabı (MT)</dt>
+      <dd>
+        <table class="lines">
+          <thead><tr><th scope="col">Cins</th><th scope="col" class="r">Önceki ROB</th><th scope="col" class="r">+ İkmal</th><th scope="col" class="r">− Tüketim</th><th scope="col" class="r">Beklenen ROB</th><th scope="col" class="r">Bildirilen ROB</th><th scope="col" class="r">Fark</th></tr></thead>
+          <tbody>{% for f in r.fuel_list %}<tr{% if f.flag %} class="has-error"{% endif %}>
+            <td>{{ f.grade }}</td>
+            <td class="r num" data-label="Önceki ROB">{% if f.prev_rob is not None %}{{ f.prev_rob|mt }}{% else %}—{% endif %}</td>
+            <td class="r num" data-label="+ İkmal">{{ f.bunkered|mt }}</td>
+            <td class="r num" data-label="− Tüketim">{{ f.consumed_mt|mt }}</td>
+            <td class="r num" data-label="Beklenen ROB">{% if f.expected is not None %}{{ f.expected|mt }}{% else %}İlk rapor{% endif %}</td>
+            <td class="r num" data-label="Bildirilen ROB"><b>{{ f.rob_mt|mt }}</b></td>
+            <td class="r num" data-label="Fark">{% if f.diff is not None %}{% if f.flag %}<span class="flag-text">{{ f.diff|mt }}</span>{% else %}{{ f.diff|mt }}{% endif %}{% else %}—{% endif %}</td></tr>{% endfor %}</tbody>
+        </table>
+        <p class="hint">Fark ±0,5 MT'yi geçerse rapor işaretlenir: tüketim, ikmal ya da ROB yanlış girilmiş olabilir.{% if r.flagged and can_edit %} Raporu <a href="{% url 'operations:noon_edit' r.pk %}">düzenleyin</a>{% if r.vessel_id %} ya da ilgili <a href="{% url 'operations:bunkers' %}?gemi={{ r.vessel_id }}">bunker kaydını</a> kontrol edin{% endif %}.{% endif %}</p>
+      </dd></div>
+    {% if r.remarks %}<div class="f w4"><dt><span class="no" aria-hidden="true">4</span>Açıklama</dt><dd>{{ r.remarks }}</dd></div>{% endif %}
+  </dl>
+</article>
+{% endwith %}
+{% endblock %}

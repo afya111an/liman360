@@ -260,7 +260,9 @@ a { text-underline-offset: 3px; }
   .lines tbody td { border: 0; padding: 0; text-align: left; }
   .lines tbody td:first-child { grid-column: 1 / -1; font-weight: 600; }
   .lines tbody td[data-label]::before { content: attr(data-label); display: block; font: 600 .6875rem/1.3 var(--display); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
-  .lines-input tbody td:last-child { grid-column: 1 / -1; }
+  .lines-input tbody td.td-wide { grid-column: 1 / -1; }
+  .lines-input tbody td .form-control { width: 100%; }
+  .btn-new .ic { margin-right: 0; }
   .lines-input .amt-in { justify-content: stretch; }
   .lines-input .amt-in .form-control { max-width: none; }
   .lines tfoot tr { display: flex; justify-content: space-between; border-top: 1px solid var(--ink); padding-top: .5rem; }
@@ -294,3 +296,28 @@ a { text-underline-offset: 3px; }
   .lines tbody td.r { text-align: left; }
   .lines th + th, .lines td + td { padding-left: 0; }
 }
+
+/* operations: voyage phase track (status markers in a row) and checkbox fields */
+.phases { list-style: none; display: flex; flex-wrap: wrap; gap: .75rem 1.75rem; margin: .25rem 0 0; padding: 0; }
+.phase { display: flex; flex-direction: column; min-width: 7.5rem; }
+.phase .state { margin-right: 0; }
+.phase small { color: var(--ink-2); font-size: .75rem; }
+.phase-todo .state { color: var(--ink-2); font-weight: 500; }
+.phase-dim .state, .phase-dim small { color: var(--ink-2); font-weight: 500; }
+.f-check { display: flex; flex-direction: column; }
+.f-check .form-check-input { width: 1.25rem; height: 1.25rem; margin: .35rem 0 0; border-color: var(--rule-strong); }
+.f-check .form-check-input:checked { background-color: var(--ink); border-color: var(--ink); }
+.bl .w3 { grid-column: span 3; }
+@media (max-width: 575.98px) {
+  .bl .w3 { grid-column: 1 / -1; }
+  .filters .btn { grid-column: 1 / -1; }
+}
+/* noon check results: consistency is not an approval, a mismatch is not a rejection, so no status square */
+.flag-text { color: var(--reject); font-weight: 600; }
+.ok-text { color: var(--ink-2); }
+.phase-current .state { font-weight: 700; }
+.noon-table td { vertical-align: middle; }
+.noon-table .form-control { max-width: 9.5rem; margin-left: auto; text-align: right; }
+.noon-table .exp { color: var(--ink-2); font-size: .8125rem; white-space: nowrap; }
+@media (max-width: 575.98px) { .noon-table .form-control { max-width: none; margin-left: 0; } }
+@media (max-width: 575.98px) { .bl .ph-full { grid-column: 1 / -1; } }

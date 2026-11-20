@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{{ form_title }}{% endblock %}
+{% block subnav %}{% include "operations/_subnav.html" %}{% endblock %}
+{% block content %}
+<div class="entry">
+  <form method="post" class="doc" novalidate data-once aria-labelledby="entry-title">
+    {% csrf_token %}
+    <header class="doc-head">
+      <h1 id="entry-title">{{ form_title }}</h1>
+      <p class="doc-state"><span class="req" aria-hidden="true">*</span> zorunlu alan</p>
+    </header>
+    {% if form.non_field_errors %}<div class="field-error" role="alert">{% for e in form.non_field_errors %}<p>{{ e }}</p>{% endfor %}</div>{% endif %}
+    <div class="bl">
+      {% for field in form %}{% include "shared/_field.html" with n=forloop.counter %}{% endfor %}
+    </div>
+    <div class="decide-actions">
+      <button class="btn btn-stamp" type="submit"{% if static_demo %} disabled{% endif %}>{{ submit_label }}</button>
+      <a class="btn btn-quiet-ink" href="{{ cancel_url }}">Vazgeç</a>
+      {% if static_demo %}<p class="hint w-100">Demoda kayıt yapılmaz.</p>{% endif %}
+    </div>
+  </form>
+</div>
+{% endblock %}

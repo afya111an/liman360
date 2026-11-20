@@ -40,7 +40,7 @@
                 <td class="num" data-label="Vade">{{ inv.due_date|date:"d.m.Y"|default:"—" }}</td>
                 <td class="r num" data-label="Fatura tutarı ({{ currency }})">{{ inv.amount|money }}</td>
                 <td class="r num" data-label="Açık bakiye ({{ currency }})">{{ inv.open|money }}</td>
-                <td class="r" data-label="Bu emirle ödenecek ({{ currency }})">
+                <td class="r td-wide" data-label="Bu emirle ödenecek ({{ currency }})">
                   <div class="amt-in">
                     <input class="form-control" id="tutar_{{ inv.pk }}" name="tutar_{{ inv.pk }}" inputmode="decimal" autocomplete="off" aria-label="{{ inv.number }}: bu emirle ödenecek ({{ currency }})" value="{{ inv.entered }}" placeholder="0,00" data-open="{{ inv.open|stringformat:'s' }}"{% if inv.error %} aria-invalid="true" aria-describedby="tutar_{{ inv.pk }}-err"{% endif %}>
                     <button type="button" class="btn btn-quiet-ink btn-sm" data-fill="tutar_{{ inv.pk }}" aria-label="{{ inv.number }}: açık bakiyenin tamamı">Tamamı</button>

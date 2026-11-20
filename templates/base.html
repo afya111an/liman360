@@ -25,6 +25,7 @@
         <ul class="navbar-nav me-auto">
           {% with app=request.resolver_match.app_name %}
           <li class="nav-item"><a class="nav-link{% if app == 'invoices' %} active" aria-current="page{% endif %}" href="{% url 'invoices:pool' %}">Faturalar</a></li>
+          <li class="nav-item"><a class="nav-link{% if app == 'operations' %} active" aria-current="page{% endif %}" href="{% url 'operations:voyages' %}">Operasyon</a></li>
           {% if perms.payments.view_paymentorder %}<li class="nav-item"><a class="nav-link{% if app == 'payments' %} active" aria-current="page{% endif %}" href="{% url 'payments:pending' %}">Ödemeler</a></li>{% endif %}
           {% endwith %}
           {% if user.is_staff %}<li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}">Tanımlar</a></li>{% endif %}

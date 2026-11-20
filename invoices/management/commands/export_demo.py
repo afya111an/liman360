@@ -73,6 +73,13 @@ class Command(BaseCommand):
                 scope = {'PENDING': 'onay', 'APPROVED': 'odenecek'}.get(o.status)
                 if scope:
                     paths.append(f'/odemeler/{scope}/{o.pk}/')
+        from operations.models import BunkerDelivery, NoonReport, Voyage
+        from invoices.models import Vessel
+        paths += ['/operasyon/seferler/', '/operasyon/gemiler/', '/operasyon/bunker/', '/operasyon/raporlar/']
+        paths += [f'/operasyon/seferler/{pk}/' for pk in Voyage.objects.values_list('pk', flat=True)]
+        paths += [f'/operasyon/gemiler/{pk}/' for pk in Vessel.objects.values_list('pk', flat=True)]
+        paths += [f'/operasyon/bunker/{pk}/' for pk in BunkerDelivery.objects.values_list('pk', flat=True)]
+        paths += [f'/operasyon/raporlar/{pk}/' for pk in NoonReport.objects.values_list('pk', flat=True)]
         pages = {}
         for p in paths:
             r = client.get(p)

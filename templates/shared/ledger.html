@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static liman %}
+{# Ledger + sheet page shared by the operations screens. Children fill the blocks; `row` renders per item as `obj`. #}
+{% block content %}
+<div class="work{% if selected %} has-doc{% endif %}">
+  <section class="ledger" aria-labelledby="ledger-title">
+    <div class="ledger-head">
+      <h1 id="ledger-title">{% block ledger_title %}{% endblock %}</h1>
+      <p class="ledger-sum">{% block ledger_sum %}{% endblock %}</p>
+    </div>
+    {% block filters %}{% endblock %}
+    {% if page.object_list %}
+    <ol class="rows">
+      {% for obj in page.object_list %}<li>{% block row %}{% endblock %}</li>{% endfor %}
+    </ol>
+    {% if page.has_other_pages %}
+    <nav class="pager" aria-label="Sayfalar">
+      {% if page.has_previous %}<a href="?{% if query %}{{ query }}&amp;{% endif %}sayfa={{ page.previous_page_number }}">Önceki</a>{% endif %}
+      <span>Sayfa {{ page.number }} / {{ page.paginator.num_pages }}</span>
+      {% if page.has_next %}<a href="?{% if query %}{{ query }}&amp;{% endif %}sayfa={{ page.next_page_number }}">Sonraki</a>{% endif %}
+    </nav>
+    {% endif %}
+    {% else %}
+    <div class="empty">
+      <svg class="ic ic-lg" aria-hidden="true"><use href="{% static 'vendor/icons.svg' %}#inbox"></use></svg>
+      {% block empty %}<p>Kayıt yok.</p>{% endblock %}
+      {% if new_url %}<a href="{{ new_url }}">Yeni {{ new_label }} ekleyin</a>{% endif %}
+    </div>
+    {% endif %}
+  </section>
+  <section class="sheet" aria-label="{% block sheet_label %}Belge{% endblock %}">
+    {% if selected %}{% block document %}{% endblock %}
+    {% else %}<p class="sheet-hint">{% block hint %}Belgesini görmek için soldan bir kayıt seçin.{% endblock %}</p>{% endif %}
+  </section>
+</div>
+{% endblock %}

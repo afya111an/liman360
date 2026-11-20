@@ -42,7 +42,8 @@ def invoice_list(request, scope, pk=None):
     selected = None
     if pk is not None:
         selected = get_object_or_404(Invoice.objects.select_related(
-            'supplier', 'company', 'vessel', 'category', 'created_by'), pk=pk)
+            'supplier', 'company', 'vessel', 'category', 'created_by', 'voyage__load_port',
+            'voyage__discharge_port'), pk=pk)
     ctx = {
         'scope': scope,
         'page': page,

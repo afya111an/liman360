@@ -1,0 +1,14 @@
+{% load static %}
+<nav class="subnav" aria-label="Operasyon">
+  <div class="container-fluid px-3 px-md-4">
+    <a href="{% url 'operations:voyages' %}" {% if section == 'seferler' %}aria-current="page"{% endif %}>Seferler <span class="count" title="Yolda olan sefer">{{ shell_underway }}</span><span class="visually-hidden"> yolda</span></a>
+    <a href="{% url 'operations:vessels' %}" {% if section == 'gemiler' %}aria-current="page"{% endif %}>Gemiler</a>
+    <a href="{% url 'operations:bunkers' %}" {% if section == 'bunker' %}aria-current="page"{% endif %}>Bunker</a>
+    <a href="{% url 'operations:noon' %}" {% if section == 'raporlar' %}aria-current="page"{% endif %}><span class="d-sm-none">Noon</span><span class="d-none d-sm-inline">Günlük raporlar</span></a>
+    {% if new_url %}
+    <a class="btn btn-quiet-ink btn-sm ms-auto btn-new" href="{{ new_url }}" aria-label="Yeni {{ new_label }}">
+      <svg class="ic" aria-hidden="true"><use href="{% static 'vendor/icons.svg' %}#plus-lg"></use></svg><span class="d-none d-sm-inline">Yeni {{ new_label }}</span>
+    </a>
+    {% endif %}
+  </div>
+</nav>

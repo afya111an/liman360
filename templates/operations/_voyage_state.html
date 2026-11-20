@@ -1,0 +1,1 @@
+<span class="state state-{% if v.status == 'PLANNED' %}pending{% elif v.status == 'COMPLETED' %}approved{% elif v.status == 'CANCELLED' %}rejected{% else %}partial{% endif %}">{{ v.get_status_display }}</span>

@@ -66,3 +66,32 @@ if (pick) {
     if ([...pick.elements].filter((el) => el.tagName === 'SELECT').every((el) => el.value)) pick.requestSubmit();
   });
 }
+
+// Noon report entry: show previous ROB + bunkered for the chosen ship and date, and the ROB to expect.
+const noon = document.getElementById('noon-entry');
+if (noon) {
+  const data = JSON.parse(document.getElementById('fuel-data').textContent);
+  const fmt = new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 3 });
+  const num = (v) => Number(String(v).trim().replace(/\s/g, '').replace(/\.(?=\d{3}(\D|$))/g, '').replace(',', '.'));
+  const update = () => {
+    const ship = data[noon.elements.vessel.value];
+    const day = noon.elements.date.value;
+    noon.querySelectorAll('tr[data-grade]').forEach((row) => {
+      const g = row.dataset.grade;
+      const baseCell = row.querySelector('[data-base]');
+      const expect = row.querySelector('[data-expect]');
+      const prev = ship && day ? ship.reports.filter((r) => r.date < day && r.rob[g] !== undefined)
+        .sort((a, b) => (a.date < b.date ? 1 : -1))[0] : null;
+      if (!prev) { baseCell.textContent = '—'; expect.textContent = ''; return; }
+      const got = ship.bunkers.filter((b) => b.grade === g && b.date > prev.date && b.date <= day)
+        .reduce((s, b) => s + Number(b.mt), 0);
+      const base = Number(prev.rob[g]) + got;
+      baseCell.textContent = fmt.format(base) + (got ? ` (+${fmt.format(got)} ikmal)` : '');
+      const cons = row.querySelector('input[name^="cons_"]').value;
+      expect.textContent = cons.trim() && !Number.isNaN(num(cons)) ? `Beklenen ≈ ${fmt.format(base - num(cons))}` : '';
+    });
+  };
+  noon.addEventListener('input', update);
+  noon.addEventListener('change', update);
+  update();
+}

@@ -1,0 +1,48 @@
+{% extends "shared/ledger.html" %}
+{% load static liman %}
+{% block title %}Bunker ikmalleri{% endblock %}
+{% block subnav %}{% include "operations/_subnav.html" %}{% endblock %}
+{% block ledger_title %}Bunker ikmalleri{% endblock %}
+{% block ledger_sum %}{{ page.paginator.count }} ikmal{% for t in totals %}<span aria-hidden="true"> · </span><span class="num">{{ t.mt|mt }}</span> MT {{ t.grade }}{% endfor %}{% endblock %}
+{% block filters %}
+{% if not static_demo %}
+<form class="filters filters-one" method="get">
+  <label class="visually-hidden" for="f-gemi">Gemi</label>
+  <select class="form-select" id="f-gemi" name="gemi">
+    <option value="">Tüm gemiler</option>
+    {% for s in vessels %}<option value="{{ s.pk }}"{% if gemi == s.pk|stringformat:'s' %} selected{% endif %}>{{ s.name }}</option>{% endfor %}
+  </select>
+  <button class="btn btn-quiet-ink" type="submit">Filtrele</button>
+</form>
+{% endif %}
+{% endblock %}
+{% block row %}
+<a class="row-link{% if obj.pk == selected.pk %} is-selected{% endif %}" href="{% url 'operations:bunker_detail' obj.pk %}{% if query %}?{{ query }}{% endif %}"{% if obj.pk == selected.pk %} aria-current="true"{% endif %}>
+  <span class="r-no">{{ obj.vessel.name }}</span>
+  <span class="r-amt num">{{ obj.quantity_mt|mt }} <small>MT {{ obj.grade }}</small></span>
+  <span class="r-sup">{{ obj.port }} · {{ obj.supplier.name }}</span>
+  <span class="r-meta"><span class="num">{{ obj.date|date:"d.m.Y" }}</span> · BDN {{ obj.bdn_no }}{% if obj.voyage %} · {{ obj.voyage.number }}{% endif %}</span>
+</a>
+{% endblock %}
+{% block empty %}<p>Bunker ikmali kaydı yok.</p>{% endblock %}
+{% block sheet_label %}Bunker teslim belgesi{% endblock %}
+{% block hint %}Ayrıntılarını görmek için soldan bir ikmal seçin.{% endblock %}
+{% block document %}
+{% with b=selected %}
+<article class="doc" aria-labelledby="doc-title">
+  <a class="back" href="{% url 'operations:bunkers' %}{% if query %}?{{ query }}{% endif %}"><svg class="ic" aria-hidden="true"><use href="{% static 'vendor/icons.svg' %}#arrow-left"></use></svg>Listeye dön</a>
+  <header class="doc-head"><h2 id="doc-title">BDN {{ b.bdn_no }}</h2><p class="doc-state">{{ b.grade }} · <span class="num">{{ b.date|date:"d.m.Y" }}</span>{% if can_edit %} · <a href="{% url 'operations:bunker_edit' b.pk %}">Düzenle</a>{% endif %}</p></header>
+  <dl class="bl">
+    <div class="f w2"><dt><span class="no" aria-hidden="true">1</span>Gemi / sefer</dt><dd>{{ b.vessel.name }}{% if b.voyage %}<small>{% if static_demo %}{{ b.voyage.number }}{% else %}<a href="{% url 'operations:voyage_detail' b.voyage_id %}">{{ b.voyage.number }}</a>{% endif %}</small>{% endif %}</dd></div>
+    <div class="f w2"><dt><span class="no" aria-hidden="true">2</span>Liman</dt><dd>{{ b.port }}<small>{{ b.port.country }}</small></dd></div>
+    <div class="f w2"><dt><span class="no" aria-hidden="true">3</span>Tedarikçi</dt><dd>{{ b.supplier.name }}</dd></div>
+    <div class="f"><dt><span class="no" aria-hidden="true">4</span>Yakıt cinsi</dt><dd>{{ b.grade }}</dd></div>
+    <div class="f"><dt><span class="no" aria-hidden="true">5</span>Teslim tarihi</dt><dd class="num">{{ b.date|date:"d.m.Y" }}</dd></div>
+    <div class="f w2"><dt><span class="no" aria-hidden="true">6</span>Miktar</dt><dd class="num">{{ b.quantity_mt|mt }} MT</dd></div>
+    <div class="f w2"><dt><span class="no" aria-hidden="true">7</span>MT fiyatı</dt><dd class="num">{{ b.price_per_mt|money }} {{ b.currency }}</dd></div>
+    <div class="f w4 f-amt"><dt><span class="no" aria-hidden="true">8</span>Tutar</dt><dd><span class="amt num">{{ b.total|money }} {{ b.currency }}</span><small>Fatura, gider faturaları ekranından ayrıca girilir.</small></dd></div>
+    <div class="f w4"><dt><span class="no" aria-hidden="true">9</span>Kaydeden</dt><dd>{{ b.created_by.get_full_name|default:b.created_by.username }}<small class="num">{{ b.created_at|date:"d.m.Y H:i" }}</small></dd></div>
+  </dl>
+</article>
+{% endwith %}
+{% endblock %}

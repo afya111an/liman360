@@ -16,6 +16,19 @@ def iban_ok(value):
     return int(digits) % 97 == 1
 
 
+def imo_ok(value):
+    """IMO ship number: 7 digits, last = sum(digit_i * (7 - i)) for the first six, mod 10."""
+    v = (value or '').upper().removeprefix('IMO').strip()
+    if len(v) != 7 or not v.isdigit():
+        return False
+    return sum(int(d) * (7 - i) for i, d in enumerate(v[:6])) % 10 == int(v[6])
+
+
+def validate_imo(value):
+    if not imo_ok(value):
+        raise ValidationError('Geçerli bir IMO numarası girin (7 rakam, ör. 9074729).')
+
+
 def validate_iban(value):
     if not iban_ok(value):
         raise ValidationError('Geçerli bir IBAN girin (ör. TR33 0006 1005 1978 6457 8413 26).')

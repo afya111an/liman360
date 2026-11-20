@@ -9,5 +9,6 @@ urlpatterns = [
     path('cikis/', auth_views.LogoutView.as_view(), name='logout'),
     path('faturalar/', include('invoices.urls')),
     path('odemeler/', include('payments.urls')),
+    path('operasyon/', include('operations.urls')),
     path('tanimlar/', admin.site.urls),
 ]
