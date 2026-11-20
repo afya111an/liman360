@@ -32,7 +32,7 @@
           <span class="r-amt num">{{ o.sum_total|money }} <small>{{ o.currency }}</small></span>
           <span class="r-sup">{{ o.supplier.name }}</span>
           <span class="r-meta">
-            <span class="state state-{% if o.status == 'PENDING' %}pending{% elif o.status == 'APPROVED' or o.status == 'PAID' %}approved{% else %}rejected{% endif %}">{{ o.get_status_display }}</span>
+            <span class="state state-{% if o.status == 'PENDING' %}pending{% elif o.status == 'APPROVED' %}partial{% elif o.status == 'PAID' %}approved{% else %}rejected{% endif %}">{{ o.get_status_display }}</span>
             {% if o.status == 'PAID' %}<span class="num">{{ o.paid_on|date:"d.m.Y" }}</span>{% else %}Ödeme <span class="num">{{ o.pay_date|date:"d.m.Y" }}</span>{% endif %} · {{ o.account.bank }}
           </span>
         </a>

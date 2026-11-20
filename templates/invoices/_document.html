@@ -58,8 +58,8 @@
           <thead><tr><th scope="col">Ödeme emri</th><th scope="col">Durum</th><th scope="col" class="r">Tutar</th></tr></thead>
           <tbody>{% for ln in pay_lines %}<tr>
             <td>{% if perms.payments.view_paymentorder and not static_demo %}<a href="{% url 'payments:all_detail' ln.order_id %}">{{ ln.order.number }}</a>{% else %}{{ ln.order.number }}{% endif %}</td>
-            <td>{{ ln.order.get_status_display }}{% if ln.order.paid_on %} · <span class="num">{{ ln.order.paid_on|date:"d.m.Y" }}</span>{% endif %}</td>
-            <td class="r num">{{ ln.amount|money }} {{ selected.currency }}</td></tr>{% endfor %}</tbody>
+            <td data-label="Durum">{{ ln.order.get_status_display }}{% if ln.order.paid_on %} · <span class="num">{{ ln.order.paid_on|date:"d.m.Y" }}</span>{% endif %}</td>
+            <td class="r num" data-label="Tutar ({{ selected.currency }})">{{ ln.amount|money }} {{ selected.currency }}</td></tr>{% endfor %}</tbody>
         </table>
         {% endif %}
         <p class="mb-0 mt-1">Ödenen <b class="num">{{ pay_paid|money }} {{ selected.currency }}</b> · Ödeme emri verilmemiş açık bakiye <b class="num">{{ pay_open|money }} {{ selected.currency }}</b></p>

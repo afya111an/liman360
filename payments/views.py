@@ -1,7 +1,8 @@
 import re
-from datetime import date
+from datetime import date, timedelta
 from decimal import Decimal, InvalidOperation
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied, ValidationError
@@ -9,6 +10,7 @@ from django.core.paginator import Paginator
 from django.db.models import Count, Sum
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 
@@ -39,7 +41,7 @@ def order_list(request, scope, pk=None):
            'query': request.GET.urlencode(), 'detail_url': DETAIL[scope], 'selected': None}
     if pk is not None:
         o = get_object_or_404(PaymentOrder.objects.select_related(
-            'supplier', 'company', 'account', 'created_by', 'decided_by', 'paid_by'), pk=pk)
+            'supplier', 'company', 'account', 'created_by', 'decided_by', 'paid_by', 'cancelled_by'), pk=pk)
         lines = list(o.lines.select_related('invoice'))
         bal = {i.pk: i for i in with_balances(Invoice.objects.filter(pk__in=[ln.invoice_id for ln in lines]))}
         for ln in lines:
@@ -47,8 +49,25 @@ def order_list(request, scope, pk=None):
             ln.paid_total = bal[ln.invoice_id].paid
         ctx.update(selected=o, lines=lines, total=sum((ln.amount for ln in lines), Decimal('0')),
                    can_decide=o.can_decide(request.user), can_pay=o.can_pay(request.user),
-                   can_cancel=o.can_cancel(request.user), here=request.get_full_path(), today=date.today())
+                   can_cancel=o.can_cancel(request.user), here=request.get_full_path(), today=date.today(),
+                   fresh=_fresh(o), n=_numbers(o))
     return render(request, 'payments/list.html', ctx)
+
+
+def _fresh(o):
+    """Which stamp was placed in the last 15 seconds, so it gets the landing motion."""
+    def recent(t):
+        return t is not None and not settings.LIMAN_STATIC_DEMO and timezone.now() - t < timedelta(seconds=15)
+    for name, t in (('cancel', o.cancelled_at), ('paid', o.paid_recorded_at), ('decision', o.decided_at)):
+        if recent(t):
+            return name
+    return None
+
+
+def _numbers(o):
+    """Field numbers after the optional note box."""
+    made = 9 if o.note else 8
+    return {'made': made, 'stamps': made + 1, 'act': made + 2}
 
 
 @login_required

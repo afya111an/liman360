@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#1B2A4A">
-<title>OE-2026-0003 · Liman360</title>
+<title>OE-2026-0004 · Liman360</title>
 <link rel="preload" href="/liman360/static/vendor/fonts/archivo-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/liman360/static/vendor/bootstrap/bootstrap.min.css">
 <link rel="stylesheet" href="/liman360/static/css/app.css">
@@ -72,8 +72,8 @@
     <ol class="rows">
       
       <li>
-        <a class="row-link is-selected" href="/liman360/odemeler/onay/3/" aria-current="true">
-          <span class="r-no">OE-2026-0003</span>
+        <a class="row-link is-selected" href="/liman360/odemeler/onay/4/" aria-current="true">
+          <span class="r-no">OE-2026-0004</span>
           <span class="r-amt num">1.500,00 <small>USD</small></span>
           <span class="r-sup">Örnek Kumanya Tedarik</span>
           <span class="r-meta">
@@ -95,7 +95,7 @@
     <svg class="ic" aria-hidden="true"><use href="/liman360/static/vendor/icons.svg#arrow-left"></use></svg>Listeye dön
   </a>
   <header class="doc-head">
-    <h2 id="doc-title">OE-2026-0003</h2>
+    <h2 id="doc-title">OE-2026-0004</h2>
     
       <p class="doc-state state-pending">Ödeme onayı bekliyor</p>
     
@@ -110,15 +110,15 @@
     <div class="f w4"><dt><span class="no" aria-hidden="true">6</span>Ödenen faturalar</dt>
       <dd>
         <table class="lines">
-          <thead><tr><th scope="col">Fatura</th><th scope="col">Vade</th><th scope="col" class="r">Fatura tutarı</th><th scope="col" class="r">Bu emirle</th><th scope="col" class="r">Kalan açık</th></tr></thead>
+          <thead><tr><th scope="col">Fatura</th><th scope="col">Vade</th><th scope="col" class="r">Bu emirle (USD)</th><th scope="col" class="r">Kalan açık (USD)</th><th scope="col" class="r">Fatura tutarı (USD)</th></tr></thead>
           <tbody>
           
             <tr>
               <td>KMN-2026-031</td>
-              <td class="num">29.11.2026</td>
-              <td class="r num">3.125,50</td>
-              <td class="r num"><b>1.500,00</b></td>
-              <td class="r num">625,50</td>
+              <td class="num" data-label="Vade">29.11.2026</td>
+              <td class="r num" data-label="Bu emirle (USD)"><b>1.500,00</b></td>
+              <td class="r num" data-label="Kalan açık (USD)">125,50</td>
+              <td class="r num" data-label="Fatura tutarı (USD)">3.125,50</td>
             </tr>
           
           </tbody>
@@ -127,15 +127,13 @@
     <div class="f w4 f-amt"><dt><span class="no" aria-hidden="true">7</span>Ödenecek toplam</dt><dd><span class="amt num">1.500,00 USD</span></dd></div>
     
     <div class="f w4"><dt><span class="no" aria-hidden="true">8</span>Hazırlayan</dt>
-      <dd>Selin Demir<small class="num">20.11.2026 21:57</small></dd></div>
+      <dd>Selin Demir<small class="num">20.11.2026 22:17</small></dd></div>
     <div class="f w4 f-stamps"><dt><span class="no" aria-hidden="true">9</span>Onay ve ödeme</dt>
       <dd>
         <ol class="stamps">
-          <li>
-            
-              <span class="slot is-next">Ödeme onayı<small>Bekliyor</small></span>
-            
-          </li>
+          
+          <li><span class="slot is-next">Ödeme onayı<small>Bekliyor</small></span></li>
+          
           
           <li><span class="slot">Bankadan ödeme<small>Sırada</small></span></li>
           
@@ -144,23 +142,22 @@
 
     
     <div class="f w4 f-decide">
-      <dt><label for="po-not"><span class="no" aria-hidden="true">10</span>Karar / not</label></dt>
+      <dt><span class="no" aria-hidden="true">10</span>İptal</dt>
       <dd>
-        <form method="post" action="/liman360/odemeler/3/islem/" data-once>
-          <input type="hidden" name="csrfmiddlewaretoken" value="CdOZOASW4V3IO6rx15f90VIIqEY1hZFJ5cA0h3FERA88uMtoOBXtHiHaA4Gyzs6h">
-          <input type="hidden" name="next" value="/odemeler/onay/3/">
-          
-          <textarea class="form-control" id="po-not" name="not" rows="2" maxlength="300" aria-describedby="po-not-hint" data-required-for="reddet iptal"></textarea>
-          <p class="hint" id="po-not-hint">İptal ederken zorunlu.</p>
-          <p class="hint">Demoda işlem kaydedilmez.</p>
+        <p class="hint mt-0">Demoda işlem kaydedilmez.</p>
+        
+        
+        
+        <form method="post" action="/liman360/odemeler/4/islem/" class="cancel-block" data-once>
+          <input type="hidden" name="csrfmiddlewaretoken" value="AUCVaZ0tBvA28kWCfj2T4zpXjvryRZwKlrkaL8JjE15gDsVeixSYaQ6rUQz7Xf2z"><input type="hidden" name="next" value="/odemeler/onay/4/">
+          <label class="sub-label" for="po-iptal">İptal gerekçesi<span class="req" aria-hidden="true">*</span></label>
+          <textarea class="form-control" id="po-iptal" name="not" rows="2" maxlength="300" aria-describedby="po-iptal-hint" data-required-for="iptal"></textarea>
+          <p class="hint" id="po-iptal-hint">Onaya gönderdiğiniz emri geri çeker; tutarlar faturalarda yeniden açılır.</p>
           <div class="decide-actions">
-            
-            
-            
-            <button class="btn btn-quiet-ink" type="submit" name="islem" value="iptal" disabled>İptal et</button>
-            
+            <button class="btn btn-quiet-ink" type="submit" name="islem" value="iptal" disabled>Ödeme emrini iptal et</button>
           </div>
         </form>
+        
       </dd>
     </div>
     

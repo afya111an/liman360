@@ -5,6 +5,7 @@ from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models, transaction
 from django.db.models import Q, Sum
+from django.template.defaultfilters import floatformat
 from django.utils import timezone
 
 from invoices.models import Company, Currency, Invoice, Supplier
@@ -70,7 +71,13 @@ class PaymentOrder(models.Model):
     paid_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True,
                                 related_name='+')
     paid_on = models.DateField('ödeme tarihi', null=True, blank=True)
+    paid_recorded_at = models.DateTimeField(null=True, blank=True)
     bank_ref = models.CharField('banka dekont / referans no', max_length=60, blank=True)
+    # Cancellation has its own fields so it never overwrites an earlier approval (audit trail).
+    cancelled_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True,
+                                     related_name='+')
+    cancelled_at = models.DateTimeField(null=True, blank=True)
+    cancel_note = models.CharField(max_length=300, blank=True)
 
     class Meta:
         verbose_name = 'ödeme emri'
@@ -94,7 +101,8 @@ class PaymentOrder(models.Model):
         return PaymentOrder.objects.select_for_update().get(pk=self.pk)
 
     def _sync(self, o):
-        for f in ('status', 'decided_by_id', 'decided_at', 'decision_note', 'paid_by_id', 'paid_on', 'bank_ref'):
+        for f in ('status', 'decided_by_id', 'decided_at', 'decision_note', 'paid_by_id', 'paid_on',
+                  'paid_recorded_at', 'bank_ref', 'cancelled_by_id', 'cancelled_at', 'cancel_note'):
             setattr(self, f, getattr(o, f))
 
     def can_decide(self, user):
@@ -105,8 +113,12 @@ class PaymentOrder(models.Model):
         return self.status == self.Status.APPROVED and user.has_perm('payments.pay_paymentorder')
 
     def can_cancel(self, user):
-        return (self.status in (self.Status.PENDING, self.Status.APPROVED)
-                and (user.pk == self.created_by_id or user.has_perm('payments.approve_paymentorder')))
+        """The creator can withdraw a pending order; once approved, the creator or an approver can cancel it.
+        (An approver facing a pending order rejects it instead.)"""
+        if self.status == self.Status.PENDING:
+            return user.pk == self.created_by_id
+        return self.status == self.Status.APPROVED and (
+            user.pk == self.created_by_id or user.has_perm('payments.approve_paymentorder'))
 
     def decide(self, user, approve, note=''):
         note = note.strip()
@@ -136,6 +148,7 @@ class PaymentOrder(models.Model):
             if not o.can_pay(user):
                 raise PermissionDenied('Ödeme kaydetme yetkiniz yok.')
             o.status, o.paid_by, o.paid_on, o.bank_ref = self.Status.PAID, user, paid_on, bank_ref
+            o.paid_recorded_at = timezone.now()
             o.save()
         self._sync(o)
 
@@ -148,7 +161,7 @@ class PaymentOrder(models.Model):
             if not o.can_cancel(user):
                 raise PermissionDenied('Bu ödeme emri iptal edilemez.')
             o.status = self.Status.CANCELLED
-            o.decided_by, o.decided_at, o.decision_note = user, timezone.now(), note
+            o.cancelled_by, o.cancelled_at, o.cancel_note = user, timezone.now(), note
             o.save()
         self._sync(o)
 
@@ -210,7 +223,7 @@ def create_order(user, *, company, supplier, currency, account, payee_iban, pay_
             if amount <= 0:
                 line_errors[pk] = 'Tutar sıfırdan büyük olmalı.'
             elif amount > open_:
-                line_errors[pk] = f'Açık bakiye {open_} {currency}; daha fazlası ödenemez.'
+                line_errors[pk] = f'Açık bakiye {floatformat(open_, "2g")} {currency}; daha fazlası ödenemez.'
         if errors or line_errors:
             raise OrderInvalid(errors, line_errors)
         order = PaymentOrder.objects.create(

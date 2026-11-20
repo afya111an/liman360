@@ -62,7 +62,7 @@
     <div class="ledger-head">
       <h1 id="ledger-title">Ödeme emirleri</h1>
       <p class="ledger-sum">
-        3 ödeme emri<span class="sep" aria-hidden="true"> · </span><span class="num">9.760,00</span> EUR<span class="sep" aria-hidden="true"> · </span><span class="num">2.500,00</span> USD
+        4 ödeme emri<span class="sep" aria-hidden="true"> · </span><span class="num">9.760,00</span> EUR<span class="sep" aria-hidden="true"> · </span><span class="num">3.000,00</span> USD
       </p>
     </div>
 
@@ -89,8 +89,8 @@
           <span class="r-amt num">1.000,00 <small>USD</small></span>
           <span class="r-sup">Örnek Kumanya Tedarik</span>
           <span class="r-meta">
-            <span class="state state-approved">Ödenecek</span>
-            Ödeme <span class="num">22.11.2026</span> · Örnek Bankası
+            <span class="state state-approved">Ödendi</span>
+            <span class="num">20.11.2026</span> · Örnek Bankası
           </span>
         </a>
       </li>
@@ -98,6 +98,18 @@
       <li>
         <a class="row-link is-selected" href="/liman360/odemeler/tumu/3/" aria-current="true">
           <span class="r-no">OE-2026-0003</span>
+          <span class="r-amt num">500,00 <small>USD</small></span>
+          <span class="r-sup">Örnek Kumanya Tedarik</span>
+          <span class="r-meta">
+            <span class="state state-partial">Ödenecek</span>
+            Ödeme <span class="num">22.11.2026</span> · Örnek Bankası
+          </span>
+        </a>
+      </li>
+      
+      <li>
+        <a class="row-link" href="/liman360/odemeler/tumu/4/" >
+          <span class="r-no">OE-2026-0004</span>
           <span class="r-amt num">1.500,00 <small>USD</small></span>
           <span class="r-sup">Örnek Kumanya Tedarik</span>
           <span class="r-meta">
@@ -121,70 +133,85 @@
   <header class="doc-head">
     <h2 id="doc-title">OE-2026-0003</h2>
     
-      <p class="doc-state state-pending">Ödeme onayı bekliyor</p>
+      <p class="doc-state state-pending">Onaylandı · ödeme bekliyor</p>
     
   </header>
 
   <dl class="bl">
     <div class="f w2"><dt><span class="no" aria-hidden="true">1</span>Ödeyen şirket</dt><dd>DEMO<small>Demo Denizcilik A.Ş. (örnek veri)</small></dd></div>
-    <div class="f"><dt><span class="no" aria-hidden="true">2</span>Planlanan ödeme</dt><dd class="num">25.11.2026</dd></div>
+    <div class="f"><dt><span class="no" aria-hidden="true">2</span>Planlanan ödeme</dt><dd class="num">22.11.2026</dd></div>
     <div class="f"><dt><span class="no" aria-hidden="true">3</span>Para birimi</dt><dd>USD</dd></div>
     <div class="f w2"><dt><span class="no" aria-hidden="true">4</span>Ödeyen hesap</dt><dd>Örnek Bankası<small class="num iban">TR79 0009 9000 0000 0000 0009 00</small></dd></div>
     <div class="f w2"><dt><span class="no" aria-hidden="true">5</span>Alıcı</dt><dd>Örnek Kumanya Tedarik<small class="num iban">TR91 0009 9000 0000 0000 0000 05</small></dd></div>
     <div class="f w4"><dt><span class="no" aria-hidden="true">6</span>Ödenen faturalar</dt>
       <dd>
         <table class="lines">
-          <thead><tr><th scope="col">Fatura</th><th scope="col">Vade</th><th scope="col" class="r">Fatura tutarı</th><th scope="col" class="r">Bu emirle</th><th scope="col" class="r">Kalan açık</th></tr></thead>
+          <thead><tr><th scope="col">Fatura</th><th scope="col">Vade</th><th scope="col" class="r">Bu emirle (USD)</th><th scope="col" class="r">Kalan açık (USD)</th><th scope="col" class="r">Fatura tutarı (USD)</th></tr></thead>
           <tbody>
           
             <tr>
               <td>KMN-2026-031</td>
-              <td class="num">29.11.2026</td>
-              <td class="r num">3.125,50</td>
-              <td class="r num"><b>1.500,00</b></td>
-              <td class="r num">625,50</td>
+              <td class="num" data-label="Vade">29.11.2026</td>
+              <td class="r num" data-label="Bu emirle (USD)"><b>500,00</b></td>
+              <td class="r num" data-label="Kalan açık (USD)">125,50</td>
+              <td class="r num" data-label="Fatura tutarı (USD)">3.125,50</td>
             </tr>
           
           </tbody>
         </table>
       </dd></div>
-    <div class="f w4 f-amt"><dt><span class="no" aria-hidden="true">7</span>Ödenecek toplam</dt><dd><span class="amt num">1.500,00 USD</span></dd></div>
+    <div class="f w4 f-amt"><dt><span class="no" aria-hidden="true">7</span>Ödenecek toplam</dt><dd><span class="amt num">500,00 USD</span></dd></div>
     
     <div class="f w4"><dt><span class="no" aria-hidden="true">8</span>Hazırlayan</dt>
-      <dd>Selin Demir<small class="num">20.11.2026 21:57</small></dd></div>
+      <dd>Selin Demir<small class="num">20.11.2026 22:17</small></dd></div>
     <div class="f w4 f-stamps"><dt><span class="no" aria-hidden="true">9</span>Onay ve ödeme</dt>
       <dd>
         <ol class="stamps">
+          
           <li>
             
-              <span class="slot is-next">Ödeme onayı<small>Bekliyor</small></span>
+            <span class="stamp">Ödeme onayı<small>Kemal Aydın · <span class="num">20.11.2026 22:17</span></small></span>
             
           </li>
           
-          <li><span class="slot">Bankadan ödeme<small>Sırada</small></span></li>
+          
+          <li><span class="slot is-next">Bankadan ödeme<small>Bekliyor</small></span></li>
           
         </ol>
       </dd></div>
 
     
     <div class="f w4 f-decide">
-      <dt><label for="po-not"><span class="no" aria-hidden="true">10</span>Karar / not</label></dt>
+      <dt><span class="no" aria-hidden="true">10</span>Ödeme kaydı</dt>
       <dd>
+        <p class="hint mt-0">Demoda işlem kaydedilmez.</p>
+        
+        
         <form method="post" action="/liman360/odemeler/3/islem/" data-once>
-          <input type="hidden" name="csrfmiddlewaretoken" value="pVbNcUZPq0axboKxvrPIO7DvTBmu8toGSUXOFnMxdFfXR4MoiXx2vuCX3141qWPe">
-          <input type="hidden" name="next" value="/odemeler/tumu/3/">
-          
-          <textarea class="form-control" id="po-not" name="not" rows="2" maxlength="300" aria-describedby="po-not-hint" data-required-for="reddet iptal"></textarea>
-          <p class="hint" id="po-not-hint">İptal ederken zorunlu.</p>
-          <p class="hint">Demoda işlem kaydedilmez.</p>
+          <input type="hidden" name="csrfmiddlewaretoken" value="uRbFhbqF9LlUJ0eS3wdIfZs8ubgWZ3u5foTUSk9vchQ8e8du6K3Nlg9C5wov5j0U"><input type="hidden" name="next" value="/odemeler/tumu/3/">
+          <div class="pay-fields">
+            <div><label class="sub-label" for="po-tarih">Ödeme tarihi<span class="req" aria-hidden="true">*</span></label>
+              <input class="form-control" type="date" id="po-tarih" name="odeme_tarihi" value="2026-11-20" max="2026-11-20" required></div>
+            <div><label class="sub-label" for="po-dekont">Banka dekont / referans no<span class="req" aria-hidden="true">*</span></label>
+              <input class="form-control" id="po-dekont" name="dekont" maxlength="60" autocomplete="off" aria-required="true" aria-describedby="po-dekont-hint" data-required-for="ode"></div>
+          </div>
+          <p class="hint" id="po-dekont-hint">Transferi internet bankacılığından <span class="num">TR91 0009 9000 0000 0000 0000 05</span> IBAN'ına gönderdikten sonra dekont numarasını girin.</p>
           <div class="decide-actions">
-            
-            
-            
-            <button class="btn btn-quiet-ink" type="submit" name="islem" value="iptal" disabled>İptal et</button>
-            
+            <button class="btn btn-stamp" type="submit" name="islem" value="ode" disabled><svg class="ic" aria-hidden="true"><use href="/liman360/static/vendor/icons.svg#check-lg"></use></svg>Ödendi olarak kaydet</button>
           </div>
         </form>
+        
+        
+        <form method="post" action="/liman360/odemeler/3/islem/" class="cancel-block is-secondary" data-once>
+          <input type="hidden" name="csrfmiddlewaretoken" value="uRbFhbqF9LlUJ0eS3wdIfZs8ubgWZ3u5foTUSk9vchQ8e8du6K3Nlg9C5wov5j0U"><input type="hidden" name="next" value="/odemeler/tumu/3/">
+          <label class="sub-label" for="po-iptal">İptal gerekçesi<span class="req" aria-hidden="true">*</span></label>
+          <textarea class="form-control" id="po-iptal" name="not" rows="2" maxlength="300" aria-describedby="po-iptal-hint" data-required-for="iptal"></textarea>
+          <p class="hint" id="po-iptal-hint">Onaylı emri ödenmeden iptal eder; onay kaydı korunur, tutarlar faturalarda yeniden açılır.</p>
+          <div class="decide-actions">
+            <button class="btn btn-quiet-ink" type="submit" name="islem" value="iptal" disabled>Ödeme emrini iptal et</button>
+          </div>
+        </form>
+        
       </dd>
     </div>
     

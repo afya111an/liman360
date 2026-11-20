@@ -93,7 +93,10 @@ class Command(BaseCommand):
         paid = order(invs[5], '9760.00', 0)
         paid.decide(mudur, approve=True)
         paid.mark_paid(fi, today, 'DK-2026-114508')
-        order(invs[4], '1000.00', 2).decide(mudur, approve=True)   # approved, waiting to be paid
+        part = order(invs[4], '1000.00', 0)                        # KMN: first part paid -> "Kısmen ödendi"
+        part.decide(mudur, approve=True)
+        part.mark_paid(fi, today, 'DK-2026-114611')
+        order(invs[4], '500.00', 2).decide(mudur, approve=True)    # approved, waiting to be paid
         order(invs[4], '1500.00', 5)                               # waiting for payment approval
         self.stdout.write(self.style.SUCCESS('Demo data created.'))
         if not os.environ.get('LIMAN_DEMO_PASSWORD'):

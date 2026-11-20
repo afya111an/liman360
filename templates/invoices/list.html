@@ -50,7 +50,7 @@
           <span class="r-amt num">{{ inv.amount|money }} <small>{{ inv.currency }}</small></span>
           <span class="r-sup">{{ inv.supplier.name }}</span>
           <span class="r-meta">
-            {% if scope == 'all' %}<span class="state state-{{ inv.status|lower }}">{% if inv.status == 'APPROVED' and inv.paid >= inv.amount %}Ödendi{% elif inv.status == 'APPROVED' and inv.paid %}Kısmen ödendi{% else %}{{ inv.get_status_display }}{% endif %}</span>{% endif %}
+            {% if scope == 'all' %}<span class="state state-{% if inv.status == 'APPROVED' and inv.paid and inv.paid < inv.amount %}partial{% else %}{{ inv.status|lower }}{% endif %}">{% if inv.status == 'APPROVED' and inv.paid >= inv.amount %}Ödendi{% elif inv.status == 'APPROVED' and inv.paid %}Kısmen ödendi{% else %}{{ inv.get_status_display }}{% endif %}</span>{% endif %}
             {% if inv.due_date %}Vade <span class="num">{{ inv.due_date|date:"d.m.Y" }}</span>{% endif %}
             {% if inv.vessel %} · {{ inv.vessel.name }}{% endif %}
           </span>

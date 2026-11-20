@@ -10,21 +10,21 @@
       <p class="doc-state"><span class="req" aria-hidden="true">*</span> zorunlu alan</p>
     </header>
 
-    <form method="get" class="bl pick" aria-label="Kime, hangi şirketten, hangi para biriminde">
+    <form method="get" class="bl pick" id="po-pick" aria-label="Kime, hangi şirketten, hangi para biriminde">
       {% for field in pick %}
-      <div class="f{% if forloop.counter == 2 %} w2{% endif %}{% if field.errors %} has-error{% endif %}">
+      <div class="f{% if field.errors %} has-error{% endif %}">
         <label for="{{ field.id_for_label }}"><span class="no" aria-hidden="true">{{ forloop.counter }}</span>{{ field.label }}<span class="req" aria-hidden="true">*</span></label>
         {{ field }}
         {% if field.errors %}<p class="field-error">{{ field.errors.0 }}</p>{% endif %}
       </div>
       {% endfor %}
-      <div class="f w4 f-go">
+      <div class="f f-go">
         <button class="btn btn-quiet-ink w-100" type="submit"{% if static_demo %} disabled{% endif %}>{% if form %}Değiştir{% else %}Açık faturaları getir{% endif %}</button>
       </div>
     </form>
 
     {% if form %}
-    <form method="post" class="mt-4" novalidate data-once>
+    <form method="post" class="mt-4" id="po-entry" novalidate data-once>
       {% csrf_token %}
       {% if form.non_field_errors %}<div class="field-error" role="alert">{% for e in form.non_field_errors %}<p>{{ e }}</p>{% endfor %}</div>{% endif %}
       <div class="bl">
@@ -32,17 +32,17 @@
           <span class="cap"><span class="no" aria-hidden="true">4</span>Ödenecek faturalar · {{ supplier.name }} · {{ currency }}</span>
           {% if invoices %}
           <table class="lines lines-input">
-            <thead><tr><th scope="col">Fatura</th><th scope="col">Vade</th><th scope="col" class="r">Fatura tutarı</th><th scope="col" class="r">Açık bakiye</th><th scope="col" class="r">Bu emirle ödenecek</th></tr></thead>
+            <thead><tr><th scope="col">Fatura</th><th scope="col">Vade</th><th scope="col" class="r">Fatura tutarı ({{ currency }})</th><th scope="col" class="r">Açık bakiye ({{ currency }})</th><th scope="col" class="r">Bu emirle ödenecek ({{ currency }})</th></tr></thead>
             <tbody>
             {% for inv in invoices %}
               <tr{% if inv.error %} class="has-error"{% endif %}>
-                <td><label for="tutar_{{ inv.pk }}">{{ inv.number }}</label>{% if inv.committed %}<small class="d-block">Önceki emirlerde {{ inv.committed|money }}</small>{% endif %}</td>
-                <td class="num">{{ inv.due_date|date:"d.m.Y"|default:"—" }}</td>
-                <td class="r num">{{ inv.amount|money }}</td>
-                <td class="r num">{{ inv.open|money }}</td>
-                <td class="r">
+                <td>{{ inv.number }}{% if inv.committed %}<small class="d-block">Önceki emirlerde {{ inv.committed|money }} {{ currency }}</small>{% endif %}</td>
+                <td class="num" data-label="Vade">{{ inv.due_date|date:"d.m.Y"|default:"—" }}</td>
+                <td class="r num" data-label="Fatura tutarı ({{ currency }})">{{ inv.amount|money }}</td>
+                <td class="r num" data-label="Açık bakiye ({{ currency }})">{{ inv.open|money }}</td>
+                <td class="r" data-label="Bu emirle ödenecek ({{ currency }})">
                   <div class="amt-in">
-                    <input class="form-control" id="tutar_{{ inv.pk }}" name="tutar_{{ inv.pk }}" inputmode="decimal" autocomplete="off" value="{{ inv.entered }}" placeholder="0,00" data-open="{{ inv.open|stringformat:'s' }}"{% if inv.error %} aria-invalid="true" aria-describedby="tutar_{{ inv.pk }}-err"{% endif %}>
+                    <input class="form-control" id="tutar_{{ inv.pk }}" name="tutar_{{ inv.pk }}" inputmode="decimal" autocomplete="off" aria-label="{{ inv.number }}: bu emirle ödenecek ({{ currency }})" value="{{ inv.entered }}" placeholder="0,00" data-open="{{ inv.open|stringformat:'s' }}"{% if inv.error %} aria-invalid="true" aria-describedby="tutar_{{ inv.pk }}-err"{% endif %}>
                     <button type="button" class="btn btn-quiet-ink btn-sm" data-fill="tutar_{{ inv.pk }}" aria-label="{{ inv.number }}: açık bakiyenin tamamı">Tamamı</button>
                   </div>
                   {% if inv.error %}<p class="field-error" id="tutar_{{ inv.pk }}-err">{{ inv.error }}</p>{% endif %}

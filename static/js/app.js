@@ -56,3 +56,13 @@ if (totalOut) {
   inputs.forEach((i) => i.addEventListener('input', update));
   update();
 }
+
+// Payment order: changing who pays whom reloads the open invoices, so lines never belong to an older choice.
+const pick = document.getElementById('po-pick');
+if (pick) {
+  pick.addEventListener('change', () => {
+    const entry = document.getElementById('po-entry');
+    if (entry) entry.querySelectorAll('input, select, textarea, button').forEach((el) => { el.disabled = true; });
+    if ([...pick.elements].filter((el) => el.tagName === 'SELECT').every((el) => el.value)) pick.requestSubmit();
+  });
+}

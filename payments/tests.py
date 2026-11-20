@@ -122,6 +122,21 @@ class OrderFlowTests(Base):
         with self.assertRaises(PermissionDenied):
             o.decide(self.fi, approve=True)
 
+    def test_cancel_rules_and_audit_trail(self):
+        o = self.order({self.inv: '10'})
+        self.assertFalse(o.can_cancel(self.boss))  # an approver rejects a pending order instead
+        with self.assertRaises(PermissionDenied):
+            o.cancel(self.boss, 'x')
+        o.decide(self.boss, approve=True, note='uygun')
+        with self.assertRaises(ValidationError):
+            o.cancel(self.boss, '  ')
+        o.cancel(self.boss, 'yanlış hesap')
+        o.refresh_from_db()
+        self.assertEqual(o.status, S.CANCELLED)
+        # the approval is still on record next to the cancellation
+        self.assertEqual((o.decided_by, o.decision_note), (self.boss, 'uygun'))
+        self.assertEqual((o.cancelled_by, o.cancel_note), (self.boss, 'yanlış hesap'))
+
     def test_reject_needs_reason(self):
         o = self.order({self.inv: '10'})
         with self.assertRaises(ValidationError):

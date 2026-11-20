@@ -64,7 +64,7 @@
       <p class="doc-state"><span class="req" aria-hidden="true">*</span> zorunlu alan</p>
     </header>
 
-    <form method="get" class="bl pick" aria-label="Kime, hangi şirketten, hangi para biriminde">
+    <form method="get" class="bl pick" id="po-pick" aria-label="Kime, hangi şirketten, hangi para biriminde">
       
       <div class="f">
         <label for="id_sirket"><span class="no" aria-hidden="true">1</span>Ödeyen şirket<span class="req" aria-hidden="true">*</span></label>
@@ -79,7 +79,7 @@
         
       </div>
       
-      <div class="f w2">
+      <div class="f">
         <label for="id_cari"><span class="no" aria-hidden="true">2</span>Alıcı (cari)<span class="req" aria-hidden="true">*</span></label>
         <select name="cari" class="form-select" required id="id_cari">
   <option value="" selected>Seçiniz</option>
@@ -111,7 +111,7 @@
         
       </div>
       
-      <div class="f w4 f-go">
+      <div class="f f-go">
         <button class="btn btn-quiet-ink w-100" type="submit" disabled>Açık faturaları getir</button>
       </div>
     </form>

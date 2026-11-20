@@ -10,9 +10,11 @@
     {% elif selected.status == 'APPROVED' %}
       <p class="doc-state state-pending">Onaylandı · ödeme bekliyor</p>
     {% elif selected.status == 'PAID' %}
-      <p class="overprint">Ödendi<small class="num">{{ selected.paid_on|date:"d.m.Y" }}</small></p>
+      <p class="overprint{% if fresh == 'paid' %} is-fresh{% endif %}">Ödendi<small class="num">{{ selected.paid_on|date:"d.m.Y" }}</small></p>
+    {% elif selected.status == 'CANCELLED' %}
+      <p class="overprint stamp-reject{% if fresh == 'cancel' %} is-fresh{% endif %}">İptal edildi<small class="num">{{ selected.cancelled_at|date:"d.m.Y" }}</small></p>
     {% else %}
-      <p class="overprint stamp-reject">{{ selected.get_status_display }}<small class="num">{{ selected.decided_at|date:"d.m.Y" }}</small></p>
+      <p class="overprint stamp-reject{% if fresh == 'decision' %} is-fresh{% endif %}">Reddedildi<small class="num">{{ selected.decided_at|date:"d.m.Y" }}</small></p>
     {% endif %}
   </header>
 
@@ -25,15 +27,15 @@
     <div class="f w4"><dt><span class="no" aria-hidden="true">6</span>Ödenen faturalar</dt>
       <dd>
         <table class="lines">
-          <thead><tr><th scope="col">Fatura</th><th scope="col">Vade</th><th scope="col" class="r">Fatura tutarı</th><th scope="col" class="r">Bu emirle</th><th scope="col" class="r">Kalan açık</th></tr></thead>
+          <thead><tr><th scope="col">Fatura</th><th scope="col">Vade</th><th scope="col" class="r">Bu emirle ({{ selected.currency }})</th><th scope="col" class="r">Kalan açık ({{ selected.currency }})</th><th scope="col" class="r">Fatura tutarı ({{ selected.currency }})</th></tr></thead>
           <tbody>
           {% for ln in lines %}
             <tr>
               <td>{% if static_demo %}{{ ln.invoice.number }}{% else %}<a href="{% url 'invoices:all_detail' ln.invoice_id %}">{{ ln.invoice.number }}</a>{% endif %}</td>
-              <td class="num">{{ ln.invoice.due_date|date:"d.m.Y"|default:"—" }}</td>
-              <td class="r num">{{ ln.invoice.amount|money }}</td>
-              <td class="r num"><b>{{ ln.amount|money }}</b></td>
-              <td class="r num">{{ ln.open|money }}</td>
+              <td class="num" data-label="Vade">{{ ln.invoice.due_date|date:"d.m.Y"|default:"—" }}</td>
+              <td class="r num" data-label="Bu emirle ({{ selected.currency }})"><b>{{ ln.amount|money }}</b></td>
+              <td class="r num" data-label="Kalan açık ({{ selected.currency }})">{{ ln.open|money }}</td>
+              <td class="r num" data-label="Fatura tutarı ({{ selected.currency }})">{{ ln.invoice.amount|money }}</td>
             </tr>
           {% endfor %}
           </tbody>
@@ -41,64 +43,79 @@
       </dd></div>
     <div class="f w4 f-amt"><dt><span class="no" aria-hidden="true">7</span>Ödenecek toplam</dt><dd><span class="amt num">{{ total|money }} {{ selected.currency }}</span></dd></div>
     {% if selected.note %}<div class="f w4"><dt><span class="no" aria-hidden="true">8</span>Açıklama</dt><dd>{{ selected.note }}</dd></div>{% endif %}
-    <div class="f w4"><dt><span class="no" aria-hidden="true">{% if selected.note %}9{% else %}8{% endif %}</span>Hazırlayan</dt>
+    <div class="f w4"><dt><span class="no" aria-hidden="true">{{ n.made }}</span>Hazırlayan</dt>
       <dd>{{ selected.created_by.get_full_name|default:selected.created_by.username }}<small class="num">{{ selected.created_at|date:"d.m.Y H:i" }}</small></dd></div>
-    <div class="f w4 f-stamps"><dt><span class="no" aria-hidden="true">{% if selected.note %}10{% else %}9{% endif %}</span>Onay ve ödeme</dt>
+    <div class="f w4 f-stamps"><dt><span class="no" aria-hidden="true">{{ n.stamps }}</span>Onay ve ödeme</dt>
       <dd>
         <ol class="stamps">
+          {% if selected.decided_by %}
           <li>
-            {% if selected.status == 'PENDING' %}
-              <span class="slot is-next">Ödeme onayı<small>Bekliyor</small></span>
-            {% elif selected.decided_by and selected.status != 'CANCELLED' %}
-              <span class="stamp{% if selected.status == 'REJECTED' %} stamp-reject{% endif %}">{% if selected.status == 'REJECTED' %}Reddedildi{% else %}Ödeme onayı{% endif %}<b>{{ selected.decided_by.get_full_name|default:selected.decided_by.username }}</b><small class="num">{{ selected.decided_at|date:"d.m.Y H:i" }}</small>{% if selected.decision_note %}<q>{{ selected.decision_note }}</q>{% endif %}</span>
-            {% elif selected.status == 'CANCELLED' %}
-              <span class="stamp stamp-reject">İptal edildi<b>{{ selected.decided_by.get_full_name|default:selected.decided_by.username }}</b><small class="num">{{ selected.decided_at|date:"d.m.Y H:i" }}</small><q>{{ selected.decision_note }}</q></span>
+            {% if selected.status == 'REJECTED' %}
+            <span class="stamp stamp-reject{% if fresh == 'decision' %} is-fresh{% endif %}">Reddedildi<b>Ödeme onayı</b><small>{{ selected.decided_by.get_full_name|default:selected.decided_by.username }} · <span class="num">{{ selected.decided_at|date:"d.m.Y H:i" }}</span></small>{% if selected.decision_note %}<q>{{ selected.decision_note }}</q>{% endif %}</span>
+            {% else %}
+            <span class="stamp{% if fresh == 'decision' %} is-fresh{% endif %}">Ödeme onayı<small>{{ selected.decided_by.get_full_name|default:selected.decided_by.username }} · <span class="num">{{ selected.decided_at|date:"d.m.Y H:i" }}</span></small>{% if selected.decision_note %}<q>{{ selected.decision_note }}</q>{% endif %}</span>
             {% endif %}
           </li>
+          {% elif selected.status == 'PENDING' %}
+          <li><span class="slot is-next">Ödeme onayı<small>Bekliyor</small></span></li>
+          {% endif %}
           {% if selected.status == 'PAID' %}
-          <li><span class="stamp">Ödendi<b>Dekont {{ selected.bank_ref }}</b><small>{{ selected.paid_by.get_full_name|default:selected.paid_by.username }} · <span class="num">{{ selected.paid_on|date:"d.m.Y" }}</span></small></span></li>
+          <li><span class="stamp{% if fresh == 'paid' %} is-fresh{% endif %}">Ödendi<b>Dekont {{ selected.bank_ref }}</b><small>{{ selected.paid_by.get_full_name|default:selected.paid_by.username }} · <span class="num">{{ selected.paid_on|date:"d.m.Y" }}</span></small></span></li>
           {% elif selected.status == 'PENDING' or selected.status == 'APPROVED' %}
           <li><span class="slot{% if selected.status == 'APPROVED' %} is-next{% endif %}">Bankadan ödeme<small>{% if selected.status == 'APPROVED' %}Bekliyor{% else %}Sırada{% endif %}</small></span></li>
+          {% elif selected.status == 'CANCELLED' %}
+          <li><span class="stamp stamp-reject{% if fresh == 'cancel' %} is-fresh{% endif %}">İptal edildi<small>{{ selected.cancelled_by.get_full_name|default:selected.cancelled_by.username }} · <span class="num">{{ selected.cancelled_at|date:"d.m.Y H:i" }}</span></small><q>{{ selected.cancel_note }}</q></span></li>
           {% endif %}
         </ol>
       </dd></div>
 
     {% if can_decide or can_pay or can_cancel %}
     <div class="f w4 f-decide">
-      <dt><label for="po-not"><span class="no" aria-hidden="true">{% if selected.note %}11{% else %}10{% endif %}</span>{% if can_pay %}Ödeme kaydı{% else %}Karar / not{% endif %}</label></dt>
+      <dt><span class="no" aria-hidden="true">{{ n.act }}</span>{% if can_decide %}Karar{% elif can_pay %}Ödeme kaydı{% else %}İptal{% endif %}</dt>
       <dd>
+        {% if static_demo %}<p class="hint mt-0">Demoda işlem kaydedilmez.</p>{% endif %}
+        {% if can_decide %}
         <form method="post" action="{% url 'payments:action' selected.pk %}" data-once>
-          {% csrf_token %}
-          <input type="hidden" name="next" value="{{ here }}">
-          {% if can_pay %}
-          <div class="pay-fields">
-            <div><label class="sub-label" for="po-tarih">Ödeme tarihi</label>
-              <input class="form-control" type="date" id="po-tarih" name="odeme_tarihi" value="{{ today|date:'Y-m-d' }}" max="{{ today|date:'Y-m-d' }}" required></div>
-            <div><label class="sub-label" for="po-dekont">Banka dekont / referans no</label>
-              <input class="form-control" id="po-dekont" name="dekont" maxlength="60" autocomplete="off" data-required-for="ode"></div>
-          </div>
-          <p class="hint">Transferi internet bankacılığından gönderdikten sonra dekont numarasını girin. Alıcı IBAN: <span class="num">{{ selected.payee_iban|iban }}</span></p>
-          {% endif %}
-          <textarea class="form-control{% if can_pay %} mt-2{% endif %}" id="po-not" name="not" rows="2" maxlength="300" aria-describedby="po-not-hint" data-required-for="reddet iptal"></textarea>
-          <p class="hint" id="po-not-hint">{% if can_decide %}Onaylarken isteğe bağlı; reddederken ve iptal ederken zorunlu.{% else %}İptal ederken zorunlu.{% endif %}</p>
-          {% if static_demo %}<p class="hint">Demoda işlem kaydedilmez.</p>{% endif %}
+          {% csrf_token %}<input type="hidden" name="next" value="{{ here }}">
+          <label class="sub-label" for="po-karar">Not</label>
+          <textarea class="form-control" id="po-karar" name="not" rows="2" maxlength="300" aria-describedby="po-karar-hint" data-required-for="reddet"></textarea>
+          <p class="hint" id="po-karar-hint">Onaylarken isteğe bağlı, reddederken zorunlu.</p>
           <div class="decide-actions">
-            {% if can_decide %}
             <button class="btn btn-stamp" type="submit" name="islem" value="onayla"{% if static_demo %} disabled{% endif %}><svg class="ic" aria-hidden="true"><use href="{% static 'vendor/icons.svg' %}#check-lg"></use></svg>Ödemeyi onayla</button>
             <button class="btn btn-reject" type="submit" name="islem" value="reddet"{% if static_demo %} disabled{% endif %}><svg class="ic" aria-hidden="true"><use href="{% static 'vendor/icons.svg' %}#x-lg"></use></svg>Reddet</button>
-            {% endif %}
-            {% if can_pay %}
-            <button class="btn btn-stamp" type="submit" name="islem" value="ode"{% if static_demo %} disabled{% endif %}><svg class="ic" aria-hidden="true"><use href="{% static 'vendor/icons.svg' %}#check-lg"></use></svg>Ödendi olarak kaydet</button>
-            {% endif %}
-            {% if can_cancel %}
-            <button class="btn btn-quiet-ink" type="submit" name="islem" value="iptal"{% if static_demo %} disabled{% endif %}>İptal et</button>
-            {% endif %}
           </div>
         </form>
+        {% endif %}
+        {% if can_pay %}
+        <form method="post" action="{% url 'payments:action' selected.pk %}" data-once>
+          {% csrf_token %}<input type="hidden" name="next" value="{{ here }}">
+          <div class="pay-fields">
+            <div><label class="sub-label" for="po-tarih">Ödeme tarihi<span class="req" aria-hidden="true">*</span></label>
+              <input class="form-control" type="date" id="po-tarih" name="odeme_tarihi" value="{{ today|date:'Y-m-d' }}" max="{{ today|date:'Y-m-d' }}" required></div>
+            <div><label class="sub-label" for="po-dekont">Banka dekont / referans no<span class="req" aria-hidden="true">*</span></label>
+              <input class="form-control" id="po-dekont" name="dekont" maxlength="60" autocomplete="off" aria-required="true" aria-describedby="po-dekont-hint" data-required-for="ode"></div>
+          </div>
+          <p class="hint" id="po-dekont-hint">Transferi internet bankacılığından <span class="num">{{ selected.payee_iban|iban }}</span> IBAN'ına gönderdikten sonra dekont numarasını girin.</p>
+          <div class="decide-actions">
+            <button class="btn btn-stamp" type="submit" name="islem" value="ode"{% if static_demo %} disabled{% endif %}><svg class="ic" aria-hidden="true"><use href="{% static 'vendor/icons.svg' %}#check-lg"></use></svg>Ödendi olarak kaydet</button>
+          </div>
+        </form>
+        {% endif %}
+        {% if can_cancel %}
+        <form method="post" action="{% url 'payments:action' selected.pk %}" class="cancel-block{% if can_decide or can_pay %} is-secondary{% endif %}" data-once>
+          {% csrf_token %}<input type="hidden" name="next" value="{{ here }}">
+          <label class="sub-label" for="po-iptal">İptal gerekçesi<span class="req" aria-hidden="true">*</span></label>
+          <textarea class="form-control" id="po-iptal" name="not" rows="2" maxlength="300" aria-describedby="po-iptal-hint" data-required-for="iptal"></textarea>
+          <p class="hint" id="po-iptal-hint">{% if selected.status == 'PENDING' %}Onaya gönderdiğiniz emri geri çeker; tutarlar faturalarda yeniden açılır.{% else %}Onaylı emri ödenmeden iptal eder; onay kaydı korunur, tutarlar faturalarda yeniden açılır.{% endif %}</p>
+          <div class="decide-actions">
+            <button class="btn btn-quiet-ink" type="submit" name="islem" value="iptal"{% if static_demo %} disabled{% endif %}>Ödeme emrini iptal et</button>
+          </div>
+        </form>
+        {% endif %}
       </dd>
     </div>
     {% elif selected.status == 'PENDING' %}
-    <div class="f w4"><dt><span class="no" aria-hidden="true">{% if selected.note %}11{% else %}10{% endif %}</span>Karar</dt>
+    <div class="f w4"><dt><span class="no" aria-hidden="true">{{ n.act }}</span>Karar</dt>
       <dd class="decide-note">Bu ödeme emrini, ödeme onayı yetkisi olan ve emri hazırlamamış biri onaylayacak.</dd></div>
     {% endif %}
   </dl>

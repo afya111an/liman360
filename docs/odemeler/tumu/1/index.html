@@ -62,7 +62,7 @@
     <div class="ledger-head">
       <h1 id="ledger-title">Ödeme emirleri</h1>
       <p class="ledger-sum">
-        3 ödeme emri<span class="sep" aria-hidden="true"> · </span><span class="num">9.760,00</span> EUR<span class="sep" aria-hidden="true"> · </span><span class="num">2.500,00</span> USD
+        4 ödeme emri<span class="sep" aria-hidden="true"> · </span><span class="num">9.760,00</span> EUR<span class="sep" aria-hidden="true"> · </span><span class="num">3.000,00</span> USD
       </p>
     </div>
 
@@ -89,8 +89,8 @@
           <span class="r-amt num">1.000,00 <small>USD</small></span>
           <span class="r-sup">Örnek Kumanya Tedarik</span>
           <span class="r-meta">
-            <span class="state state-approved">Ödenecek</span>
-            Ödeme <span class="num">22.11.2026</span> · Örnek Bankası
+            <span class="state state-approved">Ödendi</span>
+            <span class="num">20.11.2026</span> · Örnek Bankası
           </span>
         </a>
       </li>
@@ -98,6 +98,18 @@
       <li>
         <a class="row-link" href="/liman360/odemeler/tumu/3/" >
           <span class="r-no">OE-2026-0003</span>
+          <span class="r-amt num">500,00 <small>USD</small></span>
+          <span class="r-sup">Örnek Kumanya Tedarik</span>
+          <span class="r-meta">
+            <span class="state state-partial">Ödenecek</span>
+            Ödeme <span class="num">22.11.2026</span> · Örnek Bankası
+          </span>
+        </a>
+      </li>
+      
+      <li>
+        <a class="row-link" href="/liman360/odemeler/tumu/4/" >
+          <span class="r-no">OE-2026-0004</span>
           <span class="r-amt num">1.500,00 <small>USD</small></span>
           <span class="r-sup">Örnek Kumanya Tedarik</span>
           <span class="r-meta">
@@ -134,15 +146,15 @@
     <div class="f w4"><dt><span class="no" aria-hidden="true">6</span>Ödenen faturalar</dt>
       <dd>
         <table class="lines">
-          <thead><tr><th scope="col">Fatura</th><th scope="col">Vade</th><th scope="col" class="r">Fatura tutarı</th><th scope="col" class="r">Bu emirle</th><th scope="col" class="r">Kalan açık</th></tr></thead>
+          <thead><tr><th scope="col">Fatura</th><th scope="col">Vade</th><th scope="col" class="r">Bu emirle (EUR)</th><th scope="col" class="r">Kalan açık (EUR)</th><th scope="col" class="r">Fatura tutarı (EUR)</th></tr></thead>
           <tbody>
           
             <tr>
               <td>LH-2026-104</td>
-              <td class="num">23.11.2026</td>
-              <td class="r num">9.760,00</td>
-              <td class="r num"><b>9.760,00</b></td>
-              <td class="r num">0,00</td>
+              <td class="num" data-label="Vade">23.11.2026</td>
+              <td class="r num" data-label="Bu emirle (EUR)"><b>9.760,00</b></td>
+              <td class="r num" data-label="Kalan açık (EUR)">0,00</td>
+              <td class="r num" data-label="Fatura tutarı (EUR)">9.760,00</td>
             </tr>
           
           </tbody>
@@ -151,15 +163,17 @@
     <div class="f w4 f-amt"><dt><span class="no" aria-hidden="true">7</span>Ödenecek toplam</dt><dd><span class="amt num">9.760,00 EUR</span></dd></div>
     
     <div class="f w4"><dt><span class="no" aria-hidden="true">8</span>Hazırlayan</dt>
-      <dd>Selin Demir<small class="num">20.11.2026 21:57</small></dd></div>
+      <dd>Selin Demir<small class="num">20.11.2026 22:17</small></dd></div>
     <div class="f w4 f-stamps"><dt><span class="no" aria-hidden="true">9</span>Onay ve ödeme</dt>
       <dd>
         <ol class="stamps">
+          
           <li>
             
-              <span class="stamp">Ödeme onayı<b>Kemal Aydın</b><small class="num">20.11.2026 21:57</small></span>
+            <span class="stamp">Ödeme onayı<small>Kemal Aydın · <span class="num">20.11.2026 22:17</span></small></span>
             
           </li>
+          
           
           <li><span class="stamp">Ödendi<b>Dekont DK-2026-114508</b><small>Selin Demir · <span class="num">20.11.2026</span></small></span></li>
           

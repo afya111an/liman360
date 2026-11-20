@@ -210,7 +210,7 @@ Flat. There are no shadows. Depth is conveyed by rules, by white slips on paper,
 
 ## Shapes
 
-Square corners throughout (Bootstrap radii set to 0). Rules are 1px; the form's outer rule is 1.5px navy ink. Stamps have a double frame: a 2.5px border plus a 1px outline offset 2px (overprint: 3px plus 1.5px offset 3px). Stamps rotate a few degrees (-3deg, alternating +2deg; overprint -6deg). Status markers are small squares: empty for pending, filled for approved, struck diagonally for rejected.
+Square corners throughout (Bootstrap radii set to 0). Rules are 1px; the form's outer rule is 1.5px navy ink. Stamps have a double frame: a 2.5px border plus a 1px outline offset 2px (overprint: 3px plus 1.5px offset 3px). Stamps rotate a few degrees (-3deg, alternating +2deg; overprint -6deg). Status markers are small squares: empty for pending, half-filled for partway (a payment approved but not yet sent, an invoice partly paid), filled for approved or done, struck diagonally for rejected or cancelled.
 
 ## Components
 
@@ -238,7 +238,7 @@ Stacked white rows sharing 1px form rules; record number (Title), amount with sm
 Paper cells in a ruled 4-column grid inside a 1.5px navy outer rule; each cell a numbered caption over its value. The amount occupies a full-width box. Approvals are a numbered field holding the stamp row; the decision (note textarea plus approve and reject buttons) is itself the last numbered field inside the form. Entry forms use the same grid with inputs inside the cells.
 
 ### Line Tables
-Tables that live inside a form field (invoices paid by a payment order, an invoice's payments): Archivo uppercase captions over a 1px navy rule, rows ruled in form rule, amounts right-aligned in tabular numerals, totals in a footer under a navy rule. Entry tables put a right-aligned amount input and an outlined "Tamamı" button in the last column; below 576px entry rows stack and read-only tables scroll sideways inside their field.
+Tables that live inside a form field (invoices paid by a payment order, an invoice's payments): Archivo uppercase captions over a 1px navy rule, rows ruled in form rule, amounts right-aligned in tabular numerals, totals in a footer under a navy rule. Every amount caption carries the currency ("Bu emirle (USD)"); columns run record number, date, then the amounts as one right-aligned block, with the amount this document is about first. Entry tables put a right-aligned amount input and an outlined "Tamamı" button in the last column. Below 576px every line table stacks: each row becomes a block with the record number on top and each value under its own small caption; the footer total becomes one row.
 
 ### Stamps and Overprint (signature)
 - **Approval stamp:** violet double-framed box, rotated, stamp lettering for step and approver role, body type for name and timestamp, faint violet tint inside. Rejection stamps are red and quote the reason in italic.
