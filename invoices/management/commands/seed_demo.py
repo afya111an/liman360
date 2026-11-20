@@ -29,7 +29,7 @@ class Command(BaseCommand):
             return u
         clerk = user('muhasebe', 'Ayşe', 'Yılmaz')
         op = user('operasyon', 'Mert', 'Kaya', ops)
-        user('finans', 'Selin', 'Demir', fin)
+        fi = user('finans', 'Selin', 'Demir', fin)
         user('yonetici', 'Demo', 'Yönetici', is_staff=True, is_superuser=True)
 
         today = date.today()
@@ -55,6 +55,7 @@ class Command(BaseCommand):
             ('LH-2026-117', 'Örnek Liman Hizmetleri Ltd.', v2, port, '18400.00', 'EUR', 12, 'Römorkör ve pilotaj'),
             ('TRS-2026-090', 'Örnek Tersane A.Ş.', v2, None, '640000.00', 'TRY', 30, 'Ara bakım işçiliği'),
             ('KMN-2026-031', 'Örnek Kumanya Tedarik', v1, None, '3125.50', 'USD', 9, 'Kumanya'),
+            ('LH-2026-104', 'Örnek Liman Hizmetleri Ltd.', v1, port, '9760.00', 'EUR', 3, 'Rıhtım ve barınma ücreti'),
         ]
         invs = []
         for no, sup, vessel, cat, amt, cur, due, desc in rows:
@@ -64,6 +65,8 @@ class Command(BaseCommand):
                 description=desc, created_by=clerk))
         invs[0].decide(op, approve=True)                     # waits for Finans
         invs[3].decide(op, approve=False, note='Teklifle uyuşmuyor, revize fatura istendi.')
+        invs[5].decide(op, approve=True)                     # fully approved: shows both stamps
+        invs[5].decide(fi, approve=True)
         self.stdout.write(self.style.SUCCESS('Demo data created.'))
         if not os.environ.get('LIMAN_DEMO_PASSWORD'):
             self.stdout.write(f'Demo password for all users: {password}')
