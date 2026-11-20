@@ -11,7 +11,7 @@
       </p>
     </div>
 
-    {% if scope == 'all' %}
+    {% if scope == 'all' and not static_demo %}
     <form class="filters" method="get" role="search">
       <div class="filters-q">
         <label class="visually-hidden" for="f-q">Ara</label>

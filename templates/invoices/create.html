@@ -22,7 +22,8 @@
       {% endfor %}
     </div>
     <div class="decide-actions">
-      <button class="btn btn-stamp" type="submit">Kaydet ve onaya gönder</button>
+      <button class="btn btn-stamp" type="submit"{% if static_demo %} disabled{% endif %}>Kaydet ve onaya gönder</button>
+      {% if static_demo %}<p class="hint w-100">Demoda fatura kaydedilmez.</p>{% endif %}
       <a class="btn btn-quiet-ink" href="{% url 'invoices:all' %}">Vazgeç</a>
     </div>
   </form>

@@ -59,11 +59,12 @@
           <input type="hidden" name="next" value="{{ decided_here }}">
           <textarea class="form-control" id="gerekce" name="gerekce" rows="2" maxlength="300" aria-describedby="gerekce-hint"></textarea>
           <p class="hint" id="gerekce-hint">Onaylarken isteğe bağlı, reddederken zorunlu.</p>
+          {% if static_demo %}<p class="hint">Demoda karar kaydedilmez.</p>{% endif %}
           <div class="decide-actions">
-            <button class="btn btn-stamp" type="submit" name="karar" value="onayla">
+            <button class="btn btn-stamp" type="submit" name="karar" value="onayla"{% if static_demo %} disabled{% endif %}>
               <svg class="ic" aria-hidden="true"><use href="{% static 'vendor/icons.svg' %}#check-lg"></use></svg>{{ next_level.order }}. onayı ver
             </button>
-            <button class="btn btn-reject" type="submit" name="karar" value="reddet">
+            <button class="btn btn-reject" type="submit" name="karar" value="reddet"{% if static_demo %} disabled{% endif %}>
               <svg class="ic" aria-hidden="true"><use href="{% static 'vendor/icons.svg' %}#x-lg"></use></svg>Reddet
             </button>
           </div>

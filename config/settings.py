@@ -126,6 +126,7 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 USE_THOUSAND_SEPARATOR = True
+LIMAN_STATIC_DEMO = False  # True only while export_demo renders the GitHub Pages demo
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'invoices:pool'
 LOGOUT_REDIRECT_URL = 'login'

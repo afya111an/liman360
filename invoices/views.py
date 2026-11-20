@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied, ValidationError
@@ -59,8 +60,8 @@ def invoice_list(request, scope, pk=None):
             'next_level': selected.next_level(),
             'can_decide': selected.can_decide(request.user),
             'decided_here': request.get_full_path(),
-            'fresh': recent[-1].pk if recent else None,  # the stamp just placed gets its landing motion
-            'fresh_final': bool(recent) and selected.status != Invoice.Status.PENDING,
+            'fresh': recent[-1].pk if recent and not settings.LIMAN_STATIC_DEMO else None,  # the stamp just placed gets its landing motion
+            'fresh_final': bool(recent) and not settings.LIMAN_STATIC_DEMO and selected.status != Invoice.Status.PENDING,
             'final_at': max((a.at for a in decisions.values()), default=None),
             # Field numbers continue after the optional notes box.
             'n_entered': 11 if selected.notes else 10,

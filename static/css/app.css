@@ -239,3 +239,6 @@ a { text-underline-offset: 3px; }
 .login-doc .btn-stamp { min-height: 46px; margin-top: .5rem; }
 .login-help { margin: 1rem 0 0; font-size: .8125rem; color: var(--ink-2); }
 .login-doc .field-error { margin: 0 0 1rem; }
+
+/* static GitHub Pages demo */
+.demo-bar { margin: 0; padding: .45rem 1rem; background: var(--stamp-tint); color: var(--ink); font-size: .8125rem; text-align: center; }
