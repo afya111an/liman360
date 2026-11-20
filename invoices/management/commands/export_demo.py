@@ -38,6 +38,12 @@ class Command(BaseCommand):
         old_name = connection.creation.create_test_db(verbosity=0, autoclobber=True)
         try:
             call_command('seed_demo', stdout=io.StringIO())
+            # Replace the seed's sample rates with real TCMB rates as of today, when TCMB is reachable.
+            try:
+                call_command('fetch_tcmb_rates', days=14, stdout=io.StringIO())
+                self.stdout.write('TCMB rates fetched.')
+            except CommandError as e:
+                self.stderr.write(f'TCMB not reachable, demo keeps sample rates: {e}')
             with override_settings(LIMAN_STATIC_DEMO=True, STATIC_URL='/static/', ALLOWED_HOSTS=['testserver']):
                 pages = self._render(as_user, base)
         finally:
