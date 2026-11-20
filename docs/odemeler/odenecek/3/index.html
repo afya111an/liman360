@@ -36,7 +36,23 @@
           <span class="rates-date">TCMB 20.11.2026</span>
         </p>
         
-        <p class="user mb-0"><span class="user-name">Selin Demir (demo)</span></p>
+        
+        <div class="user dropdown demo-switch">
+          <button class="btn btn-sm btn-quiet dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="visually-hidden">Demo kullanıcısı: </span>Selin Demir<span class="demo-role d-none d-xl-inline">&nbsp;· Finans</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><h2 class="dropdown-header">Demo kullanıcısı değiştir</h2></li>
+            
+            <li><a class="dropdown-item active" aria-current="true" href="/liman360/odemeler/odenecek/3/">Selin Demir<small>Finans</small></a></li>
+            
+            <li><a class="dropdown-item" href="/liman360/mert/operasyon/seferler/">Mert Kaya<small>Operasyon</small></a></li>
+            
+            <li><a class="dropdown-item" href="/liman360/kemal/odemeler/odenecek/3/">Kemal Aydın<small>Ödeme onayı</small></a></li>
+            
+          </ul>
+        </div>
+        
       </div>
     </div>
   </nav>
@@ -128,14 +144,14 @@
     <div class="f w4 f-amt"><dt><span class="no" aria-hidden="true">7</span>Ödenecek toplam</dt><dd><span class="amt num">500,00 USD</span></dd></div>
     
     <div class="f w4"><dt><span class="no" aria-hidden="true">8</span>Hazırlayan</dt>
-      <dd>Selin Demir<small class="num">20.11.2026 23:41</small></dd></div>
+      <dd>Selin Demir<small class="num">20.11.2026 23:49</small></dd></div>
     <div class="f w4 f-stamps"><dt><span class="no" aria-hidden="true">9</span>Onay ve ödeme</dt>
       <dd>
         <ol class="stamps">
           
           <li>
             
-            <span class="stamp">Ödeme onayı<small>Kemal Aydın · <span class="num">20.11.2026 23:41</span></small></span>
+            <span class="stamp">Ödeme onayı<small>Kemal Aydın · <span class="num">20.11.2026 23:49</span></small></span>
             
           </li>
           
@@ -153,7 +169,7 @@
         
         
         <form method="post" action="/liman360/odemeler/3/islem/" data-once>
-          <input type="hidden" name="csrfmiddlewaretoken" value="DpiTtM9vXUXRhO67EcLVZFR4oCggHvz37tQAImg1DcylZaxyd4n6u3c5Sjv56MhH"><input type="hidden" name="next" value="/odemeler/odenecek/3/">
+          <input type="hidden" name="csrfmiddlewaretoken" value="ABxbGv3IrkmonEiKgbchv4nylvRjRwOT9fSUi4rQBzeme0cDBTUyXRlEE48FO3gd"><input type="hidden" name="next" value="/odemeler/odenecek/3/">
           <div class="pay-fields">
             <div><label class="sub-label" for="po-tarih">Ödeme tarihi<span class="req" aria-hidden="true">*</span></label>
               <input class="form-control" type="date" id="po-tarih" name="odeme_tarihi" value="2026-11-20" max="2026-11-20" required></div>
@@ -168,7 +184,7 @@
         
         
         <form method="post" action="/liman360/odemeler/3/islem/" class="cancel-block is-secondary" data-once>
-          <input type="hidden" name="csrfmiddlewaretoken" value="DpiTtM9vXUXRhO67EcLVZFR4oCggHvz37tQAImg1DcylZaxyd4n6u3c5Sjv56MhH"><input type="hidden" name="next" value="/odemeler/odenecek/3/">
+          <input type="hidden" name="csrfmiddlewaretoken" value="ABxbGv3IrkmonEiKgbchv4nylvRjRwOT9fSUi4rQBzeme0cDBTUyXRlEE48FO3gd"><input type="hidden" name="next" value="/odemeler/odenecek/3/">
           <label class="sub-label" for="po-iptal">İptal gerekçesi<span class="req" aria-hidden="true">*</span></label>
           <textarea class="form-control" id="po-iptal" name="not" rows="2" maxlength="300" aria-describedby="po-iptal-hint" data-required-for="iptal"></textarea>
           <p class="hint" id="po-iptal-hint">Onaylı emri ödenmeden iptal eder; onay kaydı korunur, tutarlar faturalarda yeniden açılır.</p>

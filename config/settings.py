@@ -129,6 +129,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 USE_THOUSAND_SEPARATOR = True
 LIMAN_STATIC_DEMO = False  # True only while export_demo renders the GitHub Pages demo
+LIMAN_DEMO_USERS = []  # set by export_demo: the demo users offered in the top-bar switcher
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'invoices:pool'
 LOGOUT_REDIRECT_URL = 'login'

@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1B2A4A">
+<title>DS-26/08 · Liman360</title>
+<link rel="preload" href="/liman360/static/vendor/fonts/archivo-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/liman360/static/vendor/bootstrap/bootstrap.min.css">
+<link rel="stylesheet" href="/liman360/static/css/app.css">
+<link rel="icon" href="/liman360/static/favicon.svg" type="image/svg+xml">
+</head>
+<body class="">
+<a class="visually-hidden-focusable skip" href="#icerik">İçeriğe geç</a>
+<p class="demo-bar">Statik demo: örnek veri, kayıt yapılmaz. <a href="https://github.com/afya111an/liman360">Kaynak kod</a></p>
+
+<header class="topbar">
+  <nav class="navbar navbar-expand-md navbar-dark" aria-label="Modüller">
+    <div class="container-fluid px-3 px-md-4">
+      <a class="brand" href="/liman360/mert/faturalar/onay/">Liman360</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#modules" aria-controls="modules" aria-expanded="false" aria-label="Menüyü aç">
+        <svg class="ic" aria-hidden="true"><use href="/liman360/static/vendor/icons.svg#list"></use></svg>
+      </button>
+      <div class="collapse navbar-collapse" id="modules">
+        <ul class="navbar-nav me-auto">
+          
+          <li class="nav-item"><a class="nav-link" href="/liman360/mert/faturalar/onay/">Faturalar</a></li>
+          <li class="nav-item"><a class="nav-link active" aria-current="page" href="/liman360/mert/operasyon/seferler/">Operasyon</a></li>
+          
+          
+          
+        </ul>
+        
+        <p class="rates mb-0" title="TCMB döviz satış kurları">
+          <span>USD <b>50,49</b></span><span>EUR <b>55,40</b></span>
+          <span class="rates-date">TCMB 20.11.2026</span>
+        </p>
+        
+        
+        <div class="user dropdown demo-switch">
+          <button class="btn btn-sm btn-quiet dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="visually-hidden">Demo kullanıcısı: </span>Mert Kaya<span class="demo-role d-none d-xl-inline">&nbsp;· Operasyon</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><h2 class="dropdown-header">Demo kullanıcısı değiştir</h2></li>
+            
+            <li><a class="dropdown-item" href="/liman360/operasyon/seferler/2/">Selin Demir<small>Finans</small></a></li>
+            
+            <li><a class="dropdown-item active" aria-current="true" href="/liman360/mert/operasyon/seferler/2/">Mert Kaya<small>Operasyon</small></a></li>
+            
+            <li><a class="dropdown-item" href="/liman360/kemal/operasyon/seferler/2/">Kemal Aydın<small>Ödeme onayı</small></a></li>
+            
+          </ul>
+        </div>
+        
+      </div>
+    </div>
+  </nav>
+</header>
+
+<nav class="subnav" aria-label="Operasyon">
+  <div class="container-fluid px-3 px-md-4">
+    <a href="/liman360/mert/operasyon/seferler/" aria-current="page">Seferler <span class="count" title="Yolda olan sefer">1</span><span class="visually-hidden"> yolda</span></a>
+    <a href="/liman360/mert/operasyon/gemiler/" >Gemiler</a>
+    <a href="/liman360/mert/operasyon/bunker/" >Bunker</a>
+    <a href="/liman360/mert/operasyon/raporlar/" ><span class="d-sm-none">Noon</span><span class="d-none d-sm-inline">Günlük raporlar</span></a>
+    
+    <a class="btn btn-quiet-ink btn-sm ms-auto btn-new" href="/liman360/mert/operasyon/seferler/yeni/" aria-label="Yeni sefer">
+      <svg class="ic" aria-hidden="true"><use href="/liman360/static/vendor/icons.svg#plus-lg"></use></svg><span class="d-none d-sm-inline">Yeni sefer</span>
+    </a>
+    
+  </div>
+</nav>
+
+
+
+<main id="icerik">
+<div class="work has-doc">
+  <section class="ledger" aria-labelledby="ledger-title">
+    <div class="ledger-head">
+      <h1 id="ledger-title">Açık seferler</h1>
+      <p class="ledger-sum">2 sefer</p>
+    </div>
+    
+
+
+    
+    <ol class="rows">
+      <li>
+<a class="row-link" href="/liman360/mert/operasyon/seferler/3/">
+  <span class="r-no">DS-26/09</span>
+  <span class="r-amt">M/V DEMO STAR</span>
+  <span class="r-sup">Alexandria → Pire · Dökme mısır</span>
+  <span class="r-meta">
+    <span class="state state-pending">Planlandı</span>
+
+    Plan <span class="num">02.12.2026</span>
+    
+  </span>
+</a>
+</li><li>
+<a class="row-link is-selected" href="/liman360/mert/operasyon/seferler/2/" aria-current="true">
+  <span class="r-no">DS-26/08</span>
+  <span class="r-amt">M/V DEMO STAR</span>
+  <span class="r-sup">Novorossiysk → Alexandria · Dökme buğday</span>
+  <span class="r-meta">
+    <span class="state state-partial">Denizde</span>
+
+    Kalkış <span class="num">09.11.2026</span>
+    
+  </span>
+</a>
+</li>
+    </ol>
+    
+    
+  </section>
+  <section class="sheet" aria-label="Sefer belgesi">
+    
+
+<article class="doc" aria-labelledby="doc-title">
+  <a class="back" href="/liman360/mert/operasyon/seferler/"><svg class="ic" aria-hidden="true"><use href="/liman360/static/vendor/icons.svg#arrow-left"></use></svg>Listeye dön</a>
+  <header class="doc-head">
+    <h2 id="doc-title">DS-26/08</h2>
+    <p class="doc-state state-pending">Denizde</p>
+  </header>
+  <dl class="bl">
+    <div class="f w2"><dt><span class="no" aria-hidden="true">1</span>Gemi</dt><dd>M/V DEMO STAR<small class="num">IMO 9074729</small></dd></div>
+    <div class="f w2"><dt><span class="no" aria-hidden="true">2</span>Rota</dt><dd>Novorossiysk → Alexandria<small>Rusya → Mısır</small></dd></div>
+    <div class="f"><dt><span class="no" aria-hidden="true">3</span>Planlanan kalkış</dt><dd class="num">06.11.2026</dd></div>
+    <div class="f"><dt><span class="no" aria-hidden="true">4</span>Planlanan varış</dt><dd class="num">22.11.2026</dd></div>
+    <div class="f"><dt><span class="no" aria-hidden="true">5</span>Gerçekleşen kalkış</dt><dd class="num">09.11.2026</dd></div>
+    <div class="f"><dt><span class="no" aria-hidden="true">6</span>Gerçekleşen varış</dt><dd class="num">—</dd></div>
+    <div class="f w4"><dt><span class="no" aria-hidden="true">7</span>Aşamalar</dt>
+      <dd>
+        <ol class="phases">
+          
+          <li class="phase phase-done">
+            <span class="state state-approved">Planlandı</span>
+            <small>Kaydeden Mert Kaya</small>
+          </li>
+          
+          <li class="phase phase-done">
+            <span class="state state-approved">Yüklemede</span>
+            <small class="num">06.11.2026 · Mert Kaya</small>
+          </li>
+          
+          <li class="phase phase-current" aria-current="step">
+            <span class="state state-partial">Denizde</span>
+            <small class="num">09.11.2026 · Mert Kaya</small>
+          </li>
+          
+          <li class="phase phase-todo">
+            <span class="state state-pending">Tahliyede</span>
+            
+          </li>
+          
+          <li class="phase phase-todo">
+            <span class="state state-pending">Tamamlandı</span>
+            
+          </li>
+          
+          
+        </ol>
+      </dd></div>
+    <div class="f w2"><dt><span class="no" aria-hidden="true">8</span>Yük</dt><dd>Dökme buğday<small class="num">28.500 MT</small></dd></div>
+    <div class="f w2"><dt><span class="no" aria-hidden="true">9</span>Kiracı (charterer)</dt><dd>Örnek Grain Trading SA</dd></div>
+    <div class="f w4 f-amt"><dt><span class="no" aria-hidden="true">10</span>Navlun</dt>
+      <dd><span class="amt num">698.250,00 USD</span><small class="num">24,50 USD/MT × 28.500 MT</small></dd></div>
+    <div class="f w4"><dt><span class="no" aria-hidden="true">11</span>Sefer masrafları</dt>
+      <dd>
+        
+        <table class="lines">
+          <thead><tr><th scope="col">Fatura</th><th scope="col">Cari</th><th scope="col">Durum</th><th scope="col" class="r">Tutar</th></tr></thead>
+          <tbody>
+          <tr>
+            <td>INV-2026-0891</td>
+            <td data-label="Cari">Örnek Marine Fuels SA</td>
+            <td data-label="Durum">Onay bekliyor</td>
+            <td class="r num" data-label="Tutar (USD)">187.200,00 USD</td></tr><tr>
+            <td>DA-26-044</td>
+            <td data-label="Cari">Örnek Port Agency Services</td>
+            <td data-label="Durum">Onay bekliyor</td>
+            <td class="r num" data-label="Tutar (USD)">42.850,00 USD</td></tr><tr>
+            <td>KMN-2026-031</td>
+            <td data-label="Cari">Örnek Kumanya Tedarik</td>
+            <td data-label="Durum">Onaylandı</td>
+            <td class="r num" data-label="Tutar (USD)">3.125,50 USD</td></tr><tr>
+            <td>LH-2026-104</td>
+            <td data-label="Cari">Örnek Liman Hizmetleri Ltd.</td>
+            <td data-label="Durum">Onaylandı</td>
+            <td class="r num" data-label="Tutar (EUR)">9.760,00 EUR</td></tr>
+          </tbody>
+          <tfoot><tr><th scope="row" colspan="3" class="r">Toplam USD</th><td class="r num">233.175,50 USD</td></tr><tr><th scope="row" colspan="3" class="r">Toplam EUR</th><td class="r num">9.760,00 EUR</td></tr></tfoot>
+        </table>
+        
+      </dd></div>
+    <div class="f w4 f-amt"><dt><span class="no" aria-hidden="true">12</span>Navlun − USD masraflar</dt>
+      <dd><span class="amt num">465.074,50 USD</span><small>Reddedilen faturalar hariç; başka para birimindeki masraflar ayrı listelenir, toplanmaz.</small></dd></div>
+    <div class="f w4"><dt><span class="no" aria-hidden="true">13</span>Bunker ikmalleri</dt>
+      <dd>
+        
+        <table class="lines">
+          <thead><tr><th scope="col">Tarih</th><th scope="col">Liman</th><th scope="col">Cins</th><th scope="col" class="r">Miktar (MT)</th><th scope="col" class="r">Tutar</th></tr></thead>
+          <tbody><tr>
+            <td class="num">07.11.2026</td>
+            <td data-label="Liman">Novorossiysk</td><td data-label="Cins">VLSFO</td>
+            <td class="r num" data-label="Miktar (MT)">650</td>
+            <td class="r num" data-label="Tutar (USD)">383.500,00 USD</td></tr><tr>
+            <td class="num">07.11.2026</td>
+            <td data-label="Liman">Novorossiysk</td><td data-label="Cins">MGO</td>
+            <td class="r num" data-label="Miktar (MT)">80</td>
+            <td class="r num" data-label="Tutar (USD)">65.200,00 USD</td></tr></tbody>
+        </table>
+        
+      </dd></div>
+    <div class="f w4"><dt><span class="no" aria-hidden="true">14</span>Son günlük raporlar</dt>
+      <dd>
+        
+        <table class="lines">
+          <thead><tr><th scope="col">Tarih</th><th scope="col" class="r">VLSFO tüketim (MT)</th><th scope="col" class="r">VLSFO ROB (MT)</th><th scope="col" class="r">MGO tüketim (MT)</th><th scope="col" class="r">MGO ROB (MT)</th><th scope="col">Kontrol</th></tr></thead>
+          <tbody><tr>
+            <td class="num">19.11.2026</td>
+            <td class="r num" data-label="VLSFO tüketim (MT)">28,9</td><td class="r num" data-label="VLSFO ROB (MT)">663,1</td><td class="r num" data-label="MGO tüketim (MT)">2,4</td><td class="r num" data-label="MGO ROB (MT)">93,6</td>
+            <td data-label="Kontrol"><span class="ok-text">Tutarlı</span></td></tr><tr>
+            <td class="num">18.11.2026</td>
+            <td class="r num" data-label="VLSFO tüketim (MT)">28,2</td><td class="r num" data-label="VLSFO ROB (MT)">692</td><td class="r num" data-label="MGO tüketim (MT)">2,4</td><td class="r num" data-label="MGO ROB (MT)">96</td>
+            <td data-label="Kontrol"><span class="ok-text">Tutarlı</span></td></tr><tr>
+            <td class="num">17.11.2026</td>
+            <td class="r num" data-label="VLSFO tüketim (MT)">27,5</td><td class="r num" data-label="VLSFO ROB (MT)">720,2</td><td class="r num" data-label="MGO tüketim (MT)">2,4</td><td class="r num" data-label="MGO ROB (MT)">98,4</td>
+            <td data-label="Kontrol"><span class="ok-text">Tutarlı</span></td></tr><tr>
+            <td class="num">16.11.2026</td>
+            <td class="r num" data-label="VLSFO tüketim (MT)">28,9</td><td class="r num" data-label="VLSFO ROB (MT)">747,7</td><td class="r num" data-label="MGO tüketim (MT)">2,4</td><td class="r num" data-label="MGO ROB (MT)">100,8</td>
+            <td data-label="Kontrol"><span class="flag-text">ROB tutmuyor</span></td></tr><tr>
+            <td class="num">15.11.2026</td>
+            <td class="r num" data-label="VLSFO tüketim (MT)">28,2</td><td class="r num" data-label="VLSFO ROB (MT)">782,6</td><td class="r num" data-label="MGO tüketim (MT)">2,4</td><td class="r num" data-label="MGO ROB (MT)">103,2</td>
+            <td data-label="Kontrol"><span class="ok-text">Tutarlı</span></td></tr></tbody>
+        </table>
+        
+      </dd></div>
+    
+    <div class="f w4 f-decide"><dt><span class="no" aria-hidden="true">15</span>Aşama</dt>
+      <dd>
+        <p class="hint mt-0">Demoda işlem kaydedilmez.</p>
+        
+        <form method="post" action="/liman360/mert/operasyon/seferler/2/islem/" data-once>
+          <input type="hidden" name="csrfmiddlewaretoken" value="RFhXuNSnM1l5TUACk9OSoP6GcgQbUX45W9vTlUSZHD96i1HACjULgJosSEk9id5P"><input type="hidden" name="next" value="/operasyon/seferler/2/">
+          <div class="pay-fields">
+            <div><label class="sub-label" for="vy-tarih">Gerçekleşme tarihi<span class="req" aria-hidden="true">*</span></label>
+              <input class="form-control" type="date" id="vy-tarih" name="tarih" value="2026-11-20" max="2026-11-20" required></div>
+          </div>
+          <div class="decide-actions">
+            <button class="btn btn-stamp" type="submit" name="islem" value="ilerle" disabled>Tahliyeye başla</button>
+          </div>
+        </form>
+        
+        
+      </dd></div>
+    
+  </dl>
+</article>
+
+
+    
+  </section>
+</div>
+</main>
+<script src="/liman360/static/vendor/bootstrap/bootstrap.bundle.min.js" defer></script>
+<script src="/liman360/static/js/app.js" defer></script>
+</body>
+</html>

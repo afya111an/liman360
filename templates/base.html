@@ -36,7 +36,19 @@
           <span class="rates-date">{% if shell_rates.0.1.source == 'TCMB' %}TCMB {% endif %}{{ shell_rates.0.1.date|date:"d.m.Y" }}</span>
         </p>
         {% endif %}
-        {% if static_demo %}<p class="user mb-0"><span class="user-name">{{ user.get_full_name }} (demo)</span></p>{% else %}
+        {% if static_demo %}
+        <div class="user dropdown demo-switch">
+          <button class="btn btn-sm btn-quiet dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="visually-hidden">Demo kullanıcısı: </span>{{ user.get_full_name }}{% for u in demo_users %}{% if u.username == user.username %}<span class="demo-role d-none d-xl-inline">&nbsp;· {{ u.role }}</span>{% endif %}{% endfor %}
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><h2 class="dropdown-header">Demo kullanıcısı değiştir</h2></li>
+            {% for u in demo_users %}
+            <li><a class="dropdown-item{% if u.username == user.username %} active" aria-current="true{% endif %}" href="__DEMO_SWITCH__{{ u.username }}__DEMO_SWITCH__">{{ u.name }}<small>{{ u.role }}</small></a></li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% else %}
         <form method="post" action="{% url 'logout' %}" class="user">
           {% csrf_token %}
           <span class="user-name">{{ user.get_full_name|default:user.username }}</span>

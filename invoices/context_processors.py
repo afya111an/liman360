@@ -23,6 +23,7 @@ def shell(request):
     rates = [(c, ExchangeRate.objects.filter(currency=c).first()) for c in (Currency.USD, Currency.EUR)]
     return {
         'static_demo': getattr(settings, 'LIMAN_STATIC_DEMO', False),
+        'demo_users': getattr(settings, 'LIMAN_DEMO_USERS', []),
         'shell_rates': [(c, r) for c, r in rates if r],
         'shell_pool_count': len(waiting_for(request.user)),
         'shell_pay_counts': _payment_counts(request.user),

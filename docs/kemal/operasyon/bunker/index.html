@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1B2A4A">
+<title>Bunker ikmalleri · Liman360</title>
+<link rel="preload" href="/liman360/static/vendor/fonts/archivo-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/liman360/static/vendor/bootstrap/bootstrap.min.css">
+<link rel="stylesheet" href="/liman360/static/css/app.css">
+<link rel="icon" href="/liman360/static/favicon.svg" type="image/svg+xml">
+</head>
+<body class="">
+<a class="visually-hidden-focusable skip" href="#icerik">İçeriğe geç</a>
+<p class="demo-bar">Statik demo: örnek veri, kayıt yapılmaz. <a href="https://github.com/afya111an/liman360">Kaynak kod</a></p>
+
+<header class="topbar">
+  <nav class="navbar navbar-expand-md navbar-dark" aria-label="Modüller">
+    <div class="container-fluid px-3 px-md-4">
+      <a class="brand" href="/liman360/kemal/faturalar/onay/">Liman360</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#modules" aria-controls="modules" aria-expanded="false" aria-label="Menüyü aç">
+        <svg class="ic" aria-hidden="true"><use href="/liman360/static/vendor/icons.svg#list"></use></svg>
+      </button>
+      <div class="collapse navbar-collapse" id="modules">
+        <ul class="navbar-nav me-auto">
+          
+          <li class="nav-item"><a class="nav-link" href="/liman360/kemal/faturalar/onay/">Faturalar</a></li>
+          <li class="nav-item"><a class="nav-link active" aria-current="page" href="/liman360/kemal/operasyon/seferler/">Operasyon</a></li>
+          <li class="nav-item"><a class="nav-link" href="/liman360/kemal/odemeler/onay/">Ödemeler</a></li>
+          
+          
+        </ul>
+        
+        <p class="rates mb-0" title="TCMB döviz satış kurları">
+          <span>USD <b>50,49</b></span><span>EUR <b>55,40</b></span>
+          <span class="rates-date">TCMB 20.11.2026</span>
+        </p>
+        
+        
+        <div class="user dropdown demo-switch">
+          <button class="btn btn-sm btn-quiet dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="visually-hidden">Demo kullanıcısı: </span>Kemal Aydın<span class="demo-role d-none d-xl-inline">&nbsp;· Ödeme onayı</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><h2 class="dropdown-header">Demo kullanıcısı değiştir</h2></li>
+            
+            <li><a class="dropdown-item" href="/liman360/operasyon/bunker/">Selin Demir<small>Finans</small></a></li>
+            
+            <li><a class="dropdown-item" href="/liman360/mert/operasyon/bunker/">Mert Kaya<small>Operasyon</small></a></li>
+            
+            <li><a class="dropdown-item active" aria-current="true" href="/liman360/kemal/operasyon/bunker/">Kemal Aydın<small>Ödeme onayı</small></a></li>
+            
+          </ul>
+        </div>
+        
+      </div>
+    </div>
+  </nav>
+</header>
+
+<nav class="subnav" aria-label="Operasyon">
+  <div class="container-fluid px-3 px-md-4">
+    <a href="/liman360/kemal/operasyon/seferler/" >Seferler <span class="count" title="Yolda olan sefer">1</span><span class="visually-hidden"> yolda</span></a>
+    <a href="/liman360/kemal/operasyon/gemiler/" >Gemiler</a>
+    <a href="/liman360/kemal/operasyon/bunker/" aria-current="page">Bunker</a>
+    <a href="/liman360/kemal/operasyon/raporlar/" ><span class="d-sm-none">Noon</span><span class="d-none d-sm-inline">Günlük raporlar</span></a>
+    
+  </div>
+</nav>
+
+
+
+<main id="icerik">
+<div class="work">
+  <section class="ledger" aria-labelledby="ledger-title">
+    <div class="ledger-head">
+      <h1 id="ledger-title">Bunker ikmalleri</h1>
+      <p class="ledger-sum">2 ikmal<span aria-hidden="true"> · </span><span class="num">80</span> MT MGO<span aria-hidden="true"> · </span><span class="num">650</span> MT VLSFO</p>
+    </div>
+    
+
+
+    
+    <ol class="rows">
+      <li>
+<a class="row-link" href="/liman360/kemal/operasyon/bunker/2/">
+  <span class="r-no">M/V DEMO STAR</span>
+  <span class="r-amt num">80 <small>MT MGO</small></span>
+  <span class="r-sup">Novorossiysk · Örnek Marine Fuels SA</span>
+  <span class="r-meta"><span class="num">07.11.2026</span> · BDN NV-26-3311 · DS-26/08</span>
+</a>
+</li><li>
+<a class="row-link" href="/liman360/kemal/operasyon/bunker/1/">
+  <span class="r-no">M/V DEMO STAR</span>
+  <span class="r-amt num">650 <small>MT VLSFO</small></span>
+  <span class="r-sup">Novorossiysk · Örnek Marine Fuels SA</span>
+  <span class="r-meta"><span class="num">07.11.2026</span> · BDN NV-26-3310 · DS-26/08</span>
+</a>
+</li>
+    </ol>
+    
+    
+  </section>
+  <section class="sheet" aria-label="Bunker teslim belgesi">
+    <p class="sheet-hint">Ayrıntılarını görmek için soldan bir ikmal seçin.</p>
+  </section>
+</div>
+</main>
+<script src="/liman360/static/vendor/bootstrap/bootstrap.bundle.min.js" defer></script>
+<script src="/liman360/static/js/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1B2A4A">
+<title>Yeni gider faturası · Liman360</title>
+<link rel="preload" href="/liman360/static/vendor/fonts/archivo-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/liman360/static/vendor/bootstrap/bootstrap.min.css">
+<link rel="stylesheet" href="/liman360/static/css/app.css">
+<link rel="icon" href="/liman360/static/favicon.svg" type="image/svg+xml">
+</head>
+<body class="">
+<a class="visually-hidden-focusable skip" href="#icerik">İçeriğe geç</a>
+<p class="demo-bar">Statik demo: örnek veri, kayıt yapılmaz. <a href="https://github.com/afya111an/liman360">Kaynak kod</a></p>
+
+<header class="topbar">
+  <nav class="navbar navbar-expand-md navbar-dark" aria-label="Modüller">
+    <div class="container-fluid px-3 px-md-4">
+      <a class="brand" href="/liman360/kemal/faturalar/onay/">Liman360</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#modules" aria-controls="modules" aria-expanded="false" aria-label="Menüyü aç">
+        <svg class="ic" aria-hidden="true"><use href="/liman360/static/vendor/icons.svg#list"></use></svg>
+      </button>
+      <div class="collapse navbar-collapse" id="modules">
+        <ul class="navbar-nav me-auto">
+          
+          <li class="nav-item"><a class="nav-link active" aria-current="page" href="/liman360/kemal/faturalar/onay/">Faturalar</a></li>
+          <li class="nav-item"><a class="nav-link" href="/liman360/kemal/operasyon/seferler/">Operasyon</a></li>
+          <li class="nav-item"><a class="nav-link" href="/liman360/kemal/odemeler/onay/">Ödemeler</a></li>
+          
+          
+        </ul>
+        
+        <p class="rates mb-0" title="TCMB döviz satış kurları">
+          <span>USD <b>50,49</b></span><span>EUR <b>55,40</b></span>
+          <span class="rates-date">TCMB 20.11.2026</span>
+        </p>
+        
+        
+        <div class="user dropdown demo-switch">
+          <button class="btn btn-sm btn-quiet dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="visually-hidden">Demo kullanıcısı: </span>Kemal Aydın<span class="demo-role d-none d-xl-inline">&nbsp;· Ödeme onayı</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><h2 class="dropdown-header">Demo kullanıcısı değiştir</h2></li>
+            
+            <li><a class="dropdown-item" href="/liman360/faturalar/yeni/">Selin Demir<small>Finans</small></a></li>
+            
+            <li><a class="dropdown-item" href="/liman360/mert/faturalar/yeni/">Mert Kaya<small>Operasyon</small></a></li>
+            
+            <li><a class="dropdown-item active" aria-current="true" href="/liman360/kemal/faturalar/yeni/">Kemal Aydın<small>Ödeme onayı</small></a></li>
+            
+          </ul>
+        </div>
+        
+      </div>
+    </div>
+  </nav>
+</header>
+
+<nav class="subnav" aria-label="Faturalar">
+  <div class="container-fluid px-3 px-md-4">
+    <a href="/liman360/kemal/faturalar/onay/" >Onay bekleyen <span class="count">0</span></a>
+    <a href="/liman360/kemal/faturalar/tumu/" ><span class="d-sm-none">Tümü</span><span class="d-none d-sm-inline">Tüm gider faturaları</span></a>
+    <a class="btn btn-quiet-ink btn-sm ms-auto" href="/liman360/kemal/faturalar/yeni/" aria-current="page">
+      <svg class="ic" aria-hidden="true"><use href="/liman360/static/vendor/icons.svg#plus-lg"></use></svg>Yeni<span class="d-none d-sm-inline">&nbsp;fatura</span>
+    </a>
+  </div>
+</nav>
+
+
+
+<main id="icerik">
+<div class="entry">
+  <form method="post" class="doc" novalidate data-once aria-labelledby="entry-title">
+    <input type="hidden" name="csrfmiddlewaretoken" value="9Q6uUhBfGxWR9pOvn67lEOXLzvjt3oLazCTKO2olcRDrDrauUV3WKrhx4LgTEorn">
+    <header class="doc-head">
+      <h1 id="entry-title">Yeni gider faturası</h1>
+      <p class="doc-state"><span class="req" aria-hidden="true">*</span> zorunlu alan</p>
+    </header>
+    
+    <div class="bl">
+      
+      <div class="f ">
+        <label for="id_number"><span class="no" aria-hidden="true">1</span>Fatura / belge no<span class="req" aria-hidden="true">*</span></label>
+        <input type="text" name="number" maxlength="40" class="form-control" autocomplete="off" required id="id_number">
+        
+        
+      </div>
+      
+      <div class="f ">
+        <label for="id_invoice_date"><span class="no" aria-hidden="true">2</span>Fatura tarihi<span class="req" aria-hidden="true">*</span></label>
+        <input type="date" name="invoice_date" value="2026-11-20" class="form-control" required id="id_invoice_date">
+        
+        
+      </div>
+      
+      <div class="f ">
+        <label for="id_due_date"><span class="no" aria-hidden="true">3</span>Vade tarihi</label>
+        <input type="date" name="due_date" class="form-control" id="id_due_date">
+        
+        
+      </div>
+      
+      <div class="f ">
+        <label for="id_ref_no"><span class="no" aria-hidden="true">4</span>Evrak / ref no</label>
+        <input type="text" name="ref_no" maxlength="40" class="form-control" id="id_ref_no">
+        
+        
+      </div>
+      
+      <div class="f w2">
+        <label for="id_supplier"><span class="no" aria-hidden="true">5</span>Cari / tedarikçi<span class="req" aria-hidden="true">*</span></label>
+        <select name="supplier" class="form-select" required id="id_supplier">
+  <option value="" selected>Seçiniz</option>
+
+  <option value="6">Örnek Grain Trading SA</option>
+
+  <option value="5">Örnek Kumanya Tedarik</option>
+
+  <option value="3">Örnek Liman Hizmetleri Ltd.</option>
+
+  <option value="1">Örnek Marine Fuels SA</option>
+
+  <option value="2">Örnek Port Agency Services</option>
+
+  <option value="4">Örnek Tersane A.Ş.</option>
+
+</select>
+        
+        
+      </div>
+      
+      <div class="f w2">
+        <label for="id_company"><span class="no" aria-hidden="true">6</span>Borçlu şirket<span class="req" aria-hidden="true">*</span></label>
+        <select name="company" class="form-select" required id="id_company">
+  <option value="" selected>Seçiniz</option>
+
+  <option value="1">DEMO</option>
+
+  <option value="2">DEMOLOJ</option>
+
+</select>
+        
+        
+      </div>
+      
+      <div class="f w2">
+        <label for="id_category"><span class="no" aria-hidden="true">7</span>Gider kategorisi</label>
+        <select name="category" class="form-select" id="id_category">
+  <option value="" selected>Seçiniz</option>
+
+  <option value="3">Genel masraf</option>
+
+  <option value="2">Liman masrafları / D/A</option>
+
+  <option value="1">Yakıt ve madeni yağ</option>
+
+</select>
+        
+        
+      </div>
+      
+      <div class="f ">
+        <label for="id_vessel"><span class="no" aria-hidden="true">8</span>Gemi</label>
+        <select name="vessel" class="form-select" id="id_vessel">
+  <option value="" selected>Seçiniz</option>
+
+  <option value="1">M/V DEMO STAR</option>
+
+  <option value="2">M/V DEMO WAVE</option>
+
+</select>
+        
+        
+      </div>
+      
+      <div class="f ">
+        <label for="id_voyage"><span class="no" aria-hidden="true">9</span>Sefer</label>
+        <select name="voyage" class="form-select" aria-describedby="id_voyage_helptext" id="id_voyage">
+  <option value="" selected>Seçiniz</option>
+
+  <option value="3">DS-26/09 · M/V DEMO STAR</option>
+
+  <option value="2">DS-26/08 · M/V DEMO STAR</option>
+
+  <option value="1">DW-26/05 · M/V DEMO WAVE</option>
+
+</select>
+        <p class="hint">Seçilirse gemi seferden alınır.</p>
+        
+      </div>
+      
+      <div class="f w2 f-amt">
+        <label for="id_amount"><span class="no" aria-hidden="true">10</span>Tutar<span class="req" aria-hidden="true">*</span></label>
+        <input type="number" name="amount" step="0.01" min="0.01" inputmode="decimal" class="form-control" required id="id_amount">
+        
+        
+      </div>
+      
+      <div class="f w2">
+        <label for="id_currency"><span class="no" aria-hidden="true">11</span>Para birimi<span class="req" aria-hidden="true">*</span></label>
+        <select name="currency" class="form-select" id="id_currency">
+  <option value="USD" selected>USD - Amerikan Doları</option>
+
+  <option value="EUR">EUR - Euro</option>
+
+  <option value="TRY">TRY - Türk Lirası</option>
+
+</select>
+        
+        
+      </div>
+      
+      <div class="f w4">
+        <label for="id_description"><span class="no" aria-hidden="true">12</span>Gider kalemi açıklaması</label>
+        <input type="text" name="description" maxlength="200" class="form-control" id="id_description">
+        
+        
+      </div>
+      
+      <div class="f w4">
+        <label for="id_notes"><span class="no" aria-hidden="true">13</span>Notlar</label>
+        <textarea name="notes" cols="40" rows="3" class="form-control" id="id_notes">
+</textarea>
+        
+        
+      </div>
+      
+    </div>
+    <div class="decide-actions">
+      <button class="btn btn-stamp" type="submit" disabled>Kaydet ve onaya gönder</button>
+      <p class="hint w-100">Demoda fatura kaydedilmez.</p>
+      <a class="btn btn-quiet-ink" href="/liman360/kemal/faturalar/tumu/">Vazgeç</a>
+    </div>
+  </form>
+</div>
+</main>
+<script src="/liman360/static/vendor/bootstrap/bootstrap.bundle.min.js" defer></script>
+<script src="/liman360/static/js/app.js" defer></script>
+</body>
+</html>

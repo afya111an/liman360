@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1B2A4A">
+<title>Seferler · Liman360</title>
+<link rel="preload" href="/liman360/static/vendor/fonts/archivo-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/liman360/static/vendor/bootstrap/bootstrap.min.css">
+<link rel="stylesheet" href="/liman360/static/css/app.css">
+<link rel="icon" href="/liman360/static/favicon.svg" type="image/svg+xml">
+</head>
+<body class="">
+<a class="visually-hidden-focusable skip" href="#icerik">İçeriğe geç</a>
+<p class="demo-bar">Statik demo: örnek veri, kayıt yapılmaz. <a href="https://github.com/afya111an/liman360">Kaynak kod</a></p>
+
+<header class="topbar">
+  <nav class="navbar navbar-expand-md navbar-dark" aria-label="Modüller">
+    <div class="container-fluid px-3 px-md-4">
+      <a class="brand" href="/liman360/mert/faturalar/onay/">Liman360</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#modules" aria-controls="modules" aria-expanded="false" aria-label="Menüyü aç">
+        <svg class="ic" aria-hidden="true"><use href="/liman360/static/vendor/icons.svg#list"></use></svg>
+      </button>
+      <div class="collapse navbar-collapse" id="modules">
+        <ul class="navbar-nav me-auto">
+          
+          <li class="nav-item"><a class="nav-link" href="/liman360/mert/faturalar/onay/">Faturalar</a></li>
+          <li class="nav-item"><a class="nav-link active" aria-current="page" href="/liman360/mert/operasyon/seferler/">Operasyon</a></li>
+          
+          
+          
+        </ul>
+        
+        <p class="rates mb-0" title="TCMB döviz satış kurları">
+          <span>USD <b>50,49</b></span><span>EUR <b>55,40</b></span>
+          <span class="rates-date">TCMB 20.11.2026</span>
+        </p>
+        
+        
+        <div class="user dropdown demo-switch">
+          <button class="btn btn-sm btn-quiet dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="visually-hidden">Demo kullanıcısı: </span>Mert Kaya<span class="demo-role d-none d-xl-inline">&nbsp;· Operasyon</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><h2 class="dropdown-header">Demo kullanıcısı değiştir</h2></li>
+            
+            <li><a class="dropdown-item" href="/liman360/operasyon/seferler/">Selin Demir<small>Finans</small></a></li>
+            
+            <li><a class="dropdown-item active" aria-current="true" href="/liman360/mert/operasyon/seferler/">Mert Kaya<small>Operasyon</small></a></li>
+            
+            <li><a class="dropdown-item" href="/liman360/kemal/operasyon/seferler/">Kemal Aydın<small>Ödeme onayı</small></a></li>
+            
+          </ul>
+        </div>
+        
+      </div>
+    </div>
+  </nav>
+</header>
+
+<nav class="subnav" aria-label="Operasyon">
+  <div class="container-fluid px-3 px-md-4">
+    <a href="/liman360/mert/operasyon/seferler/" aria-current="page">Seferler <span class="count" title="Yolda olan sefer">1</span><span class="visually-hidden"> yolda</span></a>
+    <a href="/liman360/mert/operasyon/gemiler/" >Gemiler</a>
+    <a href="/liman360/mert/operasyon/bunker/" >Bunker</a>
+    <a href="/liman360/mert/operasyon/raporlar/" ><span class="d-sm-none">Noon</span><span class="d-none d-sm-inline">Günlük raporlar</span></a>
+    
+    <a class="btn btn-quiet-ink btn-sm ms-auto btn-new" href="/liman360/mert/operasyon/seferler/yeni/" aria-label="Yeni sefer">
+      <svg class="ic" aria-hidden="true"><use href="/liman360/static/vendor/icons.svg#plus-lg"></use></svg><span class="d-none d-sm-inline">Yeni sefer</span>
+    </a>
+    
+  </div>
+</nav>
+
+
+
+<main id="icerik">
+<div class="work">
+  <section class="ledger" aria-labelledby="ledger-title">
+    <div class="ledger-head">
+      <h1 id="ledger-title">Açık seferler</h1>
+      <p class="ledger-sum">2 sefer</p>
+    </div>
+    
+
+
+    
+    <ol class="rows">
+      <li>
+<a class="row-link" href="/liman360/mert/operasyon/seferler/3/">
+  <span class="r-no">DS-26/09</span>
+  <span class="r-amt">M/V DEMO STAR</span>
+  <span class="r-sup">Alexandria → Pire · Dökme mısır</span>
+  <span class="r-meta">
+    <span class="state state-pending">Planlandı</span>
+
+    Plan <span class="num">02.12.2026</span>
+    
+  </span>
+</a>
+</li><li>
+<a class="row-link" href="/liman360/mert/operasyon/seferler/2/">
+  <span class="r-no">DS-26/08</span>
+  <span class="r-amt">M/V DEMO STAR</span>
+  <span class="r-sup">Novorossiysk → Alexandria · Dökme buğday</span>
+  <span class="r-meta">
+    <span class="state state-partial">Denizde</span>
+
+    Kalkış <span class="num">09.11.2026</span>
+    
+  </span>
+</a>
+</li>
+    </ol>
+    
+    
+  </section>
+  <section class="sheet" aria-label="Sefer belgesi">
+    <p class="sheet-hint">Ayrıntılarını görmek için soldan bir sefer seçin.</p>
+  </section>
+</div>
+</main>
+<script src="/liman360/static/vendor/bootstrap/bootstrap.bundle.min.js" defer></script>
+<script src="/liman360/static/js/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1B2A4A">
+<title>Yeni günlük rapor · Liman360</title>
+<link rel="preload" href="/liman360/static/vendor/fonts/archivo-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/liman360/static/vendor/bootstrap/bootstrap.min.css">
+<link rel="stylesheet" href="/liman360/static/css/app.css">
+<link rel="icon" href="/liman360/static/favicon.svg" type="image/svg+xml">
+</head>
+<body class="">
+<a class="visually-hidden-focusable skip" href="#icerik">İçeriğe geç</a>
+<p class="demo-bar">Statik demo: örnek veri, kayıt yapılmaz. <a href="https://github.com/afya111an/liman360">Kaynak kod</a></p>
+
+<header class="topbar">
+  <nav class="navbar navbar-expand-md navbar-dark" aria-label="Modüller">
+    <div class="container-fluid px-3 px-md-4">
+      <a class="brand" href="/liman360/mert/faturalar/onay/">Liman360</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#modules" aria-controls="modules" aria-expanded="false" aria-label="Menüyü aç">
+        <svg class="ic" aria-hidden="true"><use href="/liman360/static/vendor/icons.svg#list"></use></svg>
+      </button>
+      <div class="collapse navbar-collapse" id="modules">
+        <ul class="navbar-nav me-auto">
+          
+          <li class="nav-item"><a class="nav-link" href="/liman360/mert/faturalar/onay/">Faturalar</a></li>
+          <li class="nav-item"><a class="nav-link active" aria-current="page" href="/liman360/mert/operasyon/seferler/">Operasyon</a></li>
+          
+          
+          
+        </ul>
+        
+        <p class="rates mb-0" title="TCMB döviz satış kurları">
+          <span>USD <b>50,49</b></span><span>EUR <b>55,40</b></span>
+          <span class="rates-date">TCMB 20.11.2026</span>
+        </p>
+        
+        
+        <div class="user dropdown demo-switch">
+          <button class="btn btn-sm btn-quiet dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="visually-hidden">Demo kullanıcısı: </span>Mert Kaya<span class="demo-role d-none d-xl-inline">&nbsp;· Operasyon</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><h2 class="dropdown-header">Demo kullanıcısı değiştir</h2></li>
+            
+            <li><a class="dropdown-item" href="/liman360/faturalar/onay/">Selin Demir<small>Finans</small></a></li>
+            
+            <li><a class="dropdown-item active" aria-current="true" href="/liman360/mert/operasyon/raporlar/yeni/">Mert Kaya<small>Operasyon</small></a></li>
+            
+            <li><a class="dropdown-item" href="/liman360/kemal/odemeler/onay/">Kemal Aydın<small>Ödeme onayı</small></a></li>
+            
+          </ul>
+        </div>
+        
+      </div>
+    </div>
+  </nav>
+</header>
+
+<nav class="subnav" aria-label="Operasyon">
+  <div class="container-fluid px-3 px-md-4">
+    <a href="/liman360/mert/operasyon/seferler/" >Seferler <span class="count" title="Yolda olan sefer">1</span><span class="visually-hidden"> yolda</span></a>
+    <a href="/liman360/mert/operasyon/gemiler/" >Gemiler</a>
+    <a href="/liman360/mert/operasyon/bunker/" >Bunker</a>
+    <a href="/liman360/mert/operasyon/raporlar/" aria-current="page"><span class="d-sm-none">Noon</span><span class="d-none d-sm-inline">Günlük raporlar</span></a>
+    
+    <a class="btn btn-quiet-ink btn-sm ms-auto btn-new" href="/liman360/mert/operasyon/raporlar/yeni/" aria-label="Yeni rapor">
+      <svg class="ic" aria-hidden="true"><use href="/liman360/static/vendor/icons.svg#plus-lg"></use></svg><span class="d-none d-sm-inline">Yeni rapor</span>
+    </a>
+    
+  </div>
+</nav>
+
+
+
+<main id="icerik">
+<div class="entry">
+  <form method="post" class="doc" id="noon-entry" novalidate data-once aria-labelledby="entry-title">
+    <input type="hidden" name="csrfmiddlewaretoken" value="pImvEF7kXFvyeG2IA0UxvCMGfCjhLIsCucArvM7WShjzDN9GSa0qnw4sV0Nf9Ytm">
+    <header class="doc-head"><h1 id="entry-title">Yeni günlük (noon) rapor</h1><p class="doc-state"><span class="req" aria-hidden="true">*</span> zorunlu alan</p></header>
+    
+    <div class="bl">
+      <div class="f w2">
+  <label for="id_vessel"><span class="no" aria-hidden="true">1</span>Gemi<span class="req" aria-hidden="true">*</span></label>
+  <select name="vessel" class="form-select" required id="id_vessel">
+  <option value="" selected>Seçiniz</option>
+
+  <option value="1">M/V DEMO STAR</option>
+
+  <option value="2">M/V DEMO WAVE</option>
+
+</select>
+  
+  
+</div>
+<div class="f w2">
+  <label for="id_date"><span class="no" aria-hidden="true">2</span>Rapor tarihi<span class="req" aria-hidden="true">*</span></label>
+  <input type="date" name="date" value="2026-11-20" class="form-control" required id="id_date">
+  
+  
+</div>
+
+      <div class="f w4">
+        <span class="cap"><span class="no" aria-hidden="true">3</span>Yakıt (MT) · bilinmeyen cinsleri boş bırakın</span>
+        <table class="lines lines-input noon-table">
+          <thead><tr><th scope="col">Cins</th><th scope="col" class="r">Önceki ROB + ikmal (MT)</th><th scope="col" class="r">Son 24 saat tüketim (MT)</th><th scope="col" class="r">Gemideki miktar, ROB (MT)</th></tr></thead>
+          <tbody>
+          
+            <tr data-grade="VLSFO">
+              <td>VLSFO</td>
+              <td class="r num exp" data-label="Önceki ROB + ikmal (MT)" data-base>—</td>
+              <td class="r" data-label="Tüketim (MT)"><input class="form-control text-end" name="cons_VLSFO" id="id_cons_VLSFO" value="" inputmode="decimal" autocomplete="off" aria-label="VLSFO tüketim (MT)"></td>
+              <td class="r" data-label="ROB (MT)"><input class="form-control text-end" name="rob_VLSFO" id="id_rob_VLSFO" value="" inputmode="decimal" autocomplete="off" aria-label="VLSFO ROB (MT)" aria-describedby="exp-VLSFO"><span class="exp d-block mt-1" id="exp-VLSFO" data-expect aria-live="polite"></span></td>
+            </tr>
+          
+            <tr data-grade="HSFO">
+              <td>HSFO</td>
+              <td class="r num exp" data-label="Önceki ROB + ikmal (MT)" data-base>—</td>
+              <td class="r" data-label="Tüketim (MT)"><input class="form-control text-end" name="cons_HSFO" id="id_cons_HSFO" value="" inputmode="decimal" autocomplete="off" aria-label="HSFO tüketim (MT)"></td>
+              <td class="r" data-label="ROB (MT)"><input class="form-control text-end" name="rob_HSFO" id="id_rob_HSFO" value="" inputmode="decimal" autocomplete="off" aria-label="HSFO ROB (MT)" aria-describedby="exp-HSFO"><span class="exp d-block mt-1" id="exp-HSFO" data-expect aria-live="polite"></span></td>
+            </tr>
+          
+            <tr data-grade="LSMGO">
+              <td>LSMGO</td>
+              <td class="r num exp" data-label="Önceki ROB + ikmal (MT)" data-base>—</td>
+              <td class="r" data-label="Tüketim (MT)"><input class="form-control text-end" name="cons_LSMGO" id="id_cons_LSMGO" value="" inputmode="decimal" autocomplete="off" aria-label="LSMGO tüketim (MT)"></td>
+              <td class="r" data-label="ROB (MT)"><input class="form-control text-end" name="rob_LSMGO" id="id_rob_LSMGO" value="" inputmode="decimal" autocomplete="off" aria-label="LSMGO ROB (MT)" aria-describedby="exp-LSMGO"><span class="exp d-block mt-1" id="exp-LSMGO" data-expect aria-live="polite"></span></td>
+            </tr>
+          
+            <tr data-grade="MGO">
+              <td>MGO</td>
+              <td class="r num exp" data-label="Önceki ROB + ikmal (MT)" data-base>—</td>
+              <td class="r" data-label="Tüketim (MT)"><input class="form-control text-end" name="cons_MGO" id="id_cons_MGO" value="" inputmode="decimal" autocomplete="off" aria-label="MGO tüketim (MT)"></td>
+              <td class="r" data-label="ROB (MT)"><input class="form-control text-end" name="rob_MGO" id="id_rob_MGO" value="" inputmode="decimal" autocomplete="off" aria-label="MGO ROB (MT)" aria-describedby="exp-MGO"><span class="exp d-block mt-1" id="exp-MGO" data-expect aria-live="polite"></span></td>
+            </tr>
+          
+          </tbody>
+        </table>
+      </div>
+      <div class="f w4">
+  <label for="id_remarks"><span class="no" aria-hidden="true">4</span>Açıklama</label>
+  <input type="text" name="remarks" maxlength="200" class="form-control" id="id_remarks">
+  
+  
+</div>
+
+    </div>
+    <div class="decide-actions">
+      <button class="btn btn-stamp" type="submit" disabled>Raporu kaydet</button>
+      <a class="btn btn-quiet-ink" href="/liman360/mert/operasyon/raporlar/">Vazgeç</a>
+      <p class="hint w-100">Demoda kayıt yapılmaz.</p>
+    </div>
+  </form>
+</div>
+<script id="fuel-data" type="application/json">{"1": {"reports": [{"date": "2026-11-19", "rob": {"MGO": "93.600", "VLSFO": "663.100"}}, {"date": "2026-11-18", "rob": {"MGO": "96.000", "VLSFO": "692.000"}}, {"date": "2026-11-17", "rob": {"MGO": "98.400", "VLSFO": "720.200"}}, {"date": "2026-11-16", "rob": {"MGO": "100.800", "VLSFO": "747.700"}}, {"date": "2026-11-15", "rob": {"MGO": "103.200", "VLSFO": "782.600"}}, {"date": "2026-11-14", "rob": {"MGO": "105.600", "VLSFO": "810.800"}}, {"date": "2026-11-13", "rob": {"MGO": "108.000", "VLSFO": "838.300"}}, {"date": "2026-11-12", "rob": {"MGO": "110.400", "VLSFO": "867.200"}}, {"date": "2026-11-11", "rob": {"MGO": "112.800", "VLSFO": "895.400"}}, {"date": "2026-11-10", "rob": {"MGO": "115.200", "VLSFO": "922.900"}}, {"date": "2026-11-09", "rob": {"MGO": "117.600", "VLSFO": "951.800"}}, {"date": "2026-11-08", "rob": {"MGO": "120.000", "VLSFO": "980.000"}}], "bunkers": [{"date": "2026-11-07", "grade": "MGO", "mt": "80.000"}, {"date": "2026-11-07", "grade": "VLSFO", "mt": "650.000"}]}, "2": {"reports": [], "bunkers": []}}</script>
+</main>
+<script src="/liman360/static/vendor/bootstrap/bootstrap.bundle.min.js" defer></script>
+<script src="/liman360/static/js/app.js" defer></script>
+</body>
+</html>

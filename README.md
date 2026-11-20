@@ -47,7 +47,7 @@ If no steps are defined, new invoices are approved on save.
 
 ## Static demo (GitHub Pages)
 
-`docs/` holds a click-through demo rendered from synthetic data (nothing saves). Regenerate it after UI changes:
+`docs/` holds a click-through demo rendered from synthetic data (nothing saves). It is exported once per demo user with their real role: Selin Demir (Finans) at the root, Mert Kaya (Operasyon) under `/mert/`, Kemal Aydın (Ödeme onayı) under `/kemal/`; the name at the top right switches between them. Regenerate it after UI changes:
 
 ```bash
 .venv/bin/python manage.py export_demo   # writes docs/ for https://afya111an.github.io/liman360/
